@@ -10,6 +10,10 @@ li {
     @subnav-width-med: calc(90vw / 4);
     display: none;
 
+    @media @media-desktop-regular {
+        display: block;
+    }
+
     &--priority {
         // priority nav should never be visible on mobile
         display: none !important;
@@ -32,7 +36,7 @@ li {
         background: @color-white;
         border-top: @nav-border;
         border-bottom: @nav-border;
-        display: none;
+        //display: none;
 
         @media @media-desktop-small {
             left: -5vw;
@@ -48,7 +52,7 @@ li {
         }
 
         &.open {
-            display: block;
+            //display: block;
         }
     }
 
