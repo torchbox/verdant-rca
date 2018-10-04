@@ -109,14 +109,14 @@ function onDocumentReady(jQuery, inLightBox){
     /* hide the search submit button then show
     on typing text */
     function showSearchSubmit() {
-        $('form.search input[type="submit"]').hide();
-        $('form.search input[type="text"]').focus(function() {
-           $('form.search input[type="submit"]').show();
+        $('js-search-button').hide();
+        $('js-search-input').focus(function() {
+           $('js-search-button').show();
         });
         $(document).click(function() {
-            $('form.search input[type="submit"]').hide();
+            $('js-search-button').hide();
         });
-        $('form.search input[type="text"]').click(function(e){
+        $('js-search-input').click(function(e){
             e.stopPropagation();
         });
     }
@@ -138,14 +138,6 @@ function onDocumentReady(jQuery, inLightBox){
         }).data("ui-autocomplete")._renderItem = function( ul, item ) {
             return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "<span>" + (item.search_name || "") + "</span></a>" ).appendTo( ul );
         };
-    }
-
-
-    function showHideMobileMenu(){
-        $('.showmenu').click(function(eventObject){
-            $('nav').toggleClass('expanded');
-            $(this).toggleClass('expanded');
-        });
     }
 
     /*google maps for contact page
@@ -220,8 +212,7 @@ function onDocumentReady(jQuery, inLightBox){
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul', $('.today').hasClass('expanded'));
     showHideSlide('.related h2', '.related', '.related .wrapper');
-    showHideMobileMenu();
-    showHide('.showsearch', 'form.search');
+    showHide('.js-showsearch', '.js-search');
     showHideDialogue();
     showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
     showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
@@ -376,19 +367,16 @@ function onDocumentReady(jQuery, inLightBox){
             window.disablePushState = true;
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-            $('aside').appendTo('.mobile-menu-wrapper'); //move sidebar for mobile
             $('aside .events-ads-wrapper').insertAfter('aside .related'); //events and ads move to bottom of sidebar in mobile
         },
         on: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-            $('aside').appendTo('.mobile-menu-wrapper'); //move sidebar for mobile
             $('aside .events-ads-wrapper').insertAfter('aside .related'); //events and ads move to bottom of sidebar in mobile
         },
         off: function(){
             $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
             $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
-            $('aside').insertAfter('.page-content'); //move sidebar for mobile
             $('aside .events-ads-wrapper').insertBefore('aside .related'); //events and ads moving to top of sidebar for desktop
         }
     });
@@ -398,14 +386,6 @@ function onDocumentReady(jQuery, inLightBox){
         setup: function(){},
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
-
-            // console.log($(document).height());
-            // console.log($(window).height());
-            if($(document).height()-250 > $(window).height()){
-                $('.header-wrapper, .page-wrapper, .pjax-container').affix({
-                    offset: { top: window.affixOffsetTop }
-                });
-            }
 
             /* Packery */
             $('.packery').imagesLoaded( function() {

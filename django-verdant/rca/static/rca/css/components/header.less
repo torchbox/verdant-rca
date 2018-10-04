@@ -1,0 +1,215 @@
+.header {
+    @mobile-logo-height: 62px;
+    z-index: 4000;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    margin-bottom: 60px;
+
+    &::after {
+        content: '';
+        width: 100vw;
+        border-bottom: @nav-border;
+        position: absolute;
+        bottom: 0;
+        left: -15px;
+
+        @media @media-desktop-small {
+            left: -5vw;
+        }
+
+        .template-home-page & {
+            display: none;
+        }
+    }
+
+    @media @media-desktop-regular {
+        flex-wrap: nowrap;
+        align-items: flex-end;
+        padding: 0;
+        margin-bottom: 80px;
+    }
+
+    .template-home-page & {
+        margin-bottom: 0;
+    }
+
+    &__site-name {
+        display: flex;
+        align-items: flex-end;
+        width: 170px;
+        height: @mobile-logo-height;
+        flex-shrink: 0;
+
+        @media @media-desktop-regular {
+            width: 150px;
+            height: 130px;
+            padding: 10px 0;
+        }
+    }
+
+    &__logo {
+        height: 100%;
+        width: auto;
+    }
+
+    &__strapline {
+        font-family: @font-family-knockout;
+        font-weight: @font-weight-knockout;
+        font-size: 17px;
+        color: #9e9e9d;
+        text-transform: uppercase;
+        line-height: 0.85;
+        max-width: 100px;
+        padding-left: 10px;
+        margin: 0;
+
+        @media @media-desktop-regular {
+            font-size: 26px;
+            max-width: 130px;
+            line-height: 0.75;
+            padding-left: 0;
+            padding-bottom: 5px;
+        }
+
+        &--mobile {
+            @media @media-desktop-regular {
+                display: none;
+            }
+        }
+
+        &--desktop {
+            display: none;
+
+            @media @media-desktop-regular {
+                display: block;
+            }
+        }
+    }
+
+    &__nav-bar {
+        display: flex;
+        flex-shrink: 0;
+        margin-right: -15px;
+
+        @media @media-desktop-small {
+            margin-right: 0;
+        }
+
+        @media @media-desktop-regular {
+            padding: 0 @spacing-one;
+        }
+    }
+
+    &__button {
+        border: 0;
+        background: transparent;
+        padding: 10px 15px;
+        border-left: @nav-border;
+        height: @mobile-logo-height;
+        position: relative;
+        width: 54px;
+
+        @media @media-desktop-regular {
+            border-left: 0;
+            border-right: @nav-border;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            background: transparent;
+
+            .header__icon {
+                fill: @color-highlight-blue;
+            }
+        }
+    }
+
+    &__icon {
+        width: 21px;
+        height: 21px;
+        fill: @color-dark-grey;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.2s ease;
+
+        @media @media-desktop-regular {
+            top: 11px;
+            transform: translateX(-50%);
+        }
+
+        &--cross {
+            opacity: 0;
+
+            .expanded & {
+                opacity: 1;
+            }
+        }
+
+        &--menu,
+        &--search {
+            opacity: 1;
+
+            .expanded & {
+                opacity: 0;
+            }
+        }
+    }
+
+    &__ctas {
+        align-self: flex-end;
+        margin-bottom: -42px;
+        padding-top: 10px;
+        width: 100%;
+
+        @media @media-desktop-regular {
+            margin-bottom: -32px;
+            padding-top: 0;
+            width: auto;
+            position: relative;
+            z-index: 1;
+        }
+    }
+
+    &__cta {
+        display: flex;
+        justify-content: space-between;
+        width: 180px;
+        height: 32px;
+        padding: @spacing-half;
+        padding-bottom: 6px;
+        color: @color-white;
+        text-transform: uppercase;
+        font-family: @font-family-benton;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &--apply {
+            background: @color-pink;
+        }
+
+        &--contact {
+            background: @color-rca-blue;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            background: @color-highlight-blue;
+            color: @color-white;
+        }
+    }
+
+    &__cta-arrow {
+        width: 18px;
+        height: 18px;
+        fill: @color-white;
+    }
+}

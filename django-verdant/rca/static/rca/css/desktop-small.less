@@ -40,9 +40,6 @@ body {
     padding: 0;
     z-index: 1;
 }
-.mobile-menu-wrapper, .mobile-menu-button{
-    display: none;
-}
 
 /*
  * Lightbox styles
@@ -293,225 +290,6 @@ body.lightbox-visible {
     margin-top: @header-height + 35px; /* space for fixed header */
 }
 
-header {
-    height:auto;
-    margin:auto auto 49px auto;
-
-    a.site-name {
-        .clearfix();
-        float:none;
-        width:210px;
-        display: block;
-        background-color:transparent;
-    }
-    a.site-name p {
-        background-image: url('@{path-static}images/logo-header.png');
-        width: 210px;
-        height: 91px;
-        margin:30px 0;
-        padding:0;
-    }
-}
-
-.showmenu,
-.showsearch {
-    /* icons to show menu and search at mobile size disappear */
-    display: none;
-}
-
-.nav-wrapper {
-    /* mimics the style of the page-content below to make sure the search and navigation
-    fill the correct width at the desktop size */
-    .clearfix();
-    position:absolute;
-    width:100%;
-
-    .inner{
-        float:left;
-        width:100%;
-    }
-}
-
-nav {
-    height:34px;  //adjusted by eye to match search box
-    display:block;
-    margin-right:@right-col-width + @grid-gutter-width;
-}
-    nav h2 {
-        .transition(all 0.3s ease);
-        position:absolute;
-        top:0px;
-        z-index:1;
-        left:0;
-        margin:0 @grid-gutter-width 0 0;
-        font-size: 12px;
-        text-transform:uppercase;
-        float:right;
-        line-height:1.6em;
-        border-right:1px solid fade(@color-medium-grey, 40%);
-        .bold();
-        a {
-            padding:9px 45px 5px @grid-gutter-width;
-            display: block;
-            position: relative;
-            &:hover {
-                color: @color-white !important; /* obliged to use this to trump another important added to nav a */
-            }
-            &:after {
-                .sprite-load-23(
-                    @positionX: -48px,
-                    @positionY: -48px,
-                    @retinaPositionX: -97px,
-                    @retinaPositionY: -97px,
-                    @width: 23px,
-                    @height: 13px
-                );
-                content: ' ';
-                position: absolute;
-                top: 12px; /* Arbitrary. Whatever looks good */
-                right: @spacing-half;
-                visibility: visible; /* override generic nav a style */
-            }
-
-            &:hover{
-                color:@color-white;
-                background-color:@color-pink;
-
-                &:after{
-                    .sprite-load-23(
-                        @positionX: -48px,
-                        @positionY: -12px,
-                        @retinaPositionX: -97px,
-                        @retinaPositionY: -25px,
-                        @width: 23px,
-                        @height: 13px
-                    );
-                }
-            }
-            &:focus {
-                outline: none;
-                //color: #454545;
-            }
-        }
-
-    }
-   nav.open h2{
-        &:after{
-            .sprite-load-23(
-                @positionX: -12px,
-                @positionY: -48px,
-                @retinaPositionX: -25px,
-                @retinaPositionY: -97px,
-                @width: 23px,
-                @height: 13px
-            );
-        }
-        &:hover:after{
-            .sprite-load-23(
-                @positionX: -12px,
-                @positionY: -12px,
-                @retinaPositionX: -25px,
-                @retinaPositionY: -25px,
-                @width: 23px,
-                @height: 13px
-            );
-        }
-    }
-
-    /* these settings change when the menu is ready*/
-    nav.ready{
-        .menu{
-            /* only hide after its max height has been calculated */
-            display:none;
-        }
-        li > ul{
-            display:none;
-        }
-    }
-
-    nav.open{
-        //background-color:white;
-
-        h2{
-            border-color:#ffffff;
-        }
-    }
-    nav .menu{
-        position:relative;
-        left:@grid-gutter-width;
-        top:2em;
-        padding-bottom:200px;
-        margin-bottom:-200px;
-    }
-
-    nav .children{
-        display:none;
-    }
-    nav li {
-        width:25%;
-    }
-        nav li > ul{
-            left:25%;
-            /* increases hover-area to include space below visible items */
-            padding-bottom:200px;
-            margin-bottom:-200px;
-        }
-        nav li.selected > ul {
-            display:block;
-        }
-
-    nav a:after{
-        position:absolute;
-        margin-left:2%;
-        width:10px;
-        content:"/";
-        font-size:12px;
-        display:inline-block;
-        visibility:hidden;
-        .bold();
-        color:black;
-    }
-    nav .selected > a{
-        color:black;
-
-        &:after{
-            visibility:visible;
-        }
-    }
-
-    /* contains behaviours only when the menu is open AND mouseovered */
-    nav.hovered .menu{
-        /* hide 'selected' styles, namely colour and after */
-        .selected > a {
-            color:#999;
-
-            &:after{
-                visibility:hidden;
-            }
-        }
-
-        li:hover > a{
-            color:black;
-            &:after{
-                visibility:visible;
-            }
-            &:hover:after{
-                visibility:hidden;
-            }
-        }
-
-        li.open > a{
-            color:black;
-            &:after{
-                visibility:visible;
-            }
-            &:hover:after{
-                color:@color-highlight-blue;
-                visibility:visible;
-            }
-        }
-    }
-
     .breadcrumb{
         width:100%;
         max-width:100%;
@@ -558,23 +336,6 @@ nav {
         border-bottom:1px solid fade(@color-medium-grey, 20%);
     }
 
-/* Search moves alongside the menu above the content */
-form.search {
-    display: block;
-    position: static;
-    float:right;
-    background-color:rgba(255,255,255,0.95);
-    height: auto;
-    margin-left: -@right-col-width;
-    width: @right-col-width;
-    border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
-    border-bottom: 1px solid fade(@color-medium-grey, 40%);
-
-    input[type="text"] {
-        padding: 9px @spacing-half;
-        width: 85%;
-    }
-}
 
 /**
  * Search field autocomplete
@@ -597,7 +358,6 @@ aside {
     width: @right-col-width;
     margin-left: -@right-col-width;
     display:block;
-    overflow: hidden;
 
     &.affix{
         margin-top: @header-height; /* space for fixed header */

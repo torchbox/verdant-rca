@@ -1,13 +1,19 @@
 {% load rca_tags wagtailcore_tags %}
 
 {% for page, children in nodes %}
-    <li class="{% if children %} has-children {% endif %} ">
-        <a href="{% pageurl page %}" tabindex="4">{{ page.title }}</a>
+    <li class="nav__item nav__item--priority{% if children %} has-children {% endif %} ">
+        <a class="nav__link nav__link--priority" href="{% pageurl page %}" tabindex="4">
+            <svg class="nav__chevron">
+                <use xlink:href="#chevron"></use>
+            </svg>
+            <span>{{ page.title }}</span>
+        </a>
         {% if children %}
-            <div class="children">+</div>
-            <ul class="dl-submenu">
-                {% menu_subnav children %}
-            </ul>
+            <div class="nav__inner">
+                <ul class="nav__subnav nav__subnav--priority dl-submenu">
+                    {% menu_subnav children %}
+                </ul>
+            </div>
         {% endif %}
     </li>
 {% endfor %}
