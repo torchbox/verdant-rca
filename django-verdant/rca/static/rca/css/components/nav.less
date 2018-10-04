@@ -36,7 +36,6 @@ li {
         background: @color-white;
         border-top: @nav-border;
         border-bottom: @nav-border;
-        //display: none;
 
         @media @media-desktop-small {
             left: -5vw;
@@ -44,15 +43,18 @@ li {
 
         @media @media-desktop-regular {
             top: 100%;
-            padding: 20px 5vw;
+            padding: 0 5vw;
+            // Hide on page load
+            opacity: 0;
         }
 
         @media @media-desktop-large {
             padding-right: 0;
         }
 
-        &.open {
-            //display: block;
+        &.ready {
+            // Remove opacity after page load
+            opacity: 1;
         }
     }
 
@@ -64,6 +66,32 @@ li {
 
         &--main {
             position: relative;
+            background: @color-white;
+
+            @media @media-desktop-regular {
+                margin: 20px 0;
+            }
+
+            // Hide the burger items that appear in the priority nav
+            > .nav__item {
+                &:nth-child(1),
+                &:nth-child(2),
+                &:nth-child(3) {
+                    @media @media-desktop-regular {
+                        display: none;
+                    }
+                }
+
+                &:nth-child(4) {
+                    @media screen and (min-width: 1180px) {
+                        display: none;
+                    }
+                }
+            }
+
+            .ready & {
+                display: none;
+            }
         }
     }
 
@@ -93,6 +121,11 @@ li {
             display: block;
             padding: 0;
             border: 0;
+        }
+
+        &.dl-subviewopen,
+        &.dl-subview {
+            padding: 0;
         }
 
         &--priority {
@@ -146,19 +179,6 @@ li {
                 padding-right: 50px;
             }
 
-            &:nth-child(1),
-            &:nth-child(2),
-            &:nth-child(3) {
-                @media @media-desktop-regular {
-                    display: none;
-                }
-            }
-
-            &:nth-child(4) {
-                @media screen and (min-width: 1180px) {
-                    display: none;
-                }
-            }
 
             &.open {
                 &.has-children {
@@ -212,7 +232,7 @@ li {
         text-decoration: none;
         display: block;
         width: 100%;
-        padding: @spacing-half 0;
+        padding: 10px 0;
 
         @media @media-desktop-regular {
             padding-top: 0;
@@ -327,25 +347,47 @@ li {
         .nav__link {
             width: 100%;
         }
-    }
-}
 
+        // Back button on mobile subnavs
+        .dl-back {
+            font-size: 14px;
+            font-family: @font-family-benton-light;
+            color: #646464;
+            padding: 15px;
+            text-transform: capitalize;
 
-// I'm not sure if these styles are still needed, check after js is working
-@media @media-desktop-small {
+            @media @media-desktop-small {
+                padding: 15px 5vw;
+            }
 
-    nav {
-        display:block;
-    }
+            @media @media-desktop-regular {
+                display: none;
+            }
 
-    /* these settings change when the menu is ready*/
-    nav.ready{
-        .menu{
-            /* only hide after its max height has been calculated */
-            display:none;
-        }
-        .subnav{
-            display:none;
+            a {
+                // display: inline-block;
+                // margin-left: 10px;
+
+                &::before {
+                    content: '';
+                    width: 10px;
+                    height: 10px;
+                    margin-right: 5px;
+                    border-bottom: 1px solid @color-medium-grey;
+                    border-left: 1px solid @color-medium-grey;
+                    transform: rotate(45deg);
+                    transition: border-color 0.2s ease;
+                    display: inline-block;
+                }
+
+                &:hover,
+                &:active,
+                &:focus {
+                    &::before {
+                        border-color: @color-highlight-blue;
+                    }
+                }
+            }
         }
     }
 }
