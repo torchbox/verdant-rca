@@ -23,9 +23,16 @@
     &__spacer {
         height: 62px;
         display: block;
+        transition: all 0.3s ease;
 
         @media @media-desktop-regular {
             height: 130px;
+        }
+
+        &.fixed {
+            @media @media-desktop-regular {
+                height: 62px;
+            }
         }
     }
 
