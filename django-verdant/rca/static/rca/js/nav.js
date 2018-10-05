@@ -1,18 +1,22 @@
 $(function(){
+	Harvey.attach(breakpoints.mobileAndDesktopSmall, {
+		setup: function(){
+		},
+		on: function(){
+			mobileNav.apply();
+		},
+		off: function(){
+			mobileNav.revoke();
+		}
+	});
 	Harvey.attach(breakpoints.desktopRegular, {
 		setup: function(){
 		},
 		on: function(){
-			/* Duplicate anything added to this function, into the ".lt-ie9" section below */
-
-			//enable desktop dropdown nav and kill mobile nav
-			mobileNav.revoke();
 			desktopNav.apply();
 		},
 		off: function(){
-			//kill desktop dropdown nav and enable mobile nav
 			desktopNav.revoke();
-			mobileNav.apply();
 		}
 	});
 
@@ -64,7 +68,16 @@ var desktopNav = {
 			openMenu($nav);
 		}
 
+		function closePriorityMenu($nav, $trigger) {
+			$trigger.removeClass('open');
+			closeMenu($nav);
+		}
+
 		function openMenu($nav){
+
+			// close the burger menu if it is open
+			closeMenu($mainNav );
+
 			var $menu = $nav.find('.js-menu');
 
 			$nav.addClass('changing');
@@ -137,16 +150,6 @@ var desktopNav = {
 			// set menu as ready
 			$self.addClass('ready');
 
-			// function clearMenu(e) {
-			// 	console.log('calling clear menu');
-			// 	if(!$(e.target).hasClass('js-showmenu')){
-			// 		closeMenu();
-			// 	}
-			// }
-
-			// close menu on all clicks outside the toggle
-			//$(document).on('click.desktop', clearMenu);
-
 			$('li', $menu).hoverIntent({
 				over: function(e){
 					$self.addClass('hovered');
@@ -178,7 +181,7 @@ var desktopNav = {
 					openPriorityMenu($subNav, $hover);
 				},
 				out: function() {
-					closeMenu($subNav);
+					closePriorityMenu($subNav, $hover);
 				},
 				timeout: 200
 			});
