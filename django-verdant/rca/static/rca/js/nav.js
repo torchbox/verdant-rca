@@ -68,6 +68,11 @@ var desktopNav = {
 			openMenu($nav);
 		}
 
+		function closePriorityMenu($nav, $trigger) {
+			$trigger.removeClass('open');
+			closeMenu($nav);
+		}
+
 		function openMenu($nav){
 
 			// close the burger menu if it is open
@@ -176,7 +181,7 @@ var desktopNav = {
 					openPriorityMenu($subNav, $hover);
 				},
 				out: function() {
-					closeMenu($subNav);
+					closePriorityMenu($subNav, $hover);
 				},
 				timeout: 200
 			});
