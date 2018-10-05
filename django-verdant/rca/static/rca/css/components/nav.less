@@ -34,7 +34,6 @@ li {
         left: -15px;
         width: 100vw;
         background: @color-white;
-        border-top: @nav-border;
         border-bottom: @nav-border;
 
         @media @media-desktop-small {
@@ -316,10 +315,8 @@ li {
         &--priority {
             position: relative;
             left: 0;
-
-            @media @media-desktop-regular {
-                width: @subnav-width-med;
-            }
+            width: @subnav-width-med;
+            margin-top: 20px;
 
             @media @media-desktop-large {
                 width: @subnav-width-large;
