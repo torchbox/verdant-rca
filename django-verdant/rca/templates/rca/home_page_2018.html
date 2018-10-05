@@ -11,9 +11,6 @@
     {% image self.hero_image fill-1800x420 as hero_image %}
     <section class="hero homepage-block" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%), url('{{ hero_image.url }}');">
         <div class="hero__inner page-wrapper">
-            <a href="{{ header_navigation_links.navigation_link_1_url }}">{{ header_navigation_links.navigation_link_1_text }}</a>
-            <a href="{{ header_navigation_links.navigation_link_2_url }}">{{ header_navigation_links.navigation_link_2_text }}</a>
-
             <p class="hero__text js-bold">{{ self.hero_text }}</p>
 
             <div class="hero__content-wrapper">

@@ -1013,4 +1013,13 @@ function onDocumentReady(jQuery, inLightBox){
         var boldedText = splitText[0] + '<b>' + splitText[1] + '</b>' + splitText[2];
         $(this).html(boldedText);
     });
+
+    // Sticky header
+    $(window).scroll(function(){
+        var sticky = $('.js-sticky-header'),
+            scroll = $(window).scrollTop();
+
+        if (scroll > 0) sticky.addClass('fixed');
+        else sticky.removeClass('fixed');
+    });
 }

@@ -117,7 +117,7 @@
         <![endif]-->
 
         <div class="mobile-content-wrapper">
-            <div class="header__wrapper header-wrapper">
+            <div class="header__wrapper header-wrapper js-sticky-header">
                 <header class="header">
                     {% block logo %}
                         <a href="/" class="header__site-name" tabindex="2">
@@ -183,14 +183,14 @@
                     <div class="header__ctas">
                         <p class="header__strapline header__strapline--desktop">The No.1 Postgraduate Art & Design University</p>
 
-                        <a class="header__cta header__cta--apply" href="/">
-                            Apply now
+                        <a class="header__cta header__cta--apply" href="{{ header_navigation_links.navigation_link_1_url }}">
+                            {{ header_navigation_links.navigation_link_1_text }}
                             <svg class="header__cta-arrow">
                                 <use xlink:href="#arrow"></use>
                             </svg>
                         </a>
-                        <a class="header__cta header__cta--contact" href="/">
-                            Contact us
+                        <a class="header__cta header__cta--contact" href="{{ header_navigation_links.navigation_link_2_url }}">
+                            {{ header_navigation_links.navigation_link_2_text }}
                             <svg class="header__cta-arrow">
                                 <use xlink:href="#arrow"></use>
                             </svg>
