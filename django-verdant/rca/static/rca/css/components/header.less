@@ -127,6 +127,25 @@
                 fill: @color-highlight-blue;
             }
         }
+
+        &--show-menu {
+            &::after {
+                transition: all 0.2s ease;
+            }
+
+            &.expanded {
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    height: 1px;
+                    background: @color-white;
+                    z-index: 1;
+                }
+            }
+        }
     }
 
     &__icon {
@@ -144,20 +163,43 @@
             transform: translateX(-50%);
         }
 
-        &--cross {
+        &--menu {
+            opacity: 1;
+
+            .expanded & {
+                opacity: 0;
+
+                @media @media-desktop-regular {
+                    opacity: 1;
+                }
+            }
+        }
+
+        &--menu-cross {
             opacity: 0;
 
             .expanded & {
                 opacity: 1;
+
+                @media @media-desktop-regular {
+                    opacity: 0;
+                }
             }
         }
 
-        &--menu,
         &--search {
             opacity: 1;
 
             .expanded & {
                 opacity: 0;
+            }
+        }
+
+        &--search-cross {
+            opacity: 0;
+
+            .expanded & {
+                opacity: 1;
             }
         }
     }
