@@ -9,6 +9,29 @@
     padding: 10px 0;
     margin-bottom: 60px;
 
+    @media @media-desktop-small {
+        width: 90%;
+        max-width: @site-max-width;
+        margin-left: 5vw;
+    }
+
+    &__wrapper {
+        background: @color-white;
+
+        &.fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 0 15px;
+
+            @media @media-desktop-small {
+                padding: 0;
+            }
+        }
+    }
+
     &::after {
         content: '';
         width: 100vw;
@@ -43,11 +66,18 @@
         width: 170px;
         height: @mobile-logo-height;
         flex-shrink: 0;
+        transition: all 0.3s ease;
 
         @media @media-desktop-regular {
             width: 150px;
             height: 130px;
             padding: 10px 0;
+
+            .fixed & {
+                width: 140px;
+                height: 62px;
+                padding: 5px 0;
+            }
         }
     }
 
@@ -66,6 +96,9 @@
         max-width: 100px;
         padding-left: 10px;
         margin: 0;
+        max-height: 81px;
+        transition: all 0.3s ease;
+        overflow: hidden;
 
         @media @media-desktop-regular {
             font-size: 26px;
@@ -86,6 +119,11 @@
 
             @media @media-desktop-regular {
                 display: block;
+            }
+
+            .fixed & {
+                max-height: 0;
+                padding-bottom: 0;
             }
         }
     }
@@ -209,13 +247,27 @@
         margin-bottom: -42px;
         padding-top: 10px;
         width: 100%;
+        transition: all 0.3s ease;
+        max-height: 74px;
+        overflow: hidden;
 
         @media @media-desktop-regular {
+            max-height: none;
             margin-bottom: -32px;
             padding-top: 0;
             width: auto;
             position: relative;
             z-index: 1;
+        }
+
+        .fixed & {
+            max-height: 0;
+            padding-top: 0;
+            margin-bottom: 0;
+
+            @media @media-desktop-regular {
+                max-height: none;
+            }
         }
     }
 
