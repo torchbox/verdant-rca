@@ -69,6 +69,10 @@ var desktopNav = {
 		}
 
 		function openMenu($nav){
+
+			// close the burger menu if it is open
+			closeMenu($mainNav );
+
 			var $menu = $nav.find('.js-menu');
 
 			$nav.addClass('changing');
