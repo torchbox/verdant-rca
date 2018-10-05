@@ -1,35 +1,57 @@
-{% load wagtailcore_tags %}
+{% extends "rca/base.html" %}
+{% load wagtailimages_tags wagtailcore_tags rca_tags %}
 
-<h1>{{ page.title }}</h1>
+{% block body_class %}type-news-index{% endblock %}
 
-<p>{{ page.introduction }}</p>
+{% block content %}
+    <h1 class="h1 major">{{ page.title }}</h1>
 
-<form method="GET">
-    <div>
-        <label>Level of study</label>
-        <select name="level">
-            <option value="">-- Choose a level of study --</option>
-            {% for level in degree_levels %}
-                <option value="{{ level.slug }}" {% if filter_degree_level == level.slug %}selected{% endif %}>{{ level }}</option>
-            {% endfor %}
-        </select>
+    {% include "rca/includes/modules/intro-large.html" %}
+
+    <section class="filters two-filters row">
+        <form id="filters" action="{% pageurl self %}" method="GET">
+            <ul>
+                <li class="filter">
+                    <label for="level">Level of study</label>
+                    <select id="level" name="level">
+                        <option value="">All levels</option>
+                        {% for level in degree_levels %}
+                            <option value="{{ level.slug }}" {% if filter_degree_level == level.slug %}selected{% endif %}>{{ level }}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li class="filter">
+                    <label for="school">School</label>
+                    <select id="school" name="school">
+                        <option value="">All schools</option>
+                        {% for school in schools %}
+                            <option value="{{ school.slug }}" {% if filter_school == school.slug %}selected{% endif %}>{{ school }}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+            </ul>
+            <input type="submit" />
+        </form>
+    </section>
+
+    <div id="listing">
+        {% include "rca/includes/news_listing.html" with news=courses %}
     </div>
-    <div>
-        <label>School </label>
-        <select name="school">
-            <option value="">-- Choose a school --</option>
-            {% for school in schools %}
-                <option value="{{ school.slug }}" {% if filter_school == school.slug %}selected{% endif %}>{{ school }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div><input type="submit" name="search" value="search"></div>
-</form>
 
+    {% include "rca/includes/modules/twitter-feed.html" %}
 
-{% for course in courses %}
-    {% if forloop.first %}<h2>Programmes</h2>{% endif %}
-    <p><a href="{% pageurl course %}">{{ course }}</a></p>
-{% empty %}
-    <h2>There are no programmes to show</h2>
-{% endfor %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        //global var for current_page set here so that it can be used by the script being called
+        var current_page = "{{ global_news_index }}";
+
+        var filters = {{ filters|safe }};
+    </script>
+    <script src="/static/rca/js/filters.js"></script>
+{% endblock %}
