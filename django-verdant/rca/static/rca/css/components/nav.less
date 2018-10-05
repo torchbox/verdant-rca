@@ -54,6 +54,11 @@ li {
         &.ready {
             // Remove opacity after page load
             opacity: 1;
+
+            .nav__subnav {
+                display: none;
+                opacity: 1;
+            }
         }
 
         &.open {
@@ -72,7 +77,7 @@ li {
             background: @color-white;
 
             @media @media-desktop-regular {
-                margin: 20px 0;
+                margin: 40px 0;
             }
 
             // Hide the burger items that appear in the priority nav
@@ -158,6 +163,10 @@ li {
                     display: block;
                 }
 
+                .nav__subnav {
+                    opacity: 1;
+                }
+
                 .nav__subnav--priority {
                     display: block;
                 }
@@ -177,7 +186,6 @@ li {
             @media @media-desktop-regular {
                 padding-right: 50px;
             }
-
 
             &.open {
                 &.has-children {
@@ -304,35 +312,32 @@ li {
     }
 
     &__subnav {
-        display: none;
+        opacity: 0;
 
         @media @media-desktop-regular {
             position: absolute;
             top: 0;
             left: @subnav-width-med;
+            width: @subnav-width-med;
         }
 
         @media @media-desktop-large {
             left: @subnav-width-large;
+            width: @subnav-width-large;
         }
 
         &--priority {
             position: relative;
             left: 0;
-            width: @subnav-width-med;
             margin-top: 20px;
 
-            @media @media-desktop-large {
-                width: @subnav-width-large;
-            }
+            // .nav__subnav {
+            //     width: @subnav-width-med;
 
-            .nav__subnav {
-                width: @subnav-width-med;
-
-                @media @media-desktop-large {
-                    width: @subnav-width-large;
-                }
-            }
+            //     @media @media-desktop-large {
+            //         width: @subnav-width-large;
+            //     }
+            // }
         }
 
         .nav__item {

@@ -127,6 +127,25 @@
                 fill: @color-highlight-blue;
             }
         }
+
+        &--show-menu {
+            &::after {
+                transition: all 0.2s ease;
+            }
+
+            &.expanded {
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    height: 1px;
+                    background: @color-white;
+                    z-index: 1;
+                }
+            }
+        }
     }
 
     &__icon {
