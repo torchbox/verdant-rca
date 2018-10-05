@@ -321,20 +321,19 @@ li {
             @media @media-desktop-large {
                 width: @subnav-width-large;
             }
+
+            .nav__subnav {
+                width: @subnav-width-med;
+
+                @media @media-desktop-large {
+                    width: @subnav-width-large;
+                }
+            }
         }
 
         .nav__item {
             display: flex;
-
-            @media @media-desktop-regular {
-                flex-basis: @subnav-width-med;
-                width: @subnav-width-med;
-            }
-
-            @media @media-desktop-large {
-                flex-basis: @subnav-width-large;
-                width: @subnav-width-large;
-            }
+            width: 100%;
         }
 
         .nav__link {
@@ -358,9 +357,6 @@ li {
             }
 
             a {
-                // display: inline-block;
-                // margin-left: 10px;
-
                 &::before {
                     content: '';
                     width: 10px;
