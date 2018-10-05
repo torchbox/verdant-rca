@@ -144,20 +144,43 @@
             transform: translateX(-50%);
         }
 
-        &--cross {
+        &--menu {
+            opacity: 1;
+
+            .expanded & {
+                opacity: 0;
+
+                @media @media-desktop-regular {
+                    opacity: 1;
+                }
+            }
+        }
+
+        &--menu-cross {
             opacity: 0;
 
             .expanded & {
                 opacity: 1;
+
+                @media @media-desktop-regular {
+                    opacity: 0;
+                }
             }
         }
 
-        &--menu,
         &--search {
             opacity: 1;
 
             .expanded & {
                 opacity: 0;
+            }
+        }
+
+        &--search-cross {
+            opacity: 0;
+
+            .expanded & {
+                opacity: 1;
             }
         }
     }

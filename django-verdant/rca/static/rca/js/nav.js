@@ -121,6 +121,7 @@ var desktopNav = {
 			$nav.find('li:not(.selected) > ul').stop().fadeOut(100, function(){
 				$(this).find('.selected > ul').fadeIn(100)
 			});
+			$('.js-showmenu').removeClass('expanded');
 		}
 
 		function toggleMenu(event) {
@@ -129,6 +130,7 @@ var desktopNav = {
 				closeMenu($nav);
 			}else{
 				openMenu($nav);
+				$('.js-showmenu').addClass('expanded');
 			}
 		}
 
