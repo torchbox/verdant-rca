@@ -119,9 +119,13 @@
     .tweet-wrapper {
         display: flex;
         flex-direction: column;
-        height: 260px; //ie11 fix for min-height and justify-content bug see https://github.com/philipwalton/flexbugs/issues/231
-        min-height: 265px;
+        height: 209px; //ie11 fix for min-height and justify-content bug see https://github.com/philipwalton/flexbugs/issues/231
+        min-height: 210px;
         justify-content: space-between;
+    }
+
+    .tweet-meta {
+        margin-top: @spacing-one;
     }
 
     @supports  (justify-content: space-between) {
@@ -133,7 +137,8 @@
     .twitter-icon {
         display: block;
         width: 30px;
-        margin-bottom: @spacing-half;
+        height: 25px;
+        margin-bottom: @spacing-one;
 
         &:after{
             content:"";
