@@ -669,11 +669,13 @@ footer {
     }
     ul.social {
         li {
-            text-indent: 0px;
             a {
                 padding: @spacing-half;
                 width: 100px;
                 height: auto;
+                .social-hide {
+                    opacity: 1;
+                }
             }
             .facebook:after,
             .vimeo:after,
@@ -681,6 +683,10 @@ footer {
             .youtube:after {
                 content: none;
                 background-image: none;
+            }
+
+            .social-icon {
+                display: none;
             }
         }
     }

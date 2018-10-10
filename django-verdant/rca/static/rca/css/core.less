@@ -1265,8 +1265,7 @@ footer {
             display: inline-block;
             color: @color-white;
             .h7;
-            margin-left: @spacing-one;
-            text-indent: -2000px;
+            margin: @spacing-half @spacing-one @spacing-half 0;
 
             &:first-child{
                 margin-left:0;
@@ -1286,6 +1285,9 @@ footer {
                     top: 50%;
                     left: 50%;
 
+                }
+                .social-hide {
+                    opacity: 0;
                 }
             }
             .facebook {
@@ -1347,6 +1349,30 @@ footer {
                     margin-top: -22px;
                     margin-left: -19px;
                 }
+            }
+            // the next two buttons use an inline svg instead of a png from the old sprite
+            .instagram {
+                background-color: @color-instagram;
+                &:after {
+                    content: '';
+                }
+            }
+            .linkedin {
+                background-color: @color-linkedin;
+                &:after {
+                    content: '';
+                }
+            }
+            .social-icon {
+                width: 44px;
+                height: 44px;
+                fill: @color-white;
+                // mirror the after styles for the other icons
+                position: absolute;
+                margin-top: -22px;
+                margin-left: -22px;
+                top: 50%;
+                left: 50%;
             }
         }
     }
