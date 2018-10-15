@@ -15,6 +15,8 @@ class ShowcaseBlock(blocks.StructBlock):
     pages = blocks.StreamBlock([(
         'Page', blocks.PageChooserBlock()
     )])
+    link_text = blocks.CharBlock(required=False)
+    link_page = blocks.PageChooserBlock(required=False)
 
     class Meta:
         icon = 'list-ul'
