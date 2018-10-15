@@ -26,3 +26,5 @@ $(function() {
         }
     };
 });
+
+// degree level is in `item.degree_level`
