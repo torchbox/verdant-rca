@@ -5,6 +5,11 @@
         <h2 class="showcase__title homepage-heading homepage-heading--dark-grey">{{ value.title }}</a></h2>
     </div>
 
+    {# FE required here #}
+    {% if value.link_text and value.link_page %}
+        <p><a href="{% pageurl value.link_page %}">{{ value.link_text }}</a></p>
+    {% endif %}
+
     <div class="homepage-block__slider-wrapper">
         <div class="showcase__slider js-showcase">
             {% for showcase_page in showcase_pages %}
