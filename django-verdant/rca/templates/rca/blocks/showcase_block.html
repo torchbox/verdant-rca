@@ -1,8 +1,18 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="showcase homepage-block homepage-block--full-width">
-    <div class="homepage-block__wrapper">
-        <h2 class="showcase__title homepage-heading homepage-heading--dark-grey">{{ value.title }}</a></h2>
+    <div class="homepage-block__wrapper homepage-block__header">
+        <h2 class="homepage-block__title homepage-heading homepage-heading--dark-grey">{{ value.title }}</a></h2>
+
+        {% if value.link_text and value.link_page %}
+            <a class="homepage-block__more" href="{% pageurl value.link_page %}">
+                {{ value.link_text }}
+                <svg class="homepage-block__arrow" aria-hidden="true">
+                    <title>Arrow</title>
+                    <use xlink:href="#arrow-thin"></use>
+                </svg>
+            </a>
+        {% endif %}
     </div>
 
     <div class="homepage-block__slider-wrapper">

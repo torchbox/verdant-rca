@@ -50,4 +50,42 @@
         }
 
     }
+
+    &__header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: @spacing-one;
+    }
+
+    &__title {
+        margin-bottom: 0;
+    }
+
+    &__more {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: @color-highlight-blue;
+        font-family: @font-family-benton;
+
+        &:hover {
+            color: @color-pink;
+        }
+    }
+
+    &__arrow {
+        width: 39px;
+        height: 30px;
+        margin-left: @spacing-one;
+        display: inline-block;
+        fill: @color-highlight-blue;
+
+        .news-block__more:hover & {
+            fill: @color-pink;
+        }
+    }
+
 }
