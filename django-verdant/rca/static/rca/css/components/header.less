@@ -1,17 +1,17 @@
 .header {
-    @mobile-logo-height: 62px;
     z-index: 4000;
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
-    padding: 10px 0;
+    padding: 10px 16px;
 
     @media @media-desktop-small {
         width: 90%;
         max-width: @site-max-width;
         margin-left: 5vw;
+        padding: 10px 0;
     }
 
     @media @media-desktop-regular {
@@ -21,17 +21,19 @@
     }
 
     &__spacer {
-        height: 62px;
+        height: 99px;
         display: block;
         transition: all 0.3s ease;
 
         @media @media-desktop-regular {
-            height: 130px;
+            height: 120px;
         }
 
         &.fixed {
+            height: 74px;
+
             @media @media-desktop-regular {
-                height: 62px;
+                height: 54px;
             }
         }
     }
@@ -43,14 +45,6 @@
         left: 0;
         right: 0;
         z-index: 10;
-
-        &.fixed {
-            padding: 0 15px;
-
-            @media @media-desktop-small {
-                padding: 0;
-            }
-        }
     }
 
     &::after {
@@ -77,19 +71,17 @@
     &__site-name {
         display: flex;
         align-items: flex-end;
-        width: 170px;
-        height: @mobile-logo-height;
+        height: @nav-height;
         flex-shrink: 0;
         transition: all 0.3s ease;
 
         @media @media-desktop-regular {
-            width: 150px;
-            height: 130px;
-            padding: 10px 0;
+            width: 152px;
+            height: 122px;
+            padding: 8px 0;
 
             .fixed & {
-                width: 140px;
-                height: 62px;
+                height: @nav-height;
                 padding: 5px 0;
             }
         }
@@ -97,27 +89,29 @@
 
     &__logo {
         height: 100%;
-        width: auto;
+        width: 75px;
+        transition: all 0.3s ease;
+
+        @media @media-desktop-regular {
+            width: 100%;
+
+            .fixed & {
+                width: 62px;
+            }
+        }
     }
 
     &__strapline {
-        font-family: @font-family-knockout;
-        font-weight: @font-weight-knockout;
-        font-size: 17px;
-        color: #9e9e9d;
-        text-transform: uppercase;
-        line-height: 0.85;
-        max-width: 100px;
+        width: 80px;
+        height: 50px;
         padding-left: 10px;
         margin: 0;
-        max-height: 81px;
         transition: all 0.3s ease;
         overflow: hidden;
 
         @media @media-desktop-regular {
-            font-size: 26px;
-            max-width: 130px;
-            line-height: 0.75;
+            width: 106px;
+            height: 80px;
             padding-left: 0;
             padding-bottom: 5px;
         }
@@ -161,7 +155,7 @@
         background: transparent;
         padding: 10px 15px;
         border-left: @nav-border;
-        height: @mobile-logo-height;
+        height: @nav-height;
         position: relative;
         width: 54px;
 
@@ -258,8 +252,8 @@
 
     &__ctas {
         align-self: flex-end;
-        margin-bottom: -42px;
-        padding-top: 10px;
+        margin-bottom: -37px;
+        padding-top: 8px;
         width: 100%;
         transition: all 0.3s ease;
         max-height: 74px;
@@ -267,7 +261,7 @@
 
         @media @media-desktop-regular {
             max-height: none;
-            margin-bottom: -32px;
+            margin-bottom: -(@nav-height / 2);
             padding-top: 0;
             width: auto;
             position: relative;
@@ -289,13 +283,14 @@
         display: flex;
         justify-content: space-between;
         width: 180px;
-        height: 32px;
+        height: @nav-height / 2;
         padding: @spacing-half;
         padding-bottom: 6px;
         color: @color-white;
         text-transform: uppercase;
         font-family: @font-family-benton;
-        font-size: 14px;
+        font-size: 13px;
+        line-height: 1;
         cursor: pointer;
         transition: background 0.2s ease;
 
@@ -316,8 +311,8 @@
     }
 
     &__cta-arrow {
-        width: 18px;
-        height: 18px;
+        width: 14px;
+        height: 14px;
         fill: @color-white;
     }
 }

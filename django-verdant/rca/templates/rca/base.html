@@ -133,11 +133,14 @@
                     {% block logo %}
                         <a href="/" class="header__site-name" tabindex="2">
                             <p class="hidden">Royal College of Art</p>
-                            <!-- <svg class="header__logo">
+                            <svg class="header__logo">
+                                <title>RCA</title>
                                 <use xlink:href="#logo"></use>
-                            </svg> -->
-                            <img class="header__logo" src="{% static "rca/images/new-logo.png" %}">
-                            <p class="header__strapline header__strapline--mobile">The No.1 Postgraduate Art & Design University</p>
+                            </svg>
+                            <svg class="header__strapline header__strapline--mobile">
+                                <title>The No.1 Postgraduate Art & Design University</title>
+                                <use xlink:href="#strapline"></use>
+                            </svg>
                         </a>
                     {% endblock %}
 
@@ -192,7 +195,10 @@
                     </div>
 
                     <div class="header__ctas">
-                        <p class="header__strapline header__strapline--desktop">The No.1 Postgraduate Art & Design University</p>
+                        <svg class="header__strapline header__strapline--desktop">
+                            <title>The No.1 Postgraduate Art & Design University</title>
+                            <use xlink:href="#strapline"></use>
+                        </svg>
 
                         <a class="header__cta header__cta--apply" href="{{ header_navigation_links.navigation_link_1_url }}">
                             {{ header_navigation_links.navigation_link_1_text }}
