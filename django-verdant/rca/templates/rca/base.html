@@ -110,47 +110,103 @@
         {# ADD CAMPAIGNS TRACKERS https://projects.torchbox.com/projects/rca-django-cms-project/tickets/898 #}
         {% include "rca/includes/campaigns_trackers.html" %}
 
+        {% include "rca/includes/sprites.html" %}
+
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
-        <div class="mobile-menu-wrapper">
-        </div>
-        {% block enquiry_form_button %}
-            <div class="enquiry-button-wrapper">
-            {% if settings.rca.EnquiryFormSettings.form_page %}
-                <button class="enquiry-form-trigger enquiry-form-trigger--body js-enquiry-form-trigger">
-                    Enquire to study
-                </button>
-            {% endif %}
-            </div>
-        {% endblock %}
-
         <div class="mobile-content-wrapper">
-            <div class="mobile-menu-button">Inside</div>
-
-            <div class="header-wrapper">
-                <header class="page-header">
+            <span class="header__spacer js-sticky-header"></span>
+            <div class="header__wrapper js-sticky-header">
+                <header class="header">
                     {% block logo %}
-                        <a href="/" class="site-name" tabindex="2"><p>Royal College of Art</p></a>
+                        <a href="/" class="header__site-name" tabindex="2">
+                            <p class="hidden">Royal College of Art</p>
+                            <svg class="header__logo">
+                                <title>RCA</title>
+                                <use xlink:href="#logo"></use>
+                            </svg>
+                            <svg class="header__strapline header__strapline--mobile">
+                                <title>The No.1 Postgraduate Art & Design University</title>
+                                <use xlink:href="#strapline"></use>
+                            </svg>
+                        </a>
                     {% endblock %}
-                    <div class="showmenu dl-trigger">Show menu</div>
-                    <div class="showsearch">Show search</div>
-                    <div class="nav-wrapper">
-                        <div class="inner">
-                            <nav>
-                                <h2><a href="javascript: void(0);" class="trigger" tabindex="3">Menu</a></h2>
-                                <ul class="menu dl-menu">
+
+                    <div class="header__nav-bar">
+                        <div class="header__nav header__nav--priority">
+                            <nav class="nav nav--priority">
+                                <ul class="nav__menu nav__menu--priority">
+                                    {% priority_menu %}
+                                </ul>
+                            </nav>
+                        </div>
+
+                        <div class="header__nav-wrapper">
+                            <button class="header__button header__button--show-menu js-showmenu dl-trigger">
+                                <span class="hidden">Show menu</span>
+                                <svg class="header__icon header__icon--menu">
+                                    <use xlink:href="#menu"></use>
+                                </svg>
+                                <svg class="header__icon header__icon--menu-cross">
+                                    <use xlink:href="#cross"></use>
+                                </svg>
+                            </button>
+
+                            <nav class="js-nav nav nav__inner nav--main js-mobile-nav">
+                                <ul class="nav__menu nav__menu--main menu js-menu dl-menu">
                                     {% include "rca/menu.html" %}
                                 </ul>
                             </nav>
                         </div>
-                        <form class="search" action="{% url 'wagtailsearch_search' %}" method="get">
-                            <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
-                            <input type="submit" value="search" />
-                        </form>
+
+                        <div class="search js-search">
+                            <form class="search__form" action="{% url 'wagtailsearch_search' %}" method="get">
+                                <input class="search__input js-search-input" tabindex="5" id="search_box" type="text" name="q" placeholder="SEARCH"{% if query_string %} value="{{ query_string }}"{% endif %} />
+                                <button class="search__button header__button js-search-button" type="submit">
+                                    <span class="hidden">Search</span>
+                                    <svg class="header__icon">
+                                        <use xlink:href="#search"></use>
+                                    </svg>
+                                </button>
+                            </form>
+
+                            <button class="header__button header__button--show-search js-showsearch">
+                                <span class="hidden">Show search</span>
+                                <svg class="header__icon header__icon--search">
+                                    <use xlink:href="#search"></use>
+                                </svg>
+                                <svg class="header__icon header__icon--search-cross">
+                                    <use xlink:href="#cross"></use>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
+
+                    <div class="header__ctas">
+                        <svg class="header__strapline header__strapline--desktop">
+                            <title>The No.1 Postgraduate Art & Design University</title>
+                            <use xlink:href="#strapline"></use>
+                        </svg>
+
+                        <a class="header__cta header__cta--apply" href="{{ header_navigation_links.navigation_link_1_url }}">
+                            {{ header_navigation_links.navigation_link_1_text }}
+                            <svg class="header__cta-arrow">
+                                <use xlink:href="#arrow"></use>
+                            </svg>
+                        </a>
+                        <a class="header__cta header__cta--contact" href="{{ header_navigation_links.navigation_link_2_url }}">
+                            {{ header_navigation_links.navigation_link_2_text }}
+                            <svg class="header__cta-arrow">
+                                <use xlink:href="#arrow"></use>
+                            </svg>
+                        </a>
+                    </div>
+
+
                 </header>
+
             </div>
 
             <div class="page-overlay">
@@ -161,16 +217,22 @@
                 <div class="pjax-content"></div>
             </div>
 
+            {% block hero %}{% endblock %}
+
             <div class="page-wrapper">
                 <div class="page-content">
-                    <div class="inner" id="maincontent">
-                        {% block top %}{% endblock %}
-                        {% block content %}{% endblock %}
-                    </div>
+                    {% block layout %}
+                        <div class="inner" id="maincontent">
+                            {% block top %}{% endblock %}
+                            {% block content %}{% endblock %}
+                        </div>
+                    {% endblock %}
                 </div>
-                <aside>
-                    {% block sidebar %}{% endblock %}
-                </aside>
+                {% block aside %}
+                    <aside>
+                        {% block sidebar %}{% endblock %}
+                    </aside>
+                {% endblock %}
             </div>
 
             {% block extra_footer %}{% endblock %}
@@ -269,10 +331,5 @@
             {% block extra_js %}{% endblock %}
         {% endblock %}
 
-        {% block enquiry_form_sidebar %}
-            {% if settings.rca.EnquiryFormSettings.form_page %}
-                {% enquiry_form %}
-            {% endif %}
-        {% endblock %}
     </body>
 </html>

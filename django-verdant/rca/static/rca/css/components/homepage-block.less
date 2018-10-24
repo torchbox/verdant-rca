@@ -1,0 +1,53 @@
+.homepage-block {
+    margin-bottom: @spacing-onepointfive;
+
+    &--full-width {
+        width: 100vw;
+        margin-left: -15px;
+
+        @media @media-desktop-small {
+            margin-left: -5vw;
+        }
+    }
+
+    &__wrapper {
+        padding: 0 @spacing-one;
+
+        @media @media-desktop-small {
+            padding: 0;
+            max-width: 90%;
+            margin-left: 5%;
+        }
+
+        @media @media-desktop-large {
+            width: 90vw;
+            max-width: 1300px;
+        }
+    }
+
+    &__slider-wrapper {
+        max-width: calc(1300px + 10vw);
+        position: relative;
+
+        // Add a border on really large screens that show the edge of the carousel
+        @media screen and (min-width: 1444px) {
+            &::after {
+                content: '';
+                position: absolute;
+                top: -@spacing-one;
+                right: 0;
+                width: 1px;
+                height: 100%;
+                background: @color-medium-grey;
+
+                .showcase & {
+                    background: @color-light-grey;
+                    height: 400px;
+                    top: 0;
+                    opacity: 0.4;
+                }
+            }
+        }
+
+    }
+}

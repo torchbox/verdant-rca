@@ -37,51 +37,11 @@
     a {
         display: block;
 		position: relative;
-		padding: 15px 20px;
 		outline: none;
     }
 
 
-   	li.dl-back a:before{
-		display:none;
-	}
 
-	li > a:after {
-		right: 10px;
-	}	
-   
-	li.dl-back > a {
-		padding-left: 20px;
-	}
-
-	li.dl-back:after{
-		position: absolute;
-		top: 0;
-		left:5px;
-		line-height: 50px;
-		speak: none;
-		-webkit-font-smoothing: antialiased;
-		content: "<";
-	}
-
-	.children{
-		position: absolute;
-		top: 0;
-		bottom:0;
-		right:15px;
-		margin:auto;
-		line-height: 50px;
-		speak: none;
-		-webkit-font-smoothing: antialiased;
-		content: "+";
-		height:40px;
-		background-color:#f5f5f5;
-		width:40px;
-		line-height:36px;
-		font-size:30px;
-		text-align:center;
-		cursor:pointer;
-	}
 		li.dl-back .children{
 			display:none;
 		}
@@ -130,9 +90,12 @@
     .dl-menu.dl-subview li.dl-subview,
     .dl-menu.dl-subview li.dl-subview .dl-submenu,
     .dl-menu.dl-subview li.dl-subviewopen,
-    .dl-menu.dl-subview li.dl-subviewopen > .dl-submenu,
-    .dl-menu.dl-subview li.dl-subviewopen > .dl-submenu > li {
+    .dl-menu.dl-subview li.dl-subviewopen > .dl-submenu {
         display: block;
+    }
+
+    .dl-menu.dl-subview li.dl-subviewopen > .dl-submenu > li {
+        display: flex;
     }
 
     .dl-subviewopen > .children,

@@ -1,0 +1,141 @@
+.slider {
+    &__button {
+        //reset global button styles
+        line-height: 0;
+        padding: 0;
+        display: block;
+        text-transform: none;
+        background-color: transparent;
+        border: 0;
+        font-size: 0;
+
+        &:hover {
+            background-color: transparent;
+        }
+
+        // apply button styles
+        position: absolute;
+        background-image: none;
+        z-index: 1;
+        width: 32px;
+        height: 64px;
+
+        &--next {
+            right: 4px;
+            top: calc(~"50% - 31px");
+
+            @media @media-desktop-regular {
+                top: 30%;
+            }
+
+            @media @media-desktop-large {
+                top: 35%;
+            }
+
+            .testimonial & {
+                .opacity(0);
+
+                @media @media-desktop-regular {
+                    .opacity(100);
+                    right: -40px;
+                }
+            }
+
+            .events-block & {
+                right: 4px;
+                top: 30%;
+
+                @media @media-desktop-regular {
+                    right: 9px;
+                    top: 20%;
+                }
+
+                @media @media-desktop-large {
+                    top: 26%;
+                }
+            }
+        }
+
+        &--prev {
+            left: 4px;
+            top: calc(~"50% - 31px");
+
+            @media @media-desktop-regular {
+                top: 30%;
+            }
+
+            @media @media-desktop-large {
+                top: 35%;
+            }
+
+            .testimonial & {
+                .opacity(0);
+
+                @media @media-desktop-regular {
+                    .opacity(100);
+                    left: -40px;
+                }
+            }
+
+            .events-block & {
+                left: 4px;
+                top: 30%;
+
+                @media @media-desktop-regular {
+                    left: 9px;
+                    top: 20%;
+                }
+
+                @media @media-desktop-large {
+                    top: 26%;
+                }
+            }
+        }
+    }
+
+    &__arrow {
+        width: 100%;
+        height: 100%;
+        fill: @color-white;
+
+        &:hover {
+            fill: @color-pink;
+        }
+
+        .slider__button--prev & {
+            transform: scaleX(-1);
+        }
+    }
+}
+
+.slick-dots {
+    display: flex;
+    justify-content: center;
+
+    @media @media-desktop-small {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+    }
+
+    li {
+        width: 13px;
+        height: 13px;
+        margin-right: @spacing-half;
+    }
+
+    button {
+        background: transparent;
+        border-radius: 100%;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        text-indent: -10000px;
+    }
+
+    .slick-active {
+        button {
+            background: @color-white;
+        }
+    }
+}

@@ -107,12 +107,63 @@
  */
 
 .twitter-feed {
+    margin-left: -@spacing-one;
+    margin-right: -@spacing-one;
+
     li {
         .column(4);
-        padding-left: 0;
-        padding-right: 10px;
+        padding-left: @spacing-one;
+        padding-right: @spacing-one;
+    }
+
+    .tweet-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 260px; //ie11 fix for min-height and justify-content bug see https://github.com/philipwalton/flexbugs/issues/231
+        min-height: 265px;
+        justify-content: space-between;
+    }
+
+    @supports  (justify-content: space-between) {
+        .tweet-wrapper {
+            height: auto; //overrides ie11 fix for normal browsers.
+        }
+    }
+
+    .twitter-icon {
+        display: block;
+        width: 30px;
+        margin-bottom: @spacing-half;
+
+        &:after{
+            content:"";
+            display:inline-block;
+            float:right;
+            .sprite-load-standard(
+                @positionX: -14px,
+                @positionY: -150px,
+                @retinaPositionX: -28px,
+                @retinaPositionY: -300px,
+                @width: 30px,
+                @height: 25px
+            );
+        }
+    }
+
+    h3, .tweet-time, .tweet-join {
+        margin-top: 0;
+    }
+
+    &.no-borders {
+        .tweet-wrapper {
+            border-top: 0;
+            margin-top: 0;
+            padding-top: @spacing-half;
+        }
     }
 }
+
+
 
 /**
  * $Share and dialogue box

@@ -1,0 +1,29 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="homepage-block">
+    <h2 class="homepage-heading">{{ value.title }}</h2>
+
+    <div class="two-column-block homepage-block">
+        <div class="two-column-block__item">
+            <a class="two-column-block__link" href="{% pageurl value.column_one_link_page %}">
+                {% image value.column_one_image fill-600x312 class="two-column-block__image" %}
+
+                <h3 class="two-column-block__title">{{ value.column_one_link_text }}</h3>
+                <svg class="two-column-block__arrow">
+                    <use xlink:href="#arrow"></use>
+                </svg>
+            </a>
+        </div>
+
+        <div class="two-column-block__item">
+            <a class="two-column-block__link" href="{% pageurl value.column_two_link_page %}">
+                {% image value.column_two_image fill-600x312 class="two-column-block__image" %}
+
+                <h3 class="two-column-block__title">{{ value.column_two_link_text }}</h3>
+                <svg class="two-column-block__arrow">
+                    <use xlink:href="#arrow"></use>
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>

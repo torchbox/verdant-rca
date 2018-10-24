@@ -1,0 +1,384 @@
+ul,
+li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav {
+    @subnav-width-large: 320px;
+    @subnav-width-med: calc(90vw / 4);
+    display: none;
+
+    @media @media-desktop-regular {
+        display: block;
+    }
+
+    &--priority {
+        // priority nav should never be visible on mobile
+        display: none !important;
+
+        @media @media-desktop-regular {
+            display: flex !important;
+            height: 100%;
+        }
+    }
+
+    &.expanded {
+        display: block;
+    }
+
+    &__inner {
+        position: absolute;
+        top: 82px;
+        left: -15px;
+        width: 100vw;
+        background: @color-white;
+        border-bottom: @nav-border;
+
+        @media @media-desktop-small {
+            left: -5vw;
+        }
+
+        @media @media-desktop-regular {
+            top: 100%;
+            padding: 0 5vw;
+            // Hide on page load
+            opacity: 0;
+        }
+
+        @media @media-desktop-large {
+            padding-right: 0;
+        }
+
+        &.ready {
+            // Remove opacity after page load
+            opacity: 1;
+
+            .nav__subnav {
+                display: none;
+                opacity: 1;
+            }
+        }
+
+        &.open {
+            border-top: @nav-border;
+        }
+    }
+
+    &__menu {
+        &--priority {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        &--main {
+            position: relative;
+            background: @color-white;
+
+            @media @media-desktop-regular {
+                margin: 40px 0;
+            }
+
+            // Hide the burger items that appear in the priority nav
+            > .nav__item {
+                &:nth-child(1),
+                &:nth-child(2),
+                &:nth-child(3) {
+                    @media @media-desktop-regular {
+                        display: none;
+                    }
+                }
+
+                &:nth-child(4) {
+                    @media screen and (min-width: 1180px) {
+                        display: none;
+                    }
+                }
+            }
+
+            .ready & {
+                display: none;
+            }
+        }
+    }
+
+    &__active-item-arrow {
+        width: 18px;
+        height: 18px;
+        fill: @color-black;
+        transition: all 0.2s ease;
+        position: absolute;
+        left: -26px;
+        opacity: 0;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 7px;
+        padding-left: 15px;
+        border-bottom: @nav-border;
+
+        @media @media-desktop-small {
+            padding: 5px 5vw;
+        }
+
+        @media @media-desktop-regular {
+            display: block;
+            padding: 0;
+            border: 0;
+        }
+
+        &.dl-subviewopen,
+        &.dl-subview {
+            padding: 0;
+        }
+
+        &--priority {
+            > .nav__link {
+                &::after {
+                    transition: all 0.2s ease;
+                }
+            }
+
+            &.open {
+                > .nav__link {
+                    position: relative;
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        right: 0;
+                        height: 1px;
+                        background: @color-white;
+                        z-index: 1;
+                    }
+                }
+
+                .nav__inner {
+                    display: block;
+                }
+
+                .nav__subnav {
+                    opacity: 1;
+                }
+
+                .nav__subnav--priority {
+                    display: block;
+                }
+            }
+
+            // Hide the 4th priority item when there's not enough space
+            &:nth-child(4) {
+                display: none;
+
+                @media screen and (min-width: 1180px) {
+                    display: block;
+                }
+            }
+        }
+
+        &:not(.nav__item--priority) {
+            @media @media-desktop-regular {
+                padding-right: 50px;
+            }
+
+            &.open {
+                &.has-children {
+                    > .nav__link {
+                        color: @color-black;
+                        display: flex;
+                        justify-content: space-between;
+                        position: relative;
+
+                        &:hover,
+                        &:active,
+                        &:focus {
+                            color: @color-highlight-blue;
+
+                            .nav__active-item-arrow {
+                                fill: @color-highlight-blue;
+                            }
+                        }
+
+                        .nav__active-item-arrow {
+                            @media @media-desktop-regular {
+                                opacity: 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        &:first-child {
+            .nav__link--priority {
+                border-left: @nav-border;
+            }
+        }
+
+        .nav--main & {
+            @media @media-desktop-regular {
+                width: @subnav-width-med;
+            }
+
+            @media @media-desktop-large {
+                width: @subnav-width-large;
+            }
+        }
+    }
+
+    &__link {
+        font-size: 14px;
+        font-family: @font-family-benton-light;
+        color: #646464;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+
+        @media @media-desktop-regular {
+            padding-top: 0;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: @color-highlight-blue;
+        }
+
+        &--priority {
+            display: flex;
+            padding: 10px;
+            padding-right: 25px;
+            padding-left: 40px;
+            border-right: @nav-border;
+            height: @nav-height;
+            max-width: 150px;
+            position: relative;
+
+            // Force line wrapping
+            span {
+                max-width: 80px;
+            }
+        }
+    }
+
+    &__children-button {
+        border: 0;
+        width: 40px;
+        height: 40px;
+        background: #f5f5f5;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background 0.2s ease;
+
+        @media @media-desktop-regular {
+            display: none;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            background: @color-highlight-blue;
+
+            .nav__plus {
+                fill: @color-white;
+            }
+        }
+    }
+
+    &__plus {
+        width: 16px;
+        height: 16px;
+        fill: #575757;
+        transition: fill 0.2s ease;
+    }
+
+    &__chevron {
+        width: 18px;
+        height: 18px;
+        transform: rotate(90deg);
+        fill: @color-dark-grey;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+
+    &__subnav {
+        @media @media-desktop-regular {
+            position: absolute;
+            top: 0;
+            left: @subnav-width-med;
+            width: @subnav-width-med;
+            opacity: 0;
+        }
+
+        @media @media-desktop-large {
+            left: @subnav-width-large;
+            width: @subnav-width-large;
+        }
+
+        &--priority {
+            position: relative;
+            left: 0;
+            margin-top: 20px;
+        }
+
+        .nav__item {
+            display: flex;
+            width: 100%;
+        }
+
+        .nav__link {
+            width: 100%;
+        }
+
+        // Back button on mobile subnavs
+        .dl-back {
+            font-size: 14px;
+            font-family: @font-family-benton-light;
+            color: #646464;
+            padding: 15px;
+            text-transform: capitalize;
+
+            @media @media-desktop-small {
+                padding: 15px 5vw;
+            }
+
+            @media @media-desktop-regular {
+                display: none;
+            }
+
+            a {
+                width: 100%;
+
+                &::before {
+                    content: '';
+                    width: 10px;
+                    height: 10px;
+                    margin-right: 5px;
+                    border-bottom: 1px solid @color-medium-grey;
+                    border-left: 1px solid @color-medium-grey;
+                    transform: rotate(45deg);
+                    transition: border-color 0.2s ease;
+                    display: inline-block;
+                }
+
+                &:hover,
+                &:active,
+                &:focus {
+                    &::before {
+                        border-color: @color-highlight-blue;
+                    }
+                }
+            }
+        }
+    }
+}

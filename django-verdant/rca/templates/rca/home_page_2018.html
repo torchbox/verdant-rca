@@ -1,0 +1,64 @@
+{% extends "rca/full_width.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+{% endblock %}
+
+{% block body_class %}{{ block.super }} template-home-page{% endblock %}
+
+{% block hero %}
+    {% image self.hero_image fill-1800x420 as hero_image %}
+    <section class="hero homepage-block" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%), url('{{ hero_image.url }}');">
+        <div class="hero__inner page-wrapper">
+            <p class="hero__text js-bold">{{ self.hero_text }}</p>
+
+            <div class="hero__content-wrapper">
+                <h2 class="hero__title homepage-heading homepage-heading--white">Study with us</h2>
+
+                {# Browse all programmes link needs a ProgrammeFinderPage to exist #}
+                {% if programme_finder_page_url %}
+                    <a class="hero__browse-link" href="{{ programme_finder_page_url }}">
+                        <span class="hero__browse-text">
+                            <span class="hero__browse-text--text-alt">Browse</span> our programmes
+                        </span>
+
+                        <svg class="hero__browse-icon">
+                            <use xlink:href="#arrow-thin"></use>
+                        </svg>
+                    </a>
+                {% endif %}
+
+                <div class="hero__search hero-search__wrapper">
+                    <label class="hidden" for="course_search">Search our programmes: enter a title or keyword</label>
+
+                    <input class="hero-search__input" type="text" name="course_search" id="course_search" placeholder="SEARCH OUR PROGRAMMES: ENTER A TITLE OR KEYWORD">
+
+                    <svg class="hero-search__icon">
+                        <title>Search</title>
+                        <use xlink:href="#search"></use>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+    {% include_block self.body %}
+
+    <h2 class="social__heading homepage-heading homepage-heading--blue">Social</a></h2>
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+
+{% block extra_js %}
+
+    {# carousels are using slick #}
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+    <script src="{% static "rca/js/showcase-block.js" %}"></script>
+    <script src="{% static "rca/js/testimonial-block.js" %}"></script>
+    <script src="{% static "rca/js/events-block.js" %}"></script>
+    <script src="{% static "rca/js/programme-finder.js" %}"></script>
+{% endblock %}

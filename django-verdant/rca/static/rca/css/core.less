@@ -21,16 +21,11 @@
 /**
  * Contents...................You’re reading it!
  * Reset and body styles......Any remaining browser reset styles, body text style
- * Mobile menu styles.........Only visible in mobile layout
  * Lightbox styles............Used when navigating with push-state
  * Images & media.............img and other media
  * Links and lists............default styles for links and lists
  * Typography.................reusable typographical styles
  * Structure..................structure and layout
- * Header.....................header
- * Search.....................search bar
- * Top navigation.............nav
- * Show icons for search and menu at mobile size
  * Common grid divisions
  * Mixins for shared styles...reusable, non-parametric mixins
  * Sidebar elements...........anything in aside
@@ -68,101 +63,6 @@ html, body {
     min-height:100%;
 }
 
-
-/**
- * $Mobile menu styles
- */
-
-.mobile-content-wrapper{
-    position: relative;
-    float:right;
-    width:100%;
-    overflow: hidden;
-    padding: 0 15px 0 15px; /* padding for mobile */
-    background: white;
-    transition:
-        transform 300ms ease;
-
-    &--shift-left {
-        @media screen and ( min-width : 768px ) {
-            transform: translate3d(-@sidebarWidth, 0, 0);
-        }
-    }
-}
-
-.mobile-menu-wrapper{
-    position:relative;
-    float: left;
-    width: 180px;
-    margin-left:-180px;
-
-    aside{
-        display: block;
-        width: 180px;
-    }
-}
-
-.mobile-menu-button{
-    @button-height:40px;
-    font-family:@font-family-benton;
-    position: fixed;
-    z-index: 3000;
-    left: @spacing-two;
-    line-height:@spacing-two;
-    top: 8em;
-    background:#333;
-    color: white;
-    padding: 0 @grid-gutter-width*1.1;
-    font-size: 1em;
-    text-transform: uppercase;
-    outline: none !important;
-    display: none; /* javascript is now used to display this only if there is some content within the aside block */
-    transform: rotate(90deg);
-    transform-origin: top left;
-    -moz-transform: rotate(90deg);
-    -moz-transform-origin: top left;
-    -webkit-transform: rotate(90deg);
-    -webkit-transform-origin: top left;
-    -o-transform: rotate(90deg);
-    -o-transform-origin: top left;
-    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-    zoom: 1;
-
-    &:hover{
-        cursor: pointer;
-    }
-}
-
-body.show-mobile-menu{
-    overflow-x:hidden;
-
-    .mobile-menu-wrapper{
-        transform: translate3d(100%,0,0);
-        -webkit-transform: translate3d(100%,0,0);
-        -moz-transform: translate3d(100%,0,0);
-        -o-transform: translate3d(100%,0,0);
-        -ms-transform: translate3d(100%,0,0);
-    }
-    .mobile-content-wrapper{
-        border-left:1px solid @color-pink;
-        transform: translate3d(180px,0,0);
-        -webkit-transform: translate3d(180px,0,0);
-        -moz-transform: translate3d(180px,0,0);
-        -o-transform: translate3d(180px,0,0);
-        -ms-transform: translate3d(180px,0,0);
-    }
-    .mobile-menu-button{
-        color:white;
-        background-color:@color-pink;
-        display: block;
-    }
-}
-
-
-.lt-ie10 .mobile-menu-button{
-    left: 0;
-}
-
 /*
  * Lightbox styles
  */
@@ -184,6 +84,15 @@ body.lightbox-view{
         width: 100%;
         top: 86px;
     }
+}
+
+.mobile-content-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 0 15px;
+    background: white;
+    transition: transform 300ms ease;
 }
 
 /**
@@ -514,7 +423,7 @@ ul {
 
 .page-wrapper {
     .clearfix();
-    margin-top:1em;
+    margin-top: 60px;
 }
 
 .page-content {
@@ -528,7 +437,8 @@ footer {
 }
 
 aside {
-    display: none; /* hidden until large desktop size */
+    width: 100%;
+    overflow: hidden;
 }
 
 /* grey background bleeding to edge */
@@ -543,300 +453,6 @@ aside {
     .clearfix();
 }
 
-/**
- * $Header
- */
-
-/* header has to match width of page-content below so has left and right
-margins like the wrapper. When page-content scrolls up, especially the full width
-footer, we don't want stuff appearing behind the header. This 100% width wrapper
-makes sure that doesn't happen. NB may no longer be needed if we definitely have a transparent background */
-.header-wrapper {
-    margin:0 -15px ;
-    z-index: 199;
-    .clearfix();
-}
-
-header {
-    .clearfix();
-    height: @header-height-mobile;
-    z-index: 4000;
-    position: relative;
-    .site-name {
-        margin-left:-2px; /* necessary to give space for 2 x 1px gaps beside other headers buttons */
-        display: block;
-        float: left;
-        height:100%;
-        background-color:rgba(250,250,250,0.9);
-        width: 70%;
-    }
-    .site-name p { /* logo */
-        text-indent: -2000px;
-        background-image: url('@{path-static}images/logo-header-mobile.png');
-        background-repeat: no-repeat;
-        display: block;
-        width: 110px;
-        height:100%;
-        margin: 10px 0 0 15px;
-
-        @media @media-retina {
-            background-image: url("@{path-static}images/logo-header.png");
-            background-size:110px 48px;
-        }
-    }
-
-
-}
-
-
-
-/**
- * $Show icons for search and menu at mobile size
- */
-
-.showsearch, .showmenu{
-    text-indent: -2000px;
-    float:right;
-    width:15%;
-    margin-left:1px;
-    background-color:rgba(250,250,250,0.9);
-    position:relative;
-    height:100%;
-    border-left:1px solid rgba(125,125,125,0.1);
-    cursor: pointer;
-
-    &:after {
-        overflow:hidden;
-        width:100%;
-        content: " ";
-        display:block;
-        position:absolute;
-        margin:auto;
-        top: 0;
-        left: 0;
-        bottom:0;
-        right:0;
-    }
-}
-
-.showsearch {
-    &:after {
-        .sprite-load-23(
-            @positionX: -229px,
-            @positionY: -50px,
-            @retinaPositionX: -459px,
-            @retinaPositionY: -100px,
-            @width: 20px,
-            @height: 19px
-        );
-    }
-}
-
-.showmenu {
-    &:after {
-        .sprite-load-23(
-            @positionX: -48px,
-            @positionY: -48px,
-            @retinaPositionX: -97px,
-            @retinaPositionY: -97px,
-            @width: 23px,
-            @height: 13px
-        );
-    }
-
-    &.expanded:after {
-        .sprite-load-23(
-            @positionX: -12px,
-            @positionY: -48px,
-            @retinaPositionX: -25px,
-            @retinaPositionY: -97px,
-            @width: 23px,
-            @height: 13px
-        );
-    }
-
-}
-
-
-/**
- * $Search
- */
-
- form.search {
-    display: none; /* initially hidden */
-    position: fixed;
-    background-color: @color-white;
-    margin-left: -2px;
-    left: 0;
-    top: 0;
-    height: @header-height-mobile;
-    width: 70%;
-
-    input[type="text"] {
-        width: 90%;
-        .bc5;
-        color: @color-dark-grey;
-        padding: 28px;
-        border: none;
-        border-image-width: 0;
-        background-color:transparent;
-    }
-    ::-webkit-input-placeholder {
-        padding: 2px 0 0 0;
-       .t2;
-    }
-
-    :-moz-placeholder { /* Firefox 18- */
-        padding: 2px 0 0 0;
-       .t2;
-    }
-
-    ::-moz-placeholder {  /* Firefox 19+ */
-        padding: 2px 0 0 0;
-       .t2;
-    }
-
-    :-ms-input-placeholder {
-        padding: 2px 0 0 0;
-       .t2;
-    }
-    input[type="text"]:focus{
-        outline:none;
-    }
-    input[type="submit"] {
-        .sprite-load-23(
-            @positionX: -89px,
-            @positionY: -48px,
-            @retinaPositionX: -179px,
-            @retinaPositionY: -97px,
-            @width: 13px,
-            @height: 23px
-        );
-        background-color:transparent;
-        text-indent: -9999px;
-        border: 0;
-        position: relative;
-        top: 0px;
-        padding: 0;
-    }
- }
-
-form.search.expanded {
-    display: block;
-}
-
-/**
- * Search field autocomplete
- */
-.ui-autocomplete{
-    width: 100%;
-    position:absolute;
-    background-color:white;
-    z-index:3500;
-
-    li{
-        border-top:1px solid @color-light-grey;
-        &:first{
-            border:0;
-        }
-        a{
-            .h7;
-            display:block;
-            padding:0.5em 10px;
-        }
-        a:hover{
-            background-color:@color-pale-grey;
-        }
-        span{
-            .a1;
-            display:block;
-        }
-    }
-}
-.ui-helper-hidden-accessible{
-    display:none;
-}
-
-/**
- * $Top navigation
- */
-
-/* General menu styles */
-nav {
-    background-color:white;
-    background-color:rgba(255,255,255,0.95);
-    border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
-    border-bottom: 1px solid fade(@color-medium-grey, 40%);
-    padding:8px @grid-gutter-width/2;
-    position:relative;
-    z-index:999;
-    height:150px; /* gets overridden by finding tallest submenu */
-    overflow:hidden;
-    display: none;
-}
-    nav.expanded {
-        display: block;
-    }
-
-    nav ul, nav li{
-        margin:0;
-        padding:0;
-        list-style:none;
-    }
-    nav ul {
-        position:absolute;
-        top:0;
-        width:100%;
-    }
-        nav > ul{
-            top:8px; /* Same value as padding-top of nav element */
-            left:70px;
-            width:94%;
-            max-width:800px;
-        }
-        nav li {
-            display:block;
-            overflow:hidden;
-            line-height:1.3em;
-        }
-        nav a{
-            font-size:12px;
-            color:#454545;
-            text-decoration:none;
-            text-transform:uppercase;
-            display:block;
-            position:relative;
-            padding-right:7%;
-
-            &:hover{
-                color:rgb(0, 150, 255) !important;
-            }
-        }
-
-/* DL menu styles */
-nav.dl-menuwrapper{
-    margin:0;
-    height:initial;
-    overflow:visible;
-    visibility:visible;
-}
-    nav.dl-menuwrapper ul{
-        left:0;
-        top:initial;
-        background-color:white;
-        position:relative;
-        width:auto;
-    }
-    nav.dl-menuwrapper .children{
-        display:block;
-    }
-        nav.dl-menuwrapper li {
-            width:100%;
-        }
-            nav.dl-menuwrapper li > ul{
-                display:block;
-                left:0;
-            }
 
 /**
  *$Common grid divisions
@@ -2219,11 +1835,33 @@ a.hidden {
     top:80px;
 }
 
+.hidden {
+    .visuallyhidden();
+}
+
 @import "modules.less";
 @import "dlmenu.less";
 @import "enquiry-form.less";
 @import "contact.less";
+
+// New components folder added for home page redesign 2018
+@import "components/header";
+@import "components/hero";
+@import "components/hero-search";
+@import "components/homepage-heading";
+@import "components/homepage-block";
+@import "components/nav";
+@import "components/search";
+@import "components/slider";
+@import "components/social";
+
+// streamfield blocks
 @import "streamfield-blocks/base.less";
 @import "streamfield-blocks/callout.less";
 @import "streamfield-blocks/blockquote.less";
-
+@import "streamfield-blocks/showcase.less";
+@import "streamfield-blocks/news.less";
+@import "streamfield-blocks/video-block.less";
+@import "streamfield-blocks/two-column-block";
+@import "streamfield-blocks/testimonial";
+@import "streamfield-blocks/events.less";
