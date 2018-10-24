@@ -154,8 +154,13 @@ class ProgrammeModelAdmin(TaxonomyModelAdmin):
     model = models.Programme
 
 
+class DegreeLevelModelAdmin(TaxonomyModelAdmin):
+    model = models.DegreeLevel
+
+
 class TaxonomyModelAdminGroup(ModelAdminGroup):
     menu_label = 'Taxonomy'
     menu_icon = 'folder-open-inverse'
     menu_order = 750
-    items = (AreaModelAdmin, SchoolModelAdmin, ProgrammeModelAdmin)
+    items = (AreaModelAdmin, SchoolModelAdmin, ProgrammeModelAdmin,
+             DegreeLevelModelAdmin)

@@ -157,6 +157,9 @@ HELP_TEXT = {
     ('rca.StreamPage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('rca.StreamPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('rca.ContactUsPageGeneralEnquiries', 'text'): 'You can specify custom text, if you don\'t want to use a Contact snippet.',
+    ('shortcourses.ShortCoursePage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
+    ('shortcourses.ShortCoursePage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
+    ('shortcourses.ShortCoursePage', 'tags'): 'Use the "student-story" or "alumni-story" tags to make this page appear in the homepage packery (if "Show on homepage" is ticked too).',
 }
 
 
