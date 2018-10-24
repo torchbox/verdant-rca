@@ -15,16 +15,14 @@ $(function() {
             // Render image when it's available
             return $( "<li class=\"hero-search__result\"></li>" )
                 .data( "item.autocomplete", item )
-                .append( "<a class=\"hero-search__link\">" + "<img class=\"hero-search__image\" src=\"" + item.thumbnail.url + "\">" + item.title + "</a>" )
+                .append( "<a class=\"hero-search__link\">" + "<img class=\"hero-search__image\" src=\"" + item.thumbnail.url + "\">" + item.title + "<span class=\"hero-search__link--alt\">" + item.degree_level + "</span></a>" )
                 .appendTo( ul );
         } else {
             // When there's no image just render the title
             return $( "<li class=\"hero-search__result\"></li>" )
                 .data( "item.autocomplete", item )
-                .append( "<a class=\"hero-search__link\">" + item.title + "</a>" )
+                .append( "<a class=\"hero-search__link\">" + item.title + "<span class=\"hero-search__link--alt\">" + item.degree_level + "</span></a>" )
                 .appendTo( ul );
         }
     };
 });
-
-// degree level is in `item.degree_level`
