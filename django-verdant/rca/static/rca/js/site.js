@@ -1010,8 +1010,10 @@ function onDocumentReady(jQuery, inLightBox){
     $('.js-bold').each(function() {
         var text = $(this).text();
         var splitText = text.split(/[**]/);
-        var boldedText = splitText[0] + '<b>' + splitText[1] + '</b>' + splitText[2];
-        $(this).html(boldedText);
+        if (splitText.length > 1) {
+            var boldedText = splitText[0] + '<b>' + splitText[1] + '</b>' + splitText[2];
+            $(this).html(boldedText);
+        }
     });
 
     // Sticky header
