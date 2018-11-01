@@ -23,6 +23,7 @@ def global_vars(request):
             'navigation_link_1_url': header_settings.navigation_link_1_page.url,
             'navigation_link_2_text': header_settings.navigation_link_2_text,
             'navigation_link_2_url': header_settings.navigation_link_2_page.url,
+            'strapline_link_url': header_settings.strapline_link.url,
         }
     except AttributeError:
         header_navigation_links = {}

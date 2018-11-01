@@ -7005,6 +7005,13 @@ register_snippet(DoubleclickCampaignManagerActivities)
 
 @register_setting
 class HeaderSettings(BaseSetting):
+    strapline_link = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Page'
+    )
     navigation_link_1_text = models.CharField(
         max_length=15,
         verbose_name='Text'
@@ -7029,6 +7036,7 @@ class HeaderSettings(BaseSetting):
     )
 
     panels = [
+        PageChooserPanel('strapline_link'),
         MultiFieldPanel([
             FieldPanel('navigation_link_1_text'),
             PageChooserPanel('navigation_link_1_page'),

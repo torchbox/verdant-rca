@@ -185,10 +185,12 @@
                     </div>
 
                     <div class="header__ctas">
-                        <svg class="header__strapline header__strapline--desktop">
-                            <title>The No.1 Postgraduate Art & Design University</title>
-                            <use xlink:href="#strapline"></use>
-                        </svg>
+                        <a href="{{ header_navigation_links.strapline_link_url }}">
+                            <svg class="header__strapline header__strapline--desktop">
+                                <title>The No.1 Postgraduate Art & Design University</title>
+                                <use xlink:href="#strapline"></use>
+                            </svg>
+                        </a>
 
                         <a class="header__cta header__cta--apply" href="{{ header_navigation_links.navigation_link_1_url }}">
                             {{ header_navigation_links.navigation_link_1_text }}
