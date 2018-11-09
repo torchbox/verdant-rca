@@ -1,0 +1,95 @@
+.hero {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 -@spacing-one;
+    padding: 0 @spacing-one;
+
+    @media @media-desktop-small {
+        margin-right: 0;
+        margin-left: 0;
+        padding: 0;
+    }
+
+    // Stop the main page wrapper getting margin on scroll
+    + .page-wrapper {
+        margin-top: 0 !important;
+    }
+
+    &__text {
+        color: @color-white;
+        font-size: @font-size-24;
+        max-width: 745px;
+    }
+
+    &__content-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        flex-wrap: wrap;
+    }
+
+    &__search {
+        flex-basis: 100%;
+        margin-bottom: @spacing-one;
+    }
+
+    &__title {
+        @media @media-desktop-small {
+            font-size: 80px;
+        }
+    }
+
+    &__browse-link {
+        display: block;
+        color: @color-white;
+        font-family: @font-family-benton;
+        font-size: 15px;
+        text-transform: uppercase;
+        margin-bottom: @spacing-one;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        order: 1;
+        width: 100%;
+
+        @media @media-desktop-small {
+            order: 0;
+            width: auto;
+            justify-content: flex-start;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: @color-white;
+
+            .hero__browse-text--text-alt {
+                color: @color-highlight-blue;
+            }
+
+            .hero__browse-icon {
+                fill: @color-highlight-blue;
+            }
+        }
+    }
+
+    &__browse-text {
+        max-width: 120px;
+        text-align: right;
+
+        &--text-alt {
+            color: lighten(@color-highlight-blue, 25%);
+            transition: color 0.2s ease;
+        }
+    }
+
+    &__browse-icon {
+        width: 40px;
+        height: 40px;
+        fill: lighten(@color-highlight-blue, 25%);
+        margin-left: 10px;
+        transition: fill 0.2s ease;
+    }
+
+}

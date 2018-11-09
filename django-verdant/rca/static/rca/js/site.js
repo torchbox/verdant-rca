@@ -332,13 +332,15 @@ function onDocumentReady(jQuery, inLightBox){
     /* Tweet blocks */
     $('.twitter-feed-items').each(function(){
         var username = $.trim($(this).data('twitter-feed')).replace(/^@/,'');
+        var link = '<a href="http://twitter.com/' + username + '">@' + username +'</a>';
         $(this).tweet({
             join_text: 'auto',
             username: username,
             avatar_size: 32,
-            auto_join_text_default: 'from @' + username,
+            auto_join_text_default: 'from ' + link,
             loading_text: 'Checking for new tweets...',
-            count: 3
+            count: 3,
+            template: '<div class="tweet-wrapper"><span class="twitter-icon"></span>{text} <span class="tweet-meta">{time} {join}</span></div>',
         });
     });
 
@@ -374,19 +376,16 @@ function onDocumentReady(jQuery, inLightBox){
             window.disablePushState = true;
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-            $('aside').appendTo('.mobile-menu-wrapper'); //move sidebar for mobile
             $('aside .events-ads-wrapper').insertAfter('aside .related'); //events and ads move to bottom of sidebar in mobile
         },
         on: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-            $('aside').appendTo('.mobile-menu-wrapper'); //move sidebar for mobile
             $('aside .events-ads-wrapper').insertAfter('aside .related'); //events and ads move to bottom of sidebar in mobile
         },
         off: function(){
             $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
             $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
-            $('aside').insertAfter('.page-content'); //move sidebar for mobile
             $('aside .events-ads-wrapper').insertBefore('aside .related'); //events and ads moving to top of sidebar for desktop
         }
     });
@@ -396,14 +395,6 @@ function onDocumentReady(jQuery, inLightBox){
         setup: function(){},
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
-
-            // console.log($(document).height());
-            // console.log($(window).height());
-            if($(document).height()-250 > $(window).height()){
-                $('.header-wrapper, .page-wrapper, .pjax-container').affix({
-                    offset: { top: window.affixOffsetTop }
-                });
-            }
 
             /* Packery */
             $('.packery').imagesLoaded( function() {
@@ -1022,4 +1013,14 @@ function onDocumentReady(jQuery, inLightBox){
     };
 
     contactUsForm();
+
+    // apply bold text (assumes just one set of asterisks to delimit bold text)
+    $('.js-bold').each(function() {
+        var text = $(this).text();
+        var splitText = text.split(/[**]/);
+        if (splitText.length > 1) {
+            var boldedText = splitText[0] + '<b>' + splitText[1] + '</b>' + splitText[2];
+            $(this).html(boldedText);
+        }
+    });
 }

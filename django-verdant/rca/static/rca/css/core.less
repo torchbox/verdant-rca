@@ -90,18 +90,6 @@ html, body {
     }
 }
 
-.mobile-menu-wrapper{
-    position:relative;
-    float: left;
-    width: 180px;
-    margin-left:-180px;
-
-    aside{
-        display: block;
-        width: 180px;
-    }
-}
-
 .mobile-menu-button{
     @button-height:40px;
     font-family:@font-family-benton;
@@ -136,13 +124,6 @@ html, body {
 body.show-mobile-menu{
     overflow-x:hidden;
 
-    .mobile-menu-wrapper{
-        transform: translate3d(100%,0,0);
-        -webkit-transform: translate3d(100%,0,0);
-        -moz-transform: translate3d(100%,0,0);
-        -o-transform: translate3d(100%,0,0);
-        -ms-transform: translate3d(100%,0,0);
-    }
     .mobile-content-wrapper{
         border-left:1px solid @color-pink;
         transform: translate3d(180px,0,0);
@@ -528,7 +509,8 @@ footer {
 }
 
 aside {
-    display: none; /* hidden until large desktop size */
+    width: 100%;
+    overflow: hidden;
 }
 
 /* grey background bleeding to edge */
@@ -1283,8 +1265,7 @@ footer {
             display: inline-block;
             color: @color-white;
             .h7;
-            margin-left: @spacing-one;
-            text-indent: -2000px;
+            margin: @spacing-half @spacing-one @spacing-half 0;
 
             &:first-child{
                 margin-left:0;
@@ -1304,6 +1285,9 @@ footer {
                     top: 50%;
                     left: 50%;
 
+                }
+                .social-hide {
+                    opacity: 0;
                 }
             }
             .facebook {
@@ -1365,6 +1349,30 @@ footer {
                     margin-top: -22px;
                     margin-left: -19px;
                 }
+            }
+            // the next two buttons use an inline svg instead of a png from the old sprite
+            .instagram {
+                background-color: @color-instagram;
+                &:after {
+                    content: '';
+                }
+            }
+            .linkedin {
+                background-color: @color-linkedin;
+                &:after {
+                    content: '';
+                }
+            }
+            .social-icon {
+                width: 44px;
+                height: 44px;
+                fill: @color-white;
+                // mirror the after styles for the other icons
+                position: absolute;
+                margin-top: -22px;
+                margin-left: -22px;
+                top: 50%;
+                left: 50%;
             }
         }
     }
@@ -2219,11 +2227,30 @@ a.hidden {
     top:80px;
 }
 
+.hidden {
+    .visuallyhidden();
+}
+
 @import "modules.less";
 @import "dlmenu.less";
 @import "enquiry-form.less";
 @import "contact.less";
+
+// New components folder added for home page redesign 2018
+@import "components/hero";
+@import "components/hero-search";
+@import "components/homepage-heading";
+@import "components/homepage-block";
+@import "components/slider";
+@import "components/social";
+
+// streamfield blocks
 @import "streamfield-blocks/base.less";
 @import "streamfield-blocks/callout.less";
 @import "streamfield-blocks/blockquote.less";
-
+@import "streamfield-blocks/showcase.less";
+@import "streamfield-blocks/news.less";
+@import "streamfield-blocks/video-block.less";
+@import "streamfield-blocks/two-column-block";
+@import "streamfield-blocks/testimonial";
+@import "streamfield-blocks/events.less";

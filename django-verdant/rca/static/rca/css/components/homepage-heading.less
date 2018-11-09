@@ -1,0 +1,34 @@
+.homepage-heading {
+    font-family: @font-family-knockout;
+    font-weight: @font-weight-knockout;
+    font-size: 60px;
+    text-transform: uppercase;
+    color: @color-medium-grey;
+    line-height: 0.8;
+    margin: 0;
+    margin-bottom: 12px; // Not following grid. Neville specific.
+
+    @media @media-desktop-small {
+        font-size: 70px;
+    }
+
+    &--white {
+        color: @color-white;
+    }
+
+    &--dark-grey {
+        color: @color-dark-grey;
+    }
+
+    &--blue {
+        color: @color-highlight-blue;
+    }
+
+    &--light-blue {
+        color:  lighten(@color-highlight-blue, 25%);
+    }
+
+    &--light-grey {
+        color: @color-light-grey;
+    }
+}

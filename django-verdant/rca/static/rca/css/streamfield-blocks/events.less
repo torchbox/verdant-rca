@@ -1,0 +1,128 @@
+.events-block {
+    background-color: @color-dark-grey;
+    padding: @spacing-one 0;
+
+    &__header {
+        @media @media-desktop-regular {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+
+    // v similar to news more link. refactor if time.
+    &__more {
+        display: none;
+
+        @media @media-desktop-regular {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: @color-white;
+            font-family: @font-family-benton;
+        }
+
+        &:hover {
+            color: @color-pink;
+        }
+    }
+
+    // v similar to news arrow - refactor if time
+    &__more-arrow {
+        width: 39px;
+        height: 30px;
+        margin-left: @spacing-one;
+        display: inline-block;
+        fill: @color-white;
+
+        .events-block__more:hover & {
+            fill: @color-pink;
+        }
+    }
+
+    // slick overrides
+
+    // the 2 inactive slides (partially hidden) - black and inactive
+    .slick-slide:not(.slick-active) {
+        pointer-events: none;
+
+        .event-item__image-wrapper {
+            position: relative;
+
+            &:after {
+                content: '';
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                background-color: @color-charcoal;
+
+                @media @media-desktop-regular {
+                    .opacity(60);
+                }
+            }
+        }
+
+        .event-item__dates {
+            display: none;
+        }
+    }
+}
+
+.event-item {
+    display: block;
+    padding: 0 3px;
+
+    @media @media-desktop-regular {
+        padding: 0 @spacing-half;
+    }
+
+    &__wrapper {
+        position: relative;
+        margin-bottom: @spacing-one;
+    }
+
+    &__dates {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #A4429C; // design doesn't match existing colour palette
+        .opacity(90);
+        color: @color-white;
+        padding: @spacing-half;
+        padding-right: @spacing-one;
+        font-size: 14px;
+    }
+
+    &__title {
+        font-size: 18px;
+        color: @color-white;
+        margin: 0 0 @spacing-half 0;
+        .transition(all 0.5s ease);
+    }
+
+    &__audience {
+        font-size: 13px;
+        text-transform: uppercase;
+        color: @color-black;
+        font-weight: bold;
+    }
+
+    &__image {
+        .transition(all 0.5s ease);
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+        .event-item__image {
+            .filter(brightness(0.8));
+        }
+
+        .event-item__title {
+            // Regular hover colors don't really work on the grey background
+            color: #A4429C;
+        }
+    }
+}

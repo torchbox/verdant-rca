@@ -131,7 +131,8 @@ class TaxonomyModelAdmin(ModelAdmin):
         return view_class.as_view(**kwargs)(request)
 
     def get_admin_urls_for_registration(self):
-        urls = super(TaxonomyModelAdmin, self).get_admin_urls_for_registration()
+        urls = super(TaxonomyModelAdmin,
+                     self).get_admin_urls_for_registration()
 
         urls += (
             url(self.url_helper.get_action_url_pattern('usage'),

@@ -40,7 +40,7 @@ body {
     padding: 0;
     z-index: 1;
 }
-.mobile-menu-wrapper, .mobile-menu-button{
+.mobile-menu-button{
     display: none;
 }
 
@@ -597,7 +597,6 @@ aside {
     width: @right-col-width;
     margin-left: -@right-col-width;
     display:block;
-    overflow: hidden;
 
     &.affix{
         margin-top: @header-height; /* space for fixed header */
@@ -670,11 +669,13 @@ footer {
     }
     ul.social {
         li {
-            text-indent: 0px;
             a {
                 padding: @spacing-half;
                 width: 100px;
                 height: auto;
+                .social-hide {
+                    opacity: 1;
+                }
             }
             .facebook:after,
             .vimeo:after,
@@ -682,6 +683,10 @@ footer {
             .youtube:after {
                 content: none;
                 background-image: none;
+            }
+
+            .social-icon {
+                display: none;
             }
         }
     }

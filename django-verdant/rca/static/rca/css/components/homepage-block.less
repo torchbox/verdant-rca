@@ -1,0 +1,91 @@
+.homepage-block {
+    margin-bottom: @spacing-onepointfive;
+
+    &--full-width {
+        width: 100vw;
+        margin-left: -15px;
+
+        @media @media-desktop-small {
+            margin-left: -5vw;
+        }
+    }
+
+    &__wrapper {
+        padding: 0 @spacing-one;
+
+        @media @media-desktop-small {
+            padding: 0;
+            max-width: 90%;
+            margin-left: 5%;
+        }
+
+        @media @media-desktop-large {
+            width: 90vw;
+            max-width: 1300px;
+        }
+    }
+
+    &__slider-wrapper {
+        max-width: calc(1300px + 10vw);
+        position: relative;
+
+        // Add a border on really large screens that show the edge of the carousel
+        @media screen and (min-width: 1444px) {
+            &::after {
+                content: '';
+                position: absolute;
+                top: -@spacing-one;
+                right: 0;
+                width: 1px;
+                height: 100%;
+                background: @color-medium-grey;
+
+                .showcase & {
+                    background: @color-light-grey;
+                    height: 400px;
+                    top: 0;
+                    opacity: 0.4;
+                }
+            }
+        }
+
+    }
+
+    &__header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px; // Not following grid. Neville specific.
+    }
+
+    &__title {
+        margin-bottom: 0;
+    }
+
+    &__more {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: @color-highlight-blue;
+        font-family: @font-family-benton;
+
+        &:hover {
+            color: @color-pink;
+        }
+    }
+
+    &__arrow {
+        width: 39px;
+        height: 30px;
+        margin-left: @spacing-one;
+        display: inline-block;
+        fill: @color-highlight-blue;
+
+        .news-block__more:hover & {
+            fill: @color-pink;
+        }
+    }
+
+}

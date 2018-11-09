@@ -1,0 +1,84 @@
+.hero-search {
+
+    &__wrapper {
+        position: relative;
+    }
+
+    &__input {
+        background: @color-white;
+        padding-right: 50px;
+
+        &::placeholder {
+            color: @color-highlight-blue;
+            font-family: @font-family-benton;
+        }
+    }
+
+    &__icon {
+        width: 22px;
+        height: 22px;
+        fill: @color-highlight-blue;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &__result {
+        flex-basis: 100%;
+        min-width: 220px;
+        min-height: 210px;
+        padding: @spacing-half;
+        color: @color-white;
+
+        @media @media-mobile {
+            flex-basis: 50%;
+        }
+
+        @media @media-desktop-small {
+            flex-basis: 33.33%;
+        }
+
+        // Specificity to overwrite legacy styles on ui autocomplete
+        .template-home-page & {
+            border: 0;
+        }
+    }
+
+    &__link {
+        // Specificity to overwrite legacy styles on ui autocomplete
+        .template-home-page & {
+            padding: 0;
+
+            &:hover,
+            &:active,
+            &:focus {
+                background: @color-black;
+            }
+        }
+
+        &--alt {
+            font-family: @font-family-benton;
+            font-weight: 700;
+        }
+    }
+
+    &__image {
+        margin-bottom: @spacing-one;
+    }
+}
+
+// Overwrite site styles on ui autocomplete
+.template-home-page {
+    .ui-menu {
+        background: @color-black;
+        display: flex;
+        flex-wrap: wrap;
+        // 100% width minus side padding
+        max-width: calc(100vw - 30px);
+
+        @media @media-desktop-small {
+            padding: @spacing-one;
+        }
+    }
+}

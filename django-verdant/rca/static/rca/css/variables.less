@@ -122,6 +122,7 @@ you would use 'font-weight:bold;', use the '.bold()' mixin instead */
  * $Media query sizes
  * Used in some mixins to 'bubble' different versions for different media queries
  */
+@media-mobile: ~"screen and (min-width:500px)";
 @media-desktop-small: ~"screen and (min-width:768px)";
 @media-desktop-regular: ~"screen and (min-width:1024px)";
 @media-desktop-large: ~"screen and (min-width:1280px)";
@@ -152,10 +153,12 @@ you would use 'font-weight:bold;', use the '.bold()' mixin instead */
 @color-warm-grey: #b6a2a2;
 @color-middle-column-lines: #d6d6d6;
 @color-tab-grey: darken(@color-pale-grey, 10%);
+@color-icon-grey: #cdcdcd;
 
 /* highlight colours */
 @color-rca-blue: #001950;
 @color-highlight-blue: #0096ff;
+@color-highlight-blue-light: #99d5ff;
 @color-green: #bed0be;
 
 /* social colours */
@@ -163,6 +166,8 @@ you would use 'font-weight:bold;', use the '.bold()' mixin instead */
 @color-vimeo-blue: #1ab8eb;
 @color-twitter-blue: #00afef;
 @color-youtube-red: #cc181e;
+@color-instagram: #d93175;
+@color-linkedin: #0077b5;
 
 /* extra ad colours */
 @color-advert-pink: #b6a2a2;
