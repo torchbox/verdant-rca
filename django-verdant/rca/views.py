@@ -38,7 +38,7 @@ def map_programme_search_fields(pages, root_url):
         {
             'title': p.title,
             'url': p.url,
-            'thumbnail': get_image_detail(p.feed_image, 'max-165x165', root_url),
+            'thumbnail': get_image_detail(p.feed_image, 'max-300x300', root_url),
             'degree_level': p.degree_level.name if p.degree_level else None,
         }
         for p in pages
