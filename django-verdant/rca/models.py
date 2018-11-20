@@ -52,7 +52,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase, Tag
 
-from donations.forms import DonationForm
+from donations.forms import DonationForm, ANNUAL, MONTHLY, SINGLE
 from donations.mail_admins import mail_exception, full_exc_info
 import stripe
 
@@ -5754,6 +5754,8 @@ OEFormPage.promote_panels = [
 class DonationPage(Page, SocialFields):
     redirect_to_when_done = models.ForeignKey(Page, null=True, blank=False, on_delete=models.PROTECT, related_name='+', help_text=help_text('rca.DonationPage', 'redirect_to_when_done'))
     payment_description = models.CharField(max_length=255, blank=True, help_text=help_text('rca.DonationPage', 'payment_description', default="This value will be stored along with each donation made on this page to help ditinguish them from donations on other pages."))
+    monthly_stripe_plan_id = models.CharField(max_length=255, blank=True, verbose_name='monthly Stripe plan ID', help_text=help_text('rca.DonationPage', 'monthly_stripe_plan_id'))
+    annual_stripe_plan_id = models.CharField(max_length=255, blank=True, verbose_name='annual Stripe plan ID', help_text=help_text('rca.DonationPage', 'annual_stripe_plan_id'))
 
     # fields copied from StandrdPage
     intro = RichTextField(help_text=help_text('rca.DonationPage', 'intro'), blank=True)
@@ -5776,8 +5778,13 @@ class DonationPage(Page, SocialFields):
     def serve(self, request):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
+        if self.monthly_stripe_plan_id and self.annual_stripe_plan_id:
+            form_kwargs = {
+                'show_subscription': True,
+            }
+
         if request.method == "POST":
-            form = DonationForm(request.POST)
+            form = DonationForm(request.POST, **form_kwargs)
             if form.is_valid():
                 error_metadata = ""
                 try:
@@ -5788,19 +5795,43 @@ class DonationPage(Page, SocialFields):
                         card=form.cleaned_data.get('stripe_token'),
                         email=metadata.get("email", "")
                     )
+                    if 'subscription' not in form.fields or form.cleaned_data.get('subscription') == SINGLE:
+                        # When exporting the payments from the dashboard
+                        # the metadata field is not exported but the description is,
+                        # so we duplicate the metadata there as well.
+                        charge = stripe.Charge.create(
+                            customer=customer.id,
+                            amount=form.cleaned_data.get('amount'),  # amount in cents (converted by the form)
+                            currency="usd",
+                            description=self.payment_description,
+                            metadata=metadata,
+                        )
+                    else:
+                        if form.cleaned_data.get('subscription') == MONTHLY:
+                            plan_id = self.monthly_stripe_plan_id
+                        elif form.cleaned_data.get('subscription') == ANNUAL:
+                            plan_id = self.annual_stripe_plan_id
+                        else:
+                            # This should not happen.
+                            raise RuntimeError(
+                                'Subscription selected but Stripe plan IDs '
+                                'are not configured.'
+                            )
 
-                    # When exporting the payments from the dashboard
-                    # the metadata field is not exported but the description is,
-                    # so we duplicate the metadata there as well.
-                    charge = stripe.Charge.create(
-                        customer=customer.id,
-                        amount=form.cleaned_data.get('amount'),  # amount in cents (converted by the form)
-                        currency="usd",
-                        description=self.payment_description,
-                        metadata=metadata,
-                    )
+                        subscription = stripe.Subscription.create(
+                            customer=customer.id,
+                            items=[
+                                {
+                                    'plan': plan_id,
+                                    # Make sure price of plan is a cent per
+                                    # unit.
+                                    'quantity': form.cleaned_data.get('amount'),
+                                },
+                            ],
+                        )
+
                     return HttpResponseRedirect(self.redirect_to_when_done.url)
-                except stripe.CardError, e:
+                except stripe.error.CardError, e:
                     # CardErrors are displayed to the user, but we notify admins as well
                     mail_exception(e, prefix=" [stripe] ", message=error_metadata)
                     logging.error("[stripe] " + error_metadata, exc_info=full_exc_info())
@@ -5813,8 +5844,8 @@ class DonationPage(Page, SocialFields):
                     messages.error(request, "There was a problem processing your payment. Please try again later.")
         else:
             towards = request.GET.get('to')
-            form = DonationForm(initial={'donation_for': towards})
-            form = DonationForm()
+            form = DonationForm(initial={'donation_for': towards}, **form_kwargs)
+            form = DonationForm(**form_kwargs)
 
         return render(request, self.template, {
             'self': self,
@@ -5831,6 +5862,8 @@ DonationPage.content_panels = [
     MultiFieldPanel([
         FieldPanel('payment_description', classname="full"),
         PageChooserPanel('redirect_to_when_done'),
+        FieldPanel('annual_stripe_plan_id'),
+        FieldPanel('monthly_stripe_plan_id'),
     ], "Donation details")
     # InlinePanel('carousel_items', label="Carousel content"),
     # InlinePanel('related_links', label="Related links"),
