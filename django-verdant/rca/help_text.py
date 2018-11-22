@@ -139,6 +139,8 @@ HELP_TEXT = {
     ('rca.ContactUsPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('rca.DonationPage', 'payment_description'): 'This value will be stored along with each donation made on this page to help ditinguish them from donations on other pages.',
     ('rca.DonationPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
+    ('rca.DonationPage', 'annual_stripe_plan_id'): 'You need to fill this with the ID from the Stripe website.',
+    ('rca.DonationPage', 'monthly_stripe_plan_id'): 'You need to fill this with the ID from the Stripe website.',
     ('rca.InnovationRCAProjectCreator', 'person'): "Choose an existing person's page, or enter a name manually below (which will not be linked).",
     ('rca.InnovationRCAProjectCreator', 'manual_person_name'): 'Only required if the creator has no page of their own to link to',
     ('rca.InnovationRCAProject', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
