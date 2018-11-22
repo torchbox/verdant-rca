@@ -5777,11 +5777,11 @@ class DonationPage(Page, SocialFields):
 
     def serve(self, request):
         stripe.api_key = settings.STRIPE_SECRET_KEY
-
+        form_kwargs = {}
         if self.monthly_stripe_plan_id and self.annual_stripe_plan_id:
-            form_kwargs = {
+            form_kwargs.update({
                 'show_subscription': True,
-            }
+            })
 
         if request.method == "POST":
             form = DonationForm(request.POST, **form_kwargs)
