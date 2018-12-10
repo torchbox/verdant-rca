@@ -11,6 +11,7 @@ $(function() {
             window.location.href = ui.item.search_url || ui.item.url;
         }
     }).data("ui-autocomplete")._renderItem = function( ul, item ) {
+        ul.addClass('hero-search__list');
         if (item.thumbnail.url) {
             // Render image when it's available
             return $( "<li class=\"hero-search__result\"></li>" )
