@@ -6,7 +6,7 @@ from .models import (
     EVENT_LOCATION_CHOICES, EVENT_AUDIENCE_CHOICES,
     RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES,
     STAFF_TYPES_CHOICES, INNOVATIONRCA_PROJECT_TYPES_CHOICES,
-    SUSTAINRCA_CATEGORY_CHOICES, HeaderSettings, HomePage
+    SUSTAINRCA_CATEGORY_CHOICES
 )
 from .reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 
@@ -15,18 +15,6 @@ def global_vars(request):
     all_areas = Area.objects.all()
     all_schools = School.objects.all()
     all_programmes = Programme.objects.all()
-    header_settings = HeaderSettings.for_site(request.site)
-
-    try:
-        header_navigation_links = {
-            'navigation_link_1_text': header_settings.navigation_link_1_text,
-            'navigation_link_1_url': header_settings.navigation_link_1_page.url,
-            'navigation_link_2_text': header_settings.navigation_link_2_text,
-            'navigation_link_2_url': header_settings.navigation_link_2_page.url,
-        }
-    except AttributeError:
-        header_navigation_links = {}
-
 
     return {
         'global_all_schools': all_schools.values_list('slug', 'display_name'),
@@ -50,6 +38,4 @@ def global_vars(request):
         'GOOGLE_ANALYTICS_ACCOUNT': settings.GOOGLE_ANALYTICS_ACCOUNT,
         'SILVERPOP_ID': settings.SILVERPOP_ID,
         'SILVERPOP_BRANDEDDOMAINS': settings.SILVERPOP_BRANDEDDOMAINS,
-        'use_2018_redesign_template': HomePage.objects.first().use_2018_redesign_template,
-        'header_navigation_links': header_navigation_links,
     }
