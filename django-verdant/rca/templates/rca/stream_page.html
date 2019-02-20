@@ -19,7 +19,7 @@
             playerInstance.setup({
                 file: "https://wowzaprod192-i.akamaihd.net/hls/live/766214/bc46a873/playlist.m3u8",
                 {% if self.poster_image %}
-                    {% image self.poster_image original as poster_image %}
+                    {% image self.poster_image fill-1920x1080 as poster_image %}
                     image: '{{ poster_image.url|escapejs }}',
                 {% endif %}
                 mediaid: "xxxxYYYY",
@@ -34,7 +34,7 @@
                 playerInstance.load({
                     file:"https://player.vimeo.com/external/318463120.hd.mp4?s=6815a7b947819afd296f363d3175ded4d58530d0&profile_id=175",
                     {% if self.poster_image %}
-                        {% image self.poster_image original as poster_image %}
+                        {% image self.poster_image fill-1920x1080 as poster_image %}
                         image: '{{ poster_image.url|escapejs }}',
                     {% endif %}
                 });
