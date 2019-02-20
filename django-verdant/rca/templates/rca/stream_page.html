@@ -3,17 +3,44 @@
 
 {% block body_class %}type-standard{% endblock %}
 
+{% block extra_js %}
+    <script src="https://cdn.jwplayer.com/libraries/tM4QASU8.js"> </script>
+{% endblock %}
+
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
     <section class="row">
-        <div itemscope itemtype="https://schema.org/VideoObject">
-            <meta itemprop="uploadDate" content="2018-06-28T15:18:21+0100" />
-            <meta itemprop="name" content="{{ self.title|escapejs }}" />
-            <meta itemprop="duration" content="P0D" />
-            <meta itemprop="contentUrl" content="https://wowzaprod192-i.akamaihd.net/hls/live/766214/bc46a873/playlist.m3u8" />
-            <script src="https://cdn.jwplayer.com/players/fa9beBFu-tM4QASU8.js"></script>
-        </div>
+        <div id="playerElement"></div>
+
+        <script type="text/javascript">
+            var playerInstance = jwplayer("playerElement");
+
+            playerInstance.setup({
+                file: "https://wowzaprod192-i.akamaihd.net/hls/live/766214/bc46a873/playlist.m3u8",
+                {% if self.poster_image %}
+                    {% image self.poster_image original as poster_image %}
+                    image: '{{ poster_image.url|escapejs }}',
+                {% endif %}
+                mediaid: "xxxxYYYY",
+                autostart: 'true',
+                mute: 'false',
+                volume: '5',
+                androidhls: 'true'
+            });
+
+            // Load custom video file on error
+            playerInstance.on('error', function() {
+                playerInstance.load({
+                    file:"https://player.vimeo.com/external/318463120.hd.mp4?s=6815a7b947819afd296f363d3175ded4d58530d0&profile_id=175",
+                    {% if self.poster_image %}
+                        {% image self.poster_image original as poster_image %}
+                        image: '{{ poster_image.url|escapejs }}',
+                    {% endif %}
+                });
+                playerInstance.play();
+            });
+        </script>
     </section>
 
     <section class="row">
