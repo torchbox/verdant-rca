@@ -7,7 +7,7 @@
         jwplayer('playerofeAeYdLaGHz').setup({
             file: 'https://wowzaprodhd77-lh.akamaihd.net/i/d8283c5f_1@172046/master.m3u8',
             {% if poster_image %}
-                {% image poster_image original as poster_image_rendition %}
+                {% image poster_image fill-1920x1080 as poster_image_rendition %}
                 image: '{{ poster_image_rendition.url }}',
             {% endif %}
             width: '100%',
