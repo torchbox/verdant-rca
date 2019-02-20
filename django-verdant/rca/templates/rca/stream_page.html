@@ -3,38 +3,17 @@
 
 {% block body_class %}type-standard{% endblock %}
 
-{% block extra_js_head %}
-    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
-{% endblock %}
-
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
     <section class="row">
-        <div id="playerElement" style="width:100%; height:0; padding:0 0 56.25% 0"></div>
-
-        <script type="text/javascript">
-            WowzaPlayer.create('playerElement',
-                {
-                "license":"PLAY1-djfjW-Gm9MG-Fw64x-dGQ6x-eVmkW",
-                "title":"{{ self.title|escapejs }}",
-                "description":"",
-                "sourceURL":"https://wowzaprod192-i.akamaihd.net/hls/live/766214/bc46a873/playlist.m3u8",
-                "autoPlay":true,
-                "volume":"75",
-                "mute":false,
-                "loop":false,
-                "audioOnly":false,
-                "uiShowQuickRewind":true,
-                {% if self.poster_image %}
-                    {% image self.poster_image original as poster_image %}
-                    "posterFrameURL":"{{ poster_image.url|escapejs }}",
-                {% endif %}
-                "uiPosterFrameFillMode":"fill",
-                "uiQuickRewindSeconds":"30"
-                }
-            );
-        </script>
+        <div itemscope itemtype="https://schema.org/VideoObject">
+            <meta itemprop="uploadDate" content="2018-06-28T15:18:21+0100" />
+            <meta itemprop="name" content="{{ self.title|escapejs }}" />
+            <meta itemprop="duration" content="P0D" />
+            <meta itemprop="contentUrl" content="https://wowzaprod192-i.akamaihd.net/hls/live/766214/bc46a873/playlist.m3u8" />
+            <script src="https://cdn.jwplayer.com/players/fa9beBFu-tM4QASU8.js"></script>
+        </div>
     </section>
 
     <section class="row">
