@@ -7,7 +7,7 @@
         jwplayer('playerofeAeYdLaGHz').setup({
             file: 'https://wowzaprodhd77-lh.akamaihd.net/i/d8283c5f_1@172046/master.m3u8',
             {% if poster_image %}
-                {% image poster_image original as poster_image_rendition %}
+                {% image poster_image fill-1920x1080 as poster_image_rendition %}
                 image: '{{ poster_image_rendition.url }}',
             {% endif %}
             width: '100%',
@@ -25,61 +25,3 @@
         });
     </script>
 </section>
-
-<!-- 2016 embed code
-<section class="row">
-    <div id='playerofeAeYdLaGHz'></div>
-    <script type='text/javascript'>
-        jwplayer('playerofeAeYdLaGHz').setup({
-            file: 'https://ee3a48.entrypoint.cloud.wowza.com/app-46c4/ngrp:40197c94_all/playlist.m3u8',
-            {% if poster_image %}
-                {% image poster_image original as poster_image_rendition %}
-                image: '{{ poster_image_rendition.url }}',
-            {% endif %}
-            width: '100%',
-            aspectratio: '16:9',
-            autostart: 'true',
-            ga: '{}',
-            sharing: '{}',
-            androidhls: 'true'
-        });
-
-        jwplayer().onError(function(){
-            jwplayer().load({
-                file:"{% static 'rca_show/stream-error.mp4' %}",
-                {% if poster_image %}
-                    {% image poster_image original as poster_image_rendition %}
-                    image: '{{ poster_image_rendition.url }}',
-                {% endif %}
-            });
-            jwplayer().play();
-        });
-    </script>
-</section>
--->
-
-<!-- pre-2016 embed code
-<div id='my-video'></div>
-
-		<script type='text/javascript'>
-			jwplayer('my-video').setup({
-				playlist: [{
-			        image: 'https://www.rca.ac.uk/static/rca/images/livestream.holding.2.jpg',
-			        sources: [{
-			            file: "rtmp://uh8w7w.live.cloud.influxis.com/uh8w7w/_definst_/rca",
-
-			        },{
-			            file: "http://uh8w7w.live.cloud.influxis.com/uh8w7w/rca/playlist.m3u8"
-
-			        },{
-			            file: "http://influx.is/dtJk2K"
-
-			        }]
-			    }],
-			    width: '100%',
-			    aspectratio: '16:9',
-			    controls: 'true',
-			    title: '',
-			    autostart: 'true'
-			});
-		</script> -->
