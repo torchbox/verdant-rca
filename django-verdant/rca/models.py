@@ -74,7 +74,6 @@ from wagtailcaptcha.models import WagtailCaptchaEmailForm, WagtailCaptchaFormBui
 from rca_signage.constants import SCREEN_CHOICES
 from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 
-from blocks import HomepageBody
 from .help_text import help_text
 
 
@@ -2865,23 +2864,8 @@ class HomePage(Page, SocialFields):
     packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_rcanow'))
     packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_review'))
 
-
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.HomePage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.HomePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-
-    # 2018 update fields
-    use_2018_redesign_template = models.BooleanField(default=False)  # temporary field to switch template
-    hero_text = models.TextField(
-        help_text="Add asterisks around text to make it appear bold, e.g. "
-                  "'Make *this* bold.'"
-    )
-    hero_image = models.ForeignKey(
-        'rca.RcaImage',
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-    body = StreamField(HomepageBody())
 
     def future_events(self):
         return EventItem.future_objects.filter(live=True, path__startswith=self.path)
@@ -2891,27 +2875,6 @@ class HomePage(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-
-        if self.use_2018_redesign_template:
-            try:
-                last_viewed_programme = ProgrammePage.objects.get(
-                    id=request.session.get('last_viewed_programme')
-                )
-            except ProgrammePage.DoesNotExist:
-                last_viewed_programme = None
-
-            try:
-                programme_finder_page_url = \
-                    ProgrammeFinderPage.objects.live().first().url
-            except AttributeError:
-                programme_finder_page_url = ''
-
-            return render(request, 'rca/home_page_2018.html', {
-                'self': self,
-                'last_viewed_programme': last_viewed_programme,
-                'programme_count': ProgrammePage.objects.live().public().count(),
-                'programme_finder_page_url': programme_finder_page_url,
-            })
 
         exclude = []
 
@@ -3047,15 +3010,6 @@ class HomePage(Page, SocialFields):
         InlinePanel('manual_adverts', label="Manual adverts"),
     ]
 
-    content_panels_2018 = [
-        FieldPanel('use_2018_redesign_template'),
-        MultiFieldPanel([
-            FieldPanel('hero_text'),
-            ImageChooserPanel('hero_image'),
-        ], heading="Hero"),
-        StreamFieldPanel('body'),
-    ]
-
     promote_panels = [
         MultiFieldPanel([
             FieldPanel('seo_title'),
@@ -3076,7 +3030,6 @@ class HomePage(Page, SocialFields):
 
     edit_handler = TabbedInterface([
         ObjectList(content_panels, heading='Content'),
-        ObjectList(content_panels_2018, heading='New Content'),
         ObjectList(promote_panels, heading='Promote'),
         ObjectList(Page.settings_panels, heading='Settings', classname='settings')
     ])
@@ -7001,40 +6954,3 @@ class DoubleclickCampaignManagerActivities(models.Model):
 
 
 register_snippet(DoubleclickCampaignManagerActivities)
-
-
-@register_setting
-class HeaderSettings(BaseSetting):
-    navigation_link_1_text = models.CharField(
-        max_length=15,
-        verbose_name='Text'
-    )
-    navigation_link_1_page = models.ForeignKey(
-        'wagtailcore.Page',
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Page'
-    )
-    navigation_link_2_text = models.CharField(
-        max_length=15,
-        verbose_name='Text'
-    )
-    navigation_link_2_page = models.ForeignKey(
-        'wagtailcore.Page',
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name='Page'
-    )
-
-    panels = [
-        MultiFieldPanel([
-            FieldPanel('navigation_link_1_text'),
-            PageChooserPanel('navigation_link_1_page'),
-        ], heading='Navigation Link 1'),
-        MultiFieldPanel([
-            FieldPanel('navigation_link_2_text'),
-            PageChooserPanel('navigation_link_2_page'),
-        ], heading='Navigation Link 2')
-    ]
