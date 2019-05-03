@@ -201,6 +201,7 @@ EVENT_LOCATION_CHOICES = (
 CAMPUS_CHOICES = (
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
+    ('vauxhall', 'The Workshop, Vauxhall'),
 )
 
 EVENT_GALLERY_CHOICES = (
@@ -267,6 +268,31 @@ INNOVATIONRCA_PROJECT_TYPES_CHOICES = (
 )
 
 SPECIALISM_CHOICES = (
+    ('2018/19', (
+        ('animation--experimental-animation-pathway', 'Animation: Experimental Animation Pathway'),
+        ('animation--documentary-animation-pathway', 'Animation: Documentary Animation Pathway'),
+        ('animation--narrative-animation-pathway', 'Animation: Narrative Animation Pathway'),
+        ('contemporary-art-practice--critical-practice-pathway', 'Contemporary Art Practice: Critical Practice Pathway'),
+        ('contemporary-art-practice--moving-image-pathway', 'Contemporary Art Practice: Moving Image Pathway'),
+        ('contemporary-art-practice--performance-pathway', 'Contemporary Art Practice: Performance Pathway'),
+        ('contemporary-art-practice--public-sphere-pathway', 'Contemporary Art Practice: Public Sphere Pathway'),
+        ('fashion--millinery', 'Fashion: Millinery'),
+        ('fashion--footwear', 'Fashion: Footwear'),
+        ('fashion--accessories', 'Fashion: Accessories'),
+        ('fashion--knitwear', 'Fashion: Knitwear'),
+        ('ied--experimental-design', 'IED: Experimental Design'),
+        ('ied--moving-image-design', 'IED: Moving Image Design'),
+        ('ied--sound-design', 'IED: Sound Design'),
+        ('interior-design--exhibition-design-pathway', 'Interior Design: Exhibition Design Pathway'),
+        ('textiles--knit', 'Textiles: Knit'),
+        ('textiles--mixed-media', 'Textiles: Mixed-media'),
+        ('textiles--print', 'Textiles: Print'),
+        ('textiles--smart-textiles', 'Textiles: Smart Textiles'),
+        ('textiles--weave', 'Textiles: Weave'),
+        ('visual-communication--graphic-design', 'Visual Communication: Graphic Design'),
+        ('visual-communication--illustration', 'Visual Communication: Illustration'),
+        ('visual-communication--experimental-communication', 'Visual Communication: Experimental Communication'),
+    )),
     ('2016/17', (
         ('accessories', 'Accessories'),
         ('footwear', 'Footwear'),
