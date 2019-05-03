@@ -201,6 +201,7 @@ EVENT_LOCATION_CHOICES = (
 CAMPUS_CHOICES = (
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
+    ('vauxhall', 'The Workshop, Vauxhall'),
 )
 
 EVENT_GALLERY_CHOICES = (
