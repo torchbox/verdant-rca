@@ -7,7 +7,15 @@
 * ```vagrant ssh```
 * ```djrun```
 * Edit your code locally, browse at [localhost:8000](http://localhost:8000/)
-* 
+*
+
+
+# Gotchas
+
+You may encounter a "Invalid input of type: 'CacheKey'" error when running a new box locally. This is due to a bug in django-redis (see https://github.com/niwinz/django-redis/issues/342) and can be worked around by adding:
+
+`redis==2.10.6` to `django-verdant/requirements.txt` and then running `pip install -r requirements.txt`
+
 
 # Implementation notes
 
