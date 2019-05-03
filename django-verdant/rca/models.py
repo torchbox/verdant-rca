@@ -2893,14 +2893,14 @@ class HomePage(Page, SocialFields):
         news = NewsItem.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
-        events = EventItem.past_objects\
+        events = EventItem.future_objects\
             .filter(live=True, show_on_homepage=True)\
             .exclude(audience='rcatalks')\
             .extra(select={
                 'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
             })\
             .order_by('-latest_date')
-        events_rcatalks = EventItem.past_objects\
+        events_rcatalks = EventItem.future_objects\
             .filter(live=True, show_on_homepage=True, audience='rcatalks')\
             .extra(select={
                 'is_rca_talk': True,
