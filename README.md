@@ -80,3 +80,8 @@ The desktop menu uses the same markup, but completely different functionality. T
 
 Harvey is used (as it is throughout the site) in order to switch between the desktop and mobile versions of the menu as the screen resizes.
 
+### My RCA
+
+Students (synced via LDAP) can access My RCA area via `/my-rca` to log in. To test, create a test user account with no specific role.
+
+On new builds, you will need to set pages for the 'Student pages' and 'RCA Now pages' at `/admin/settings/student_profiles/studentprofilessettings/1/` before you can use the My RCA area.
