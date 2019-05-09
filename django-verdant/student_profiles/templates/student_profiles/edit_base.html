@@ -79,12 +79,13 @@
             {% endif %}
 
         {% endif %}
-
+        {% comment %}
         <ul class="outer-menu rca-now-link" id="menu-rcanow">
             <li{% if nav_now %} class="active"{% endif %}>
                     <a href="{% url 'nowpages:overview' %}">RCA Now</a>
             </li>
         </ul>
+        {% endcomment %}
     </nav>
 </div>
 
