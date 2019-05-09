@@ -23,6 +23,22 @@ You may encounter a "Invalid input of type: 'CacheKey'" error when running a new
 * Course registration: https://projects.torchbox.com/projects/rca-django-cms-project/notebook/Implementation%20notes%20for%20Course%20registration%20(%23788).md
 
 
+# My RCA
+
+Students (synced via LDAP) can access My RCA area via `/my-rca` to log in. To test, create a test user account with a student role.
+
+## Set up My RCA on new builds (clean db)
+
+If you are starting a new build (ie without using live db) you will need to set pages for the 'Student pages' and 'RCA Now pages' at `/admin/settings/student_profiles/studentprofilessettings/1/` before you can use the My RCA area.
+
+Also you will need to add the following user groups (with same ID)
+
+- Students => 3
+- MA Students => 4
+- MPhil Students => 5
+- PhD Students => 6
+
+
 # Front end notes on the main RCA build
 
 
@@ -79,18 +95,3 @@ The mobile menu uses a library called dl-menu, which has been used since the beg
 The desktop menu uses the same markup, but completely different functionality. There is custom javascript to reveal elements as you hover over them in the mega menu. In order to achieve this, when the desktop menu is initialised it calculates the maximum possible height of all the submenus. This means that care needs to be taken when adjusting CSS for the menu - any changes that might affect the height of the menus before it is revealed (e.g. display, width etc) should be avoided.
 
 Harvey is used (as it is throughout the site) in order to switch between the desktop and mobile versions of the menu as the screen resizes.
-
-### My RCA
-
-Students (synced via LDAP) can access My RCA area via `/my-rca` to log in. To test, create a test user account with a student role.
-
-#### Set up My RCA on new builds (clean db)
-
-If you are starting a new build (ie without using live db) you will need to set pages for the 'Student pages' and 'RCA Now pages' at `/admin/settings/student_profiles/studentprofilessettings/1/` before you can use the My RCA area.
-
-Also you will need to add the following user groups (with same ID)
-
-- Students => 3
-- MA Students => 4
-- MPhil Students => 5
-- PhD Students => 6
