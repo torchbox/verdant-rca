@@ -82,6 +82,15 @@ Harvey is used (as it is throughout the site) in order to switch between the des
 
 ### My RCA
 
-Students (synced via LDAP) can access My RCA area via `/my-rca` to log in. To test, create a test user account with no specific role.
+Students (synced via LDAP) can access My RCA area via `/my-rca` to log in. To test, create a test user account with a student role.
 
-On new builds, you will need to set pages for the 'Student pages' and 'RCA Now pages' at `/admin/settings/student_profiles/studentprofilessettings/1/` before you can use the My RCA area.
+#### Set up My RCA on new builds (clean db)
+
+If you are starting a new build (ie without using live db) you will need to set pages for the 'Student pages' and 'RCA Now pages' at `/admin/settings/student_profiles/studentprofilessettings/1/` before you can use the My RCA area.
+
+Also you will need to add the following user groups (with same ID)
+
+- Students => 3
+- MA Students => 4
+- MPhil Students => 5
+- PhD Students => 6
