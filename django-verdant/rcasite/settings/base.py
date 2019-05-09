@@ -294,11 +294,6 @@ SILVERPOP_ID = ''
 SILVERPOP_BRANDEDDOMAINS = ''
 
 
-# See django-verdant/student_profiles/models.py
-NEW_STUDENT_INDEX = "6201"
-RCA_NOW_INDEX = "36"
-
-
 # ReCaptcha settings
 RECAPTCHA_PUBLIC_KEY = 'put your public key here'
 RECAPTCHA_PRIVATE_KEY = 'put your recaptcha secret key here'

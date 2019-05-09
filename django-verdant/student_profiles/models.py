@@ -15,14 +15,12 @@ class StudentProfilesSettings(BaseSetting):
         related_name='+',
         help_text="New student pages will be added as children of this page.",
         verbose_name="Student pages",
-        default=settings.NEW_STUDENT_INDEX
     )
     rca_now_index = models.ForeignKey(
         'wagtailcore.Page', null=False, blank=False, on_delete=models.PROTECT,
         related_name='+',
         help_text="New RCA Now pages will be added as children of this page.",
         verbose_name="RCA Now pages",
-        default=settings.RCA_NOW_INDEX
     )
     show_pages_enabled = models.BooleanField(
         default=True,
