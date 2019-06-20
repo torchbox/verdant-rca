@@ -33,3 +33,6 @@ Markdown==2.3.1
 
 # Reports requirements
 unicodecsv==0.14.1
+
+# Pinned as django-redis has incompatibility with later versions
+redis==2.10.6
