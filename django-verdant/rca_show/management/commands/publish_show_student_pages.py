@@ -36,10 +36,17 @@ class Command(BaseCommand):
             default=False,
             help="Don't perform any action",
         )
+        parser.add_argument(
+            '--year',
+            type=int,
+            dest='year',
+            default=2019,
+            help="The graduation year for which to publish student profiles",
+        )
 
     def handle(self, **options):
         q = models.Q(in_show=True)
-        q &= models.Q(graduation_year=2018)
+        q &= models.Q(graduation_year=options['year'])
 
         final_q = models.Q()
         final_q |= convert_degree_filters(q, 'ma')
