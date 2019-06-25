@@ -1,0 +1,68 @@
+{% extends "rca_show/base.html" %}
+{% load compress static show_tags wagtailcore_tags %}
+
+{% block body_class %}showrca theme-show2015 {% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
+
+{% block logo %}
+    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><img src="{% static 'rca_show/images/logo-2019.png' %}" alt="Show RCA {{ self.show_index.year }}" /></a>
+{% endblock %}
+
+{% block extra_footer %}
+    <div class="prefooter standard-wrapper">
+        <a href="/" class="logo-rca">Royal College of Art</a>
+    </div>
+
+    <div class="footer full-width-footer">
+        <div class="footer-wrapper">
+            <footer>
+                <ul>
+                    <li>
+                        <address>
+                            <h2>Show Architecture</h2>
+                            The Workshop<br />
+                            26 Lambeth High Street<br />
+                            London SE1 7JS
+                        </address>
+                    </li>
+                    <li>
+                        <address>
+                            <h2>Show Battersea</h2>
+                            Royal College of Art<br />
+                            1 Hester Road<br />
+                            London SW11 4AY
+                        </address>
+                    </li>
+
+                    <li>
+                        <address>
+                            <h2>Show Kensington</h2>
+                            Royal College of Art<br />
+                            Kensington Gore<br />
+                            London SW7 2EU
+                        </address>
+                    </li>
+
+                </ul>
+                <br/>
+                <ul>
+
+                    {% for item in self.show_index.menu_items %}
+                        <li>
+                            <a href="{{ item.0 }}">{{ item.1 }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+    {% if self.show_index.overlay_intro %}
+        <div id="overlay" class="fade">
+            <div class="content">
+                <video autoplay="autoplay" class="full-screen-video" muted>
+                    <source src="https://player.vimeo.com/external/338852500.hd.mp4?s=7346ec4e64b86b4cd24780661966dce78f11b17c&profile_id=175&download=1">
+                </video>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

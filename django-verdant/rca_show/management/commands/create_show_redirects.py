@@ -32,6 +32,20 @@ SUB_EXPRESSIONS = (
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('show_index_id', type=int)
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            dest='dry-run',
+            default=False,
+            help="Don't perform any action",
+        )
+        parser.add_argument(
+            '--year',
+            type=int,
+            dest='year',
+            default=2019,
+            help="The graduation year to use in the redirect slug",
+        )
 
     def handle(self, show_index_id, **options):
         # Find show index page
@@ -46,7 +60,7 @@ class Command(BaseCommand):
             for sub_expr in sub_expressions_compiled:
                 name = sub_expr[0].sub(sub_expr[1], name)
 
-            from_url = 'show2018/' + slugify(name) + '/'
+            from_url = 'show' + str(options['year']) + '/' + slugify(name) + '/'
 
             # Find students url inside
             if show_index.is_programme_page:
@@ -57,9 +71,13 @@ class Command(BaseCommand):
             # Normalise the URL
             from_url_normalised = Redirect.normalise_path(from_url)
 
-            # Create the redirect
-            redirect, created = Redirect.objects.get_or_create(old_path=from_url_normalised, defaults={'redirect_link': to_url})
+            if options['dry-run'] is False:
+                # Create the redirect
+                redirect, created = Redirect.objects.get_or_create(old_path=from_url_normalised, defaults={'redirect_link': to_url})
 
             # Print message
-            if created:
-                print "Created redirect: " + from_url_normalised + " to: " + to_url + " for student: " + student.title + " (" + str(student.id) + ")"
+            redirect_description = from_url_normalised + " to: " + to_url + " for student: " + student.title + " (" + str(student.id) + ")"
+            if options['dry-run'] is True:
+                print "Would create redirect: " + redirect_description
+            elif created:
+                print "Created redirect: " + redirect_description
