@@ -18,3 +18,10 @@ def offline_context():
             'STATIC_URL': settings.STATIC_URL,
             'base_template': get_base_show_template(year),
         }
+
+    # Make sure we always yield something so django-compressor doesn't break
+    # See https://github.com/django-compressor/django-compressor/issues/818
+    if not years:
+        yield {
+            'STATIC_URL': settings.STATIC_URL,
+        }
