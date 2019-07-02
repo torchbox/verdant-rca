@@ -3,17 +3,15 @@
 
 {% block body_class %}type-standard{% endblock %}
 
+{% block extra_js_head %}
+    <script id='player_embed' src='//player.cloud.wowza.com/hosted/nhyjq8rd/wowza.js' type='text/javascript'></script>
+{% endblock %}
+
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
     <section class="row">
-        <div itemscope itemtype="https://schema.org/VideoObject">
-            <meta itemprop="uploadDate" content="Tue Jun 27 2017 11:51:19 GMT+0100 (British Summer Time)"/>
-            <meta itemprop="name" content="RCA Convocation 2019"/>
-            <meta itemprop="duration" content="P0D" />
-            <meta itemprop="contentUrl" content="https://wowzaprod192-i.akamaihd.net/hls/live/766214/bc46a873/playlist.m3u8"/>
-            <script src="https://cdn.jwplayer.com/players/4HPt6KD8-tM4QASU8.js"></script>
-        </div>
+        <div id='wowza_player'></div>
     </section>
 
     <section class="row">
