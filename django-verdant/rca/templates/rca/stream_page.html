@@ -3,36 +3,17 @@
 
 {% block body_class %}type-standard{% endblock %}
 
-{% block extra_js_head %}
-    <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
-{% endblock %}
-
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
     <section class="row">
-        <div id="playerElement" style="width:100%; height:0; padding:0 0 56.25% 0"></div>
-        <script type="text/javascript">
-            WowzaPlayer.create('playerElement',
-                {
-                "license":"PLAY1-fkhkT-WfFnW-yjdDn-n4Qeb-JphCj",
-                "title":"",
-                "description":"",
-                "sourceURL":"https%3A%2F%2Fwowzaprod192-i.akamaihd.net%2Fhls%2Flive%2F766214%2Fbc46a873%2Fplaylist.m3u8",
-                "autoPlay":true,
-            "autoPlay":"true",
-                "volume":"75",
-                "mute":false,
-                "loop":false,
-                "audioOnly":false,
-                "uiShowQuickRewind":true,
-                "posterFrameURL":"https%3A%2F%2Fwebcast-live.co.uk%2Fwp-content%2Fuploads%2F2019%2F07%2FLive-streaming-slide-2019-slide-1.png",
-                "endPosterFrameURL":"https%3A%2F%2Fwebcast-live.co.uk%2Fwp-content%2Fuploads%2F2019%2F07%2FLive-streaming-slide-2019-slide-1.png",
-                "uiPosterFrameFillMode":"fill",
-                "uiQuickRewindSeconds":"30"
-                }
-            );
-        </script>
+        <div itemscope itemtype="https://schema.org/VideoObject">
+            <meta itemprop="uploadDate" content="Tue Jun 27 2017 11:51:19 GMT+0100 (British Summer Time)"/>
+            <meta itemprop="name" content="RCA Convocation 2019"/>
+            <meta itemprop="duration" content="P0D" />
+            <meta itemprop="contentUrl" content="https://wowzaprod192-i.akamaihd.net/hls/live/766214/bc46a873/playlist.m3u8"/>
+            <script src="https://cdn.jwplayer.com/players/4HPt6KD8-tM4QASU8.js"></script>
+        </div>
     </section>
 
     <section class="row">
