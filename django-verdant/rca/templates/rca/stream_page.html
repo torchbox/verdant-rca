@@ -3,13 +3,15 @@
 
 {% block body_class %}type-standard{% endblock %}
 
+{% block extra_js_head %}
+    <script id='player_embed' src='//player.cloud.wowza.com/hosted/nhyjq8rd/wowza.js' type='text/javascript'></script>
+{% endblock %}
+
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
     <section class="row">
-        {% if self.poster_image %}
-            {% image self.poster_image fill-1920x1080 %}
-        {% endif %}
+        <div id='wowza_player'></div>
     </section>
 
     <section class="row">
