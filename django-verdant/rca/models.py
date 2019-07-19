@@ -4572,14 +4572,6 @@ class RcaNowPage(Page, SocialFields):
     class Meta:
         verbose_name = 'RCA Now Page'
 
-    def author_profile_page(self):
-        """Return the profile page for the author of this post, if one exists (and is live)"""
-        if self.owner:
-            try:
-                return NewStudentPage.objects.filter(live=True, owner=self.owner)[0]
-            except IndexError:
-                return None
-
 
 RcaNowPage.content_panels = [
     InlinePanel('carousel_items', label="Carousel content"),
@@ -4817,13 +4809,6 @@ class RcaBlogPage(Page, SocialFields):
     class Meta:
         verbose_name = 'Blog Page'
 
-    def author_profile_page(self):
-        """Return the profile page for the author of this post, if one exists (and is live)"""
-        if self.owner:
-            try:
-                return NewStudentPage.objects.filter(live=True, owner=self.owner)[0]
-            except IndexError:
-                return None
 
     def blog_index(self):
         """Return the parent blog index for the blog page, so that it can be displayed in the Homepage packery area"""
