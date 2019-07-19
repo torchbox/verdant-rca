@@ -230,7 +230,7 @@ function onDocumentReady(jQuery, inLightBox){
     showHideSlide('.showbody', '.hide-body', '.hide-body');
     showHideSlide('.contact-dropdown .contact-dropdown-header', '.contact-dropdown .contact-dropdown-header', '.contact-dropdown .dropdown', false);
     showHideSlide('.research-show-more', '.school-research-list', '.research-more', false);
-    
+
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
@@ -718,9 +718,44 @@ function onDocumentReady(jQuery, inLightBox){
       return dontShowCookieNotice;
     };
 
+    var displaySurveyBanner = function(context, settings) {
+        // Notice and message
+        $('#survey-banner').addClass('survey-banner--show');
+
+        // Close button
+        $(document).delegate('#survey-banner-close', 'click', function() {
+          $(".survey-banner").slideUp("slow");
+          return false;
+        });
+
+        $(".survey-banner").slideDown("slow");
+
+        // Set notice to never show again by default.
+        dontShowSurveyBannerAgain();
+      };
+
+      var dontShowSurveyBannerAgain = function() {
+        // domainroot root variable is set in base.html - needed so the same cookie works across all subdomains
+
+        // set or extend the cookie life for a year
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + 365);
+        document.cookie = "dontShowSurveyBanner=" + "TRUE; expires=" + exdate.toUTCString() + ";domain=" + domainroot + ";path=/";
+      };
+
+      var pleaseShowSurveyBanner = function() {
+        // Don't show the notice if we have previously set a cookie to hide it
+        var dontShowSurveyBanner = (document.cookie.indexOf("dontShowSurveyBanner") != -1) ? false : true;
+        return dontShowSurveyBanner;
+      };
+
+
     $('body').once(function(){
       if (pleaseShowCookieNotice() == true) {
         displayCookieNotice();
+      }
+      if (pleaseShowSurveyBanner() == true) {
+        displaySurveyBanner();
       }
     });
 
@@ -760,9 +795,9 @@ function onDocumentReady(jQuery, inLightBox){
                 // Add blank <option> as placeholder
                 $select.prepend(
                     $( '<option>' , {
-                        value    : '', 
-                        text     : placeholderText, 
-                        selected : true 
+                        value    : '',
+                        text     : placeholderText,
+                        selected : true
                     }
                 ));
 
@@ -783,7 +818,7 @@ function onDocumentReady(jQuery, inLightBox){
                     $wrapper.addClass( wrapperFixed );
                     $triggerButton.addClass( toggled );
                     $('.enquiry-form-trigger').addClass('enquiry-form-trigger--fixed');
-                    
+
                     // Show/hide triggers
                     if ( $(window).width() > breakpoint.mobile ) {
                         $triggerBody.hide();
@@ -794,7 +829,7 @@ function onDocumentReady(jQuery, inLightBox){
                     }
 
                     state.open = true;
-                    
+
                     if ( state.hasData ) {
                         state.busy = false;
                     }
