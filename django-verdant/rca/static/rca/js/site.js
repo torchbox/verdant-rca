@@ -720,7 +720,7 @@ function onDocumentReady(jQuery, inLightBox){
 
     var displaySurveyBanner = function(context, settings) {
         // Notice and message
-        $('body').prepend('<div class="survey-banner" style="display: block;"><div class="survey-banner-content"><a href="https://surveymonkey.com" class="button">Participate</a><a id="survey-banner-close" class="button" href="#">X</a><p class="survey-banner-text bc4 body-text-style">Give us feedback - receive a £10 amazon voucher.</p></div></div>');
+        $('#survey-banner').addClass('survey-banner--show');
 
         // Close button
         $(document).delegate('#survey-banner-close', 'click', function() {

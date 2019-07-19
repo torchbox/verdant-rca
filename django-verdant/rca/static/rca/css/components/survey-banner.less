@@ -1,0 +1,111 @@
+.survey-banner {
+    background-color: @color-white;
+    position: relative;
+    padding-top: 20px;
+    padding-bottom: 15px;
+    display: none;
+
+    &--show {
+        display: block;
+    }
+
+    @media @media-desktop-small {
+        padding: 0;
+    }
+
+    &__content {
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+
+        @media @media-desktop-small {
+            max-width: 650px;
+            margin: 0 auto;
+            flex-wrap: nowrap;
+            align-items: center;
+        }
+    }
+
+    &__image-wrapper {
+        padding: 5px 20px 0;
+
+        @media @media-desktop-small {
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+    }
+
+    &__image {
+        width: auto;
+        height: 30px;
+    }
+
+    &__text {
+        font-family: @font-family-benton-light;
+        font-size: 18px;
+        line-height: @line-height-7;
+        margin: 0;
+        max-width: calc(100% - 155px); // 100% width minus width of amazon voucher image and close button
+
+        @media @media-desktop-small {
+            display: flex;
+            font-size: 15px;
+            align-items: center;
+            padding: 0 25px 0 20px;
+            max-width: none;
+        }
+    }
+
+    &__dash {
+        display: none;
+
+        @media @media-desktop-small {
+            display: inline;
+        }
+    }
+
+    &__bold-text {
+        display: block;
+        font-family: @font-family-benton;
+        font-size: 15px;
+
+        @media @media-desktop-small {
+            display: inline;
+        }
+    }
+
+    &__button {
+        width: 100%;
+        flex-basis: 100%;
+        font-size: 15px;
+        text-align: center;
+        padding: 14px 23px;
+        margin-top: 20px;
+
+        @media @media-desktop-small {
+            flex-basis: auto;
+            font-size: 12px;
+            margin: 0;
+            width: auto;
+        }
+    }
+
+    &__close {
+        position: absolute;
+        top: 11px;
+        right: 15px;
+        transform: scale(0.6);
+        text-indent: -9999px;
+        cursor: pointer;
+
+        .sprite-load-23(
+            @positionX: -156px,
+            @positionY: -48px,
+            @retinaPositionX: -312px,
+            @retinaPositionY: -96px,
+            @width: 23px,
+            @height: 23px
+        );
+    }
+}

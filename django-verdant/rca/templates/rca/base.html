@@ -116,6 +116,17 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
+        <div class="survey-banner" id="#survey-banner">
+            <div class="survey-banner__content">
+                <div class="survey-banner__image-wrapper">
+                    <img class="survey-banner__image" src="{% static "rca/images/amzn100.png" %}" />
+                </div>
+                <p class="survey-banner__text">Give us feedback <span class="survey-banner__dash">- &nbsp;</span><span class="survey-banner__bold-text">receive a £10 Amazon.co.uk Gift Card.</span></p>
+                <a href="https://surveymonkey.com" class="button survey-banner__button">Participate</a>
+            </div>
+            <a id="survey-banner-close" class="survey-banner__close" href="#">close</a>
+        </div>
+
         {% block enquiry_form_button %}
             <div class="enquiry-button-wrapper">
             {% if settings.rca.EnquiryFormSettings.form_page %}
