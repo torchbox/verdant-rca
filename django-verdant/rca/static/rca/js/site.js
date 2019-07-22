@@ -692,7 +692,7 @@ function onDocumentReady(jQuery, inLightBox){
       $('body').prepend('<div class="cookie-notice" style="display: block;"><div class="cookie-notice-content"><a id="cookie-notice-close" class="button" href="#">Dismiss</a><p class="cookie-notice-text bc4 body-text-style">We use cookies to help give you the best experience on our website. By continuing without changing your cookie settings, we assume you agree to this. Please read our <a href="/more/contact-us/about-this-website/privacy-cookies/">privacy policy</a> to find out more.</p></div></div>');
 
       // Close button
-      $(document).delegate('#cookie-notice-close', 'click', function() {
+      $(document).on('click', '#cookie-notice-close', function() {
         $(".cookie-notice").slideUp("slow");
         return false;
       });
@@ -719,16 +719,17 @@ function onDocumentReady(jQuery, inLightBox){
     };
 
     var displaySurveyBanner = function(context, settings) {
+        var $surverBanner = $('#survey-banner');
         // Notice and message
-        $('#survey-banner').addClass('survey-banner--show');
+        $surverBanner.addClass('survey-banner--show');
 
         // Close button
-        $(document).delegate('#survey-banner-close', 'click', function() {
-          $(".survey-banner").slideUp("slow");
-          return false;
+        $(document).on('click', $surverBanner,  function() {
+            $surverBanner.slideUp("slow");
+            return false;
         });
 
-        $(".survey-banner").slideDown("slow");
+        $surverBanner.slideDown("slow");
 
         // Set notice to never show again by default.
         dontShowSurveyBannerAgain();
