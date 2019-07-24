@@ -26,19 +26,14 @@
         }
     }
 
-    &__image-wrapper {
-        padding: 5px 20px 0;
+    &__text-wrapper {
+        max-width: calc(~"100% - 38px"); // 100% width minus width of close button
+        padding-left: 20px;
 
         @media @media-desktop-small {
-            display: flex;
-            align-items: center;
-            padding: 0;
+            padding: 0 25px 0 0;
+            max-width: none;
         }
-    }
-
-    &__image {
-        width: auto;
-        height: 30px;
     }
 
     &__text {
@@ -46,15 +41,16 @@
         font-size: 18px;
         line-height: @line-height-7;
         margin: 0;
-        max-width: calc(~"100% - 155px"); // 100% width minus width of amazon voucher image and close button
 
         @media @media-desktop-small {
-            display: flex;
             font-size: 15px;
-            align-items: center;
-            padding: 0 25px 0 20px;
-            max-width: none;
         }
+    }
+
+    &__disclaimer {
+        margin: 5px 0 0;
+        font-size: 10px;
+        font-family: @font-family-benton-light;
     }
 
     &__dash {
