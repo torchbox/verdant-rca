@@ -719,17 +719,15 @@ function onDocumentReady(jQuery, inLightBox){
     };
 
     var displaySurveyBanner = function(context, settings) {
-        var $surverBanner = $('#survey-banner');
+        var $surveyBanner = $('#survey-banner');
         // Notice and message
-        $surverBanner.addClass('survey-banner--show');
+        $surveyBanner.addClass('survey-banner--show');
 
         // Close button
-        $(document).on('click', $surverBanner,  function() {
-            $surverBanner.slideUp("slow");
+        $(document).on('click', '#survey-banner-close',  function() {
+            $surveyBanner.slideUp("slow");
             return false;
         });
-
-        $surverBanner.slideDown("slow");
 
         // Set notice to never show again by default.
         dontShowSurveyBannerAgain();
