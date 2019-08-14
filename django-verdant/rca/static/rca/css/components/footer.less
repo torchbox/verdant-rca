@@ -1,0 +1,94 @@
+.footer {
+    padding-top: (@grid-gutter-width * 2);
+    padding-bottom: @grid-gutter-width;
+    background-color: @color-black;
+    color: @color-white;
+
+    @media @media-desktop-regular{
+        padding-top: (@grid-gutter-width * 5);
+    }
+
+    @media @media-desktop-large {
+        padding-top: (@grid-gutter-width * 8);
+        padding-bottom: (@grid-gutter-width * 5);
+    }
+
+    &__upper {
+        align-items: end;
+    }
+
+    &__lower {
+        padding-top: (@grid-gutter-width * 3);
+
+        @media @media-desktop-regular {
+            padding-top: (@grid-gutter-width * 5.5);
+        }
+    }
+
+    &__mid {
+        padding-top: (@grid-gutter-width * 2.5);
+    }
+
+    &__logo {
+        @media @media-desktop-large {
+            grid-column-start: 2;
+        }
+    }
+
+    &__action {
+        grid-column-start: 2;
+
+        @media @media-desktop-large {
+            grid-column-start: 4;
+        }
+    }
+
+    &__social-links {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        grid-column-start: 1;
+        grid-column-end: 3;
+
+        @media @media-desktop-regular {
+            justify-content: flex-start;
+            width: auto;
+        }
+
+        @media @media-desktop-large {
+            grid-column-start: 2;
+        }
+    }
+
+    &__links {
+        @media @media-desktop-large {
+            grid-column-start: 2;
+            grid-column-end: 5;
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
+    &__credit {
+        font-size: @font-size-12;
+        grid-column-start: 1;
+        grid-column-end: 3;
+
+        @media @media-desktop-regular {
+            grid-column-start: 2;
+            grid-column-end: auto;
+        }
+
+        @media @media-desktop-large {
+            grid-column-start: 5;
+        }
+    }
+
+    &__credit-item {
+        &:first-child {
+            padding-bottom: @grid-gutter-width;
+            border-bottom: 1px solid @color--grid-line-light;
+        }
+    }
+}
