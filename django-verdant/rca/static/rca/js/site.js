@@ -230,7 +230,7 @@ function onDocumentReady(jQuery, inLightBox){
     showHideSlide('.showbody', '.hide-body', '.hide-body');
     showHideSlide('.contact-dropdown .contact-dropdown-header', '.contact-dropdown .contact-dropdown-header', '.contact-dropdown .dropdown', false);
     showHideSlide('.research-show-more', '.school-research-list', '.research-more', false);
-    
+
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
@@ -692,7 +692,7 @@ function onDocumentReady(jQuery, inLightBox){
       $('body').prepend('<div class="cookie-notice" style="display: block;"><div class="cookie-notice-content"><a id="cookie-notice-close" class="button" href="#">Dismiss</a><p class="cookie-notice-text bc4 body-text-style">We use cookies to help give you the best experience on our website. By continuing without changing your cookie settings, we assume you agree to this. Please read our <a href="/more/contact-us/about-this-website/privacy-cookies/">privacy policy</a> to find out more.</p></div></div>');
 
       // Close button
-      $(document).delegate('#cookie-notice-close', 'click', function() {
+      $(document).on('click', '#cookie-notice-close', function() {
         $(".cookie-notice").slideUp("slow");
         return false;
       });
@@ -718,9 +718,43 @@ function onDocumentReady(jQuery, inLightBox){
       return dontShowCookieNotice;
     };
 
+    var displaySurveyBanner = function(context, settings) {
+        var $surveyBanner = $('#survey-banner');
+        // Notice and message
+        $surveyBanner.addClass('survey-banner--show');
+
+        // Close button
+        $(document).on('click', '#survey-banner-close',  function() {
+            $surveyBanner.slideUp("slow");
+            return false;
+        });
+
+        // Set notice to never show again by default.
+        dontShowSurveyBannerAgain();
+      };
+
+      var dontShowSurveyBannerAgain = function() {
+        // domainroot root variable is set in base.html - needed so the same cookie works across all subdomains
+
+        // set or extend the cookie life for a year
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + 365);
+        document.cookie = "dontShowSurveyBanner=" + "TRUE; expires=" + exdate.toUTCString() + ";domain=" + domainroot + ";path=/";
+      };
+
+      var pleaseShowSurveyBanner = function() {
+        // Don't show the notice if we have previously set a cookie to hide it
+        var dontShowSurveyBanner = (document.cookie.indexOf("dontShowSurveyBanner") != -1) ? false : true;
+        return dontShowSurveyBanner;
+      };
+
+
     $('body').once(function(){
       if (pleaseShowCookieNotice() == true) {
         displayCookieNotice();
+      }
+      if (pleaseShowSurveyBanner() == true) {
+        displaySurveyBanner();
       }
     });
 
@@ -760,9 +794,9 @@ function onDocumentReady(jQuery, inLightBox){
                 // Add blank <option> as placeholder
                 $select.prepend(
                     $( '<option>' , {
-                        value    : '', 
-                        text     : placeholderText, 
-                        selected : true 
+                        value    : '',
+                        text     : placeholderText,
+                        selected : true
                     }
                 ));
 
@@ -783,7 +817,7 @@ function onDocumentReady(jQuery, inLightBox){
                     $wrapper.addClass( wrapperFixed );
                     $triggerButton.addClass( toggled );
                     $('.enquiry-form-trigger').addClass('enquiry-form-trigger--fixed');
-                    
+
                     // Show/hide triggers
                     if ( $(window).width() > breakpoint.mobile ) {
                         $triggerBody.hide();
@@ -794,7 +828,7 @@ function onDocumentReady(jQuery, inLightBox){
                     }
 
                     state.open = true;
-                    
+
                     if ( state.hasData ) {
                         state.busy = false;
                     }
