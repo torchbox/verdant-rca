@@ -1,0 +1,52 @@
+.logo {
+    @root: ~".logo";
+    display: block;
+    transition: opacity @transition;
+
+    &:hover,
+    &:focus,
+    &:active {
+        opacity: 0.7;
+    }
+
+    &__image {
+        height: auto;
+    }
+
+    .footer & {
+        @{root}__image {
+            width: 92px;
+            fill: @color--white;
+
+            @media @media-medium {
+                width: 230px;
+            }
+        }
+    }
+
+    .header-content-dark .header & {
+        @{root}__image {
+            fill: @color--black;
+        }
+    }
+
+    .app__navigation &,
+    .header-content-light & {
+        @{root}__image {
+            fill: @color--white;
+        }
+    }
+
+    .headroom--pinned.headroom--not-top .header &,
+    .headroom--pinned.headroom--not-top .app__navigation & {
+        @{root}__image {
+            width: 92px;
+            fill: @color--white;
+        }
+    }
+
+    .nav-open & {
+        z-index: 40;
+        position: relative;
+    }
+}
