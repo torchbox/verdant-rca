@@ -1,0 +1,49 @@
+.burger {
+    @root: ~".burger";
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    transition: opacity @transition;
+
+
+    &:hover,
+    &:focus,
+    &:active {
+        opacity: 0.7;
+        color: @color--black;
+    }
+
+    &__toggle-label {
+        .font-size(xxxs);
+        margin-left: (@gutter / 2);
+    }
+
+    &__toggle-icon {
+        stroke: @color--black;
+    }
+
+    .header-content-dark .header & {
+        @{root}__toggle-icon {
+            stroke: @color--black;
+        }
+    }
+
+    .header-content-light .header & {
+        @{root}__toggle-icon {
+            stroke: @color--white;
+        }
+    }
+
+    .headroom--pinned.headroom--not-top & {
+        @{root}__toggle-icon {
+            stroke: @color--white;
+        }
+    }
+
+    .app__navigation & {
+        @{root}__toggle-label {
+            color: @color--white;
+        }
+    }
+}
