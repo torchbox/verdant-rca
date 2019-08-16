@@ -116,7 +116,7 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
-        <div class="survey-banner" id="survey-banner">
+        <!-- <div class="survey-banner" id="survey-banner">
             <div class="survey-banner__content">
                 <div class="survey-banner__text-wrapper">
                     <p class="survey-banner__text">Tell us what you think and as a thank you, we will enter you in a prize draw to <strong class="survey-banner__bold-text">win a £10 Amazon.co.uk gift card!*</strong></p>
@@ -135,12 +135,17 @@
                 </button>
             {% endif %}
             </div>
-        {% endblock %}
+        {% endblock %} -->
 
         <div class="mobile-content-wrapper">
             {# <div class="mobile-menu-button">Inside</div> #}
 
             <div class="header-wrapper">
+
+                {% include "rca/includes/header.html" %}
+
+                <div style="padding-top: 50px;"></div>
+
                 <header class="page-header">
                     {% block logo %}
                         <a href="/" class="site-name" tabindex="2"><p>Royal College of Art</p></a>
@@ -162,6 +167,7 @@
                         </form>
                     </div>
                 </header>
+                
             </div>
 
             <div class="page-overlay">

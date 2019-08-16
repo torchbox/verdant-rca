@@ -1,4 +1,4 @@
-{% load rca_tags %}
+<!-- {% load rca_tags %}
 <header class="page-header">
     {% block logo %}
         <a href="/" class="site-name" tabindex="2"><p>Royal College of Art</p></a>
@@ -20,4 +20,58 @@
         </form>
     </div>
 
-</header>
+</header> -->
+
+<!-- New Header Code -->
+
+{% load rca_tags wagtailcore_tags %}
+<div class="header header--dark-bg"> {# modifier needs to be set by BE #}
+
+    <div class="header__container grid">
+
+        <div class="header__logo">
+            {% include "rca/includes/modules/logo.html" %}
+        </div>
+
+        <div class="header__navigation-toggle">
+            {% include 'rca/includes/modules/navigation/menu-toggle.html' %}
+            {% include 'rca/includes/modules/navigation/search-toggle.html' %}
+                
+        </div>
+
+        <div class="audience-nav-item">
+            <a class="audience-nav-item__link" href="#">
+                <div class="audience-nav-item__label">
+                    Study at RCA
+                </div>
+                <svg class="audience-nav-item__icon" width="12" height="8">
+                    <use xlink:href="#arrow-site-rebuild"></use>
+                </svg>
+            </a>
+        </div>
+
+        <div class="audience-nav-item">
+            <a class="audience-nav-item__link" href="#">
+                <div class="audience-nav-item__label">
+                    Research and Innovation
+                </div>
+                <svg class="audience-nav-item__icon" width="12" height="8">
+                    <use xlink:href="#arrow-site-rebuild"></use>
+                </svg>
+            </a>
+        </div>
+
+        <div class="audience-nav-item">
+            <a class="audience-nav-item__link" href="#">
+                <div class="audience-nav-item__label">
+                    Life at the RCA
+                </div>
+                <svg class="audience-nav-item__icon" width="12" height="8">
+                    <use xlink:href="#arrow-site-rebuild"></use>
+                </svg>
+            </a>
+        </div>
+
+    </div>
+
+</div>
