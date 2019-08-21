@@ -51,6 +51,15 @@
         @{root}__label {
             .font-size(xxs);
         }
+
+        &--mobile-cta {
+            align-items: flex-end;
+
+            @media @media-medium {
+                display: flex;
+                align-items: flex-start;
+            }
+        }
     }
 
     .footer & {

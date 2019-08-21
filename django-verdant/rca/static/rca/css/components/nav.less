@@ -125,7 +125,14 @@
         justify-content: space-between;
         align-items: center;
         padding: @gutter 0;
+        font-family: @font--secondary;
         color: @color--white;
+
+        &:hover,
+        &:focus,
+        &.is-active {
+            color: @color--white;
+        }
 
         span {
             pointer-events: none;
@@ -194,6 +201,12 @@
 
         &--standout {
             color: @color--tertiary;
+
+            &:hover,
+            &:focus,
+            &.is-active {
+                color: @color--tertiary;
+            }
         }
     }
 

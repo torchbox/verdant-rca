@@ -1,8 +1,15 @@
 .header {
     @root: ~".header";
 
-    //Font fix for new site.
+    //Font update for the new site.
     font-family: @font--primary;
+
+    /**
+     * Determines the background colour, this isn't related to the header-content
+     * light or dark classes, or the bg--light and bg--dark. I'm keeping the site 
+     * intergration with backend as simple as possible for the header.
+     */
+    background-color: @color--black;
 
     &__container {
         max-width: @site-width;
@@ -107,11 +114,11 @@
     &__menu-close {
         fill: @color--white;
         position: absolute;
-        right: 10px;
-        bottom: 0;
+        right: 0;
 
-        @media @media-large {
-            bottom: -5px;
+        @media @media-medium {
+            bottom: 0;
+            right: @gutter;
         }
     }
 
@@ -307,6 +314,19 @@
         @{root}__search-toggle,
         @{root}__menu-toggle {
             color: @color--white;
+        }
+    }
+
+    &__spacer {
+        /**
+         * 123px is the height of the header currently.
+         * I'm not sure how to structure the header code such that it pushes 
+         * content down automatically to the right height...
+         */
+        padding-bottom: 123px;
+
+        @media @media-medium {
+            padding-bottom: 133px;
         }
     }
 }

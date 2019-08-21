@@ -1,0 +1,44 @@
+.search2 {
+    position: relative !important;
+
+    @media @media-medium {
+        margin-right: (@gutter * 1.75) !important;
+    }
+
+    &__input {
+        background: @color--primary !important;
+        color: @color--white !important;
+        border: 0 !important;
+        width: 100% !important;
+        border-bottom: 1px solid @color--white !important;
+        padding: (@gutter / 2) (@gutter * 1.5) (@gutter / 2) (@gutter / 2) !important;
+        font-family: @font--primary !important;
+        font-size: 18px !important;
+        outline-offset: 2px;
+
+        &:focus {
+            outline: 0 !important;
+        }
+    }
+
+    &__button {
+        position: absolute !important;
+        right: 0 !important;
+        top: 10px !important;
+        padding: 0 !important;
+
+        &:hover,
+        &:focus {
+            outline: 0 !important;
+            background-color: transparent !important;
+        }
+
+        @media @media-medium {
+            top: 10px !important;
+        }
+    }
+
+    &__icon {
+        fill: @color--white !important;
+    }
+}
