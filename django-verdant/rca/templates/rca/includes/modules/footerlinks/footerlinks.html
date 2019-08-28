@@ -1,7 +1,0 @@
-{% load wagtailcore_tags %}
-
-{% for link in footerlinks %}
-    <div class="footer-link-item" role="presentation">
-        <a class="footer-link-item__link" href="{{link.url}}">{{link.text}}</a>
-    </div>
-{% endfor %}
