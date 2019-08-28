@@ -49,7 +49,7 @@
         }
 
         @{root}__label {
-            .font-size(xxs);
+            font-size: 14px;
         }
 
         &--mobile-cta {
@@ -72,7 +72,15 @@
         }
 
         @{root}__label {
-            .font-size(xs);
+            font-size: 14px;
+
+            @media @media-medium {
+                font-size: 16px;
+            }
+
+            @media @media-large {
+                font-size: 18px;
+            }
         }
     }
 
