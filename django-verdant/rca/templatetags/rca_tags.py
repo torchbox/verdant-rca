@@ -463,7 +463,6 @@ def menu_subnav(context, nodes):
         'request': context['request'],
     }
 
-
 @register.inclusion_tag('rca/tags/footer_nav.html', takes_context=True)
 def footer_menu(context):
     nodes = get_site_nav(max_depth=3, must_have_children=False, only_in_menu_pages=True)
