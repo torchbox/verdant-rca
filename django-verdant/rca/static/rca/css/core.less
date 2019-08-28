@@ -54,13 +54,27 @@
 }
 
 html {
-    background: #5b5a5a ;
+    //background: #5b5a5a ;
 }
 
 body {
     font-size: @font-size-base;
     font-family: @font-family-benton-light;
     -webkit-font-smoothing: antialiased; /* Do not remove! */
+
+    &.nav-open {
+        &::after {
+            z-index: 75;
+            content: '';
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: @color--black-80;
+            opacity: 1;
+        }
+    }
 }
 
 html, body {
@@ -2237,13 +2251,29 @@ a.hidden {
 @import "contact.less";
 
 // New components folder added for home page redesign 2018
+@import "components/app";
+@import "components/link";
 @import "components/hero";
 @import "components/hero-search";
 @import "components/homepage-heading";
 @import "components/homepage-block";
 @import "components/slider";
 @import "components/social";
+@import "components/footer";
+@import "components/social-item";
+@import "components/logo";
+@import "components/audience-nav-item";
+@import "components/footer-link-item";
 @import "components/survey-banner";
+@import "components/burger";
+@import "components/search-toggle";
+@import "components/header";
+@import "components/tab-nav";
+@import "components/back-link";
+@import "components/nav";
+@import "components/link";
+@import "components/search";
+@import "components/button";
 
 // streamfield blocks
 @import "streamfield-blocks/base.less";
@@ -2255,3 +2285,4 @@ a.hidden {
 @import "streamfield-blocks/two-column-block";
 @import "streamfield-blocks/testimonial";
 @import "streamfield-blocks/events.less";
+

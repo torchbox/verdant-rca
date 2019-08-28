@@ -1,0 +1,169 @@
+{% load wagtailcore_tags %}
+
+<div class="header__inner header__inner--level-zero">
+    {% include 'rca/includes/modules/logo.html' %} 
+    {% include 'rca/includes/modules/navigation/menu-toggle.html' with modifier="header__menu-toggle--small" %}
+    {% include 'rca/includes/modules/navigation/back-link.html' %}
+    {% include 'rca/includes/modules/navigation/standoutnav.html' with modifier="nav--standout-desktop" %}
+    <div class="app__search app__search--tablet">
+
+        <form action="https://www.rca.ac.uk/search" method="get" role="search" class="search2">
+            <input class="search2__input input" type="text" placeholder="Search…" name="q"{% if search_query %} value="{{ search_query }}"{% endif %}>
+            <button class="search2__button button" type="submit">
+                <svg width="12px" height="8px" class="search2__icon"><use xlink:href="#arrow"></use></svg>
+            </button>
+        </form>
+
+    </div>
+</div>
+<span class="header__inner header__inner--container">
+    <div class="header__navigation-toggle">
+        {% include 'rca/includes/modules/navigation/menu-toggle.html' with modifier="header__menu-toggle--medium" %}
+        {% include 'rca/includes/modules/navigation/search-toggle.html' %}
+        <a class="header__menu-close" href="#" data-close-menu>
+            <svg width="14" height="14"><use xlink:href="#close"></use></svg>
+        </a>
+    </div>
+
+    <span class="header__inner header__inner--menu-container">
+
+        <!-- Level 1 -->
+        <div class="header__inner header__inner--level-one" data-nav-level-1>
+            <div role="navigation" aria-label="Primary">
+                <ul data-ul="1" class="nav nav--primary" role="menubar">
+                    <li class="nav__item nav__item--primary" role="presentation">
+                        <a
+                            href="#"
+                            class="nav__link"
+                            data-nav-level="1"
+                            data-menu="1"
+                            data-menu-id=1
+                            data-menu-parent
+                        >
+                            <span>Programmes</span>
+                            <svg class="nav__icon" width="6" height="10"><use xlink:href="#chevron-site-rebuild"></use></svg>
+                        </a>
+                    </li>
+                    <li class="nav__item nav__item--primary" role="presentation">
+                        <a
+                            href="#"
+                            class="nav__link"
+                            data-nav-level="1"
+                            data-menu="1"
+                            data-menu-id=1
+                            data-menu-parent
+                        >
+                            <span>Short Courses</span>
+                            <svg class="nav__icon" width="6" height="10"><use xlink:href="#chevron-site-rebuild"></use></svg>
+                        </a>
+                    </li>
+                    <li class="nav__item nav__item--primary" role="presentation">
+                        <a
+                            href="#"
+                            class="nav__link"
+                            data-nav-level="1"
+                            data-menu="1"
+                            data-menu-id=1
+                            data-menu-parent
+                        >
+                            <span>Study at the RCA</span>
+                            <svg class="nav__icon" width="6" height="10"><use xlink:href="#chevron-site-rebuild"></use></svg>
+                        </a>
+                    </li>
+                    <li class="nav__item nav__item--primary" role="presentation">
+                        <a
+                            href="#"
+                            class="nav__link"
+                            data-nav-level="1"
+                            data-menu="1"
+                            data-menu-id=1
+                            data-menu-parent
+                        >
+                            <span>Research & Innovation</span>
+                            <svg class="nav__icon" width="6" height="10"><use xlink:href="#chevron-site-rebuild"></use></svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="app__search app__search--desktop" data-search-desktop>
+
+                <form action="https://www.rca.ac.uk/search" method="get" role="search" class="search2">
+                    <input class="search2__input input" type="text" placeholder="Search…" name="q"{% if search_query %} value="{{ search_query }}"{% endif %}>
+                    <button class="search2__button button" type="submit">
+                        <svg width="12px" height="8px" class="search2__icon"><use xlink:href="#arrow"></use></svg>
+                    </button>
+                </form>
+            
+            </div>
+        </div>
+
+        <!-- Level 2 -->
+        <div class="header__inner header__inner--drawer header__inner--level-two" data-nav-level-2>
+            <!-- {% for link in primarynav %}
+                {% if link.secondary_links %}
+                    <ul data-ul="2" data-menu-{{forloop.counter}} class="nav nav--subnav" role="menu">
+                        <li class="nav__item nav__item--group-heading">
+                            <a href="{{link.url}}" class="nav__link nav__link--group-heading">{{ link.text }}</a>
+                        </li>
+                        {% for item in link.secondary_links %}
+                            <li class="nav__item">
+
+                                <!- Level 2 <a> ->
+                                <a
+                                    href="{{ item.url }}"
+                                    class="nav__link"
+                                    data-menu-child
+                                    data-nav-level="2"
+                                    data-parent-id="{{forloop.parentloop.counter}}"
+                                    data-menu-id="{{forloop.parentloop.counter}}-{{forloop.counter}}"
+                                    data-menu="{{forloop.parentloop.counter}}-{{forloop.counter}}"
+                                    {% if item.tertiary_links %}data-menu-parent{% endif %}
+                                >
+                                    <span>{{ item.text }}</span>
+                                    {% if item.tertiary_links %}
+                                        <svg class="nav__icon" width="6" height="10"><use xlink:href="#chevron"></use></svg>
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %} -->
+        </div>
+
+        <!-- Level 3 -->
+        <div class="header__inner header__inner--drawer header__inner--level-three" data-nav-level-3>
+            <!-- {% for link in primarynav %}
+                    {% for item in link.secondary_links %}
+                        {% if item.tertiary_links %}
+                        <ul data-ul="3" data-menu-{{forloop.parentloop.counter}}-{{forloop.counter}} class="nav nav--subnav">
+                            <li class="nav__item nav__item--group-heading">
+                                <a href="{{ item.url }}" class="nav__link nav__link--group-heading">{{ item.text }}</a>
+                            </li>
+                                {% for tertiary_item in item.tertiary_links %}
+                                    <li>
+
+                                        <!- Level 3 <a> ->
+                                        <a
+                                            href="{{ tertiary_item.url }}"
+                                            class="nav__link"
+                                            data-menu-child
+                                            data-nav-level="3"
+                                            data-menu="{{forloop.parentloop.parentloop.counter}}"
+                                            data-menu-id="{{forloop.parentloop.parentloop.counter}}-{{forloop.parentloop.counter}}-{{forloop.counter}}"
+                                            data-parent-id="{{forloop.parentloop.parentloop.counter}}-{{forloop.parentloop.counter}}"
+                                        >
+                                            <span>{{ tertiary_item.text }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                    {% endfor %}
+            {% endfor %} -->
+        </div>
+        {% include 'rca/includes/modules/navigation/standoutnav.html' with modifier="nav--standout-mobile" %}
+    </span>
+</span>
+

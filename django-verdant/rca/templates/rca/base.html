@@ -97,7 +97,7 @@
 
     </head>
 
-    <body class="{% block body_class %}{% endblock %}">
+    <body class="{% block body_class %}{% endblock %} app">
 
         <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MJ4J2Q8" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -115,6 +115,20 @@
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
+
+        <!-- New site header include. -->
+
+        <header class="app__header">
+            {% include "rca/includes/header.html" %}
+        </header>
+
+        <div class="app__navigation" data-nav-container>
+            <section class="header__menus">
+                {% include "rca/includes/modules/navigation/primarynav.html" %}
+            </section>
+        </div>
+
+        <div class="header__spacer"></div>
 
         <div class="survey-banner" id="survey-banner">
             <div class="survey-banner__content">
@@ -138,13 +152,14 @@
         {% endblock %}
 
         <div class="mobile-content-wrapper">
-            {# <div class="mobile-menu-button">Inside</div> #}
+            <!-- {# <div class="mobile-menu-button">Inside</div> #}
 
             <div class="header-wrapper">
+
                 <header class="page-header">
-                    {% block logo %}
+                    <!- {% block logo %}
                         <a href="/" class="site-name" tabindex="2"><p>Royal College of Art</p></a>
-                    {% endblock %}
+                    {% endblock %} ->
                     <div class="showmenu dl-trigger">Show menu</div>
                     <div class="showsearch">Show search</div>
                     <div class="nav-wrapper">
@@ -162,7 +177,10 @@
                         </form>
                     </div>
                 </header>
-            </div>
+
+                <div style="padding-top: 50px; background-color: palegoldenrod"></div>
+                
+            </div> -->
 
             <div class="page-overlay">
                 <div id="loading-spinner"></div>
@@ -204,6 +222,7 @@
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
             <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
             <script src="https://js.stripe.com/v2/"></script>
+            <script src="https://rca-staging.herokuapp.com/static/js/main.fb14a41465ec.js"></script>
 
             {% if SILVERPOP_ID %}
                 <script src="https://www.sc.pages05.net/lp/static/js/iMAWebCookie.js?{{ SILVERPOP_ID }}&h=www.pages05.net" type="text/javascript"></script>

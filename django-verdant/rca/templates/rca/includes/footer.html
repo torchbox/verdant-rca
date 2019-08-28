@@ -1,52 +1,100 @@
-{% load rca_tags %}
-<div class="full-width-footer">
-    <div class="footer-wrapper">
-        <footer>
-            <a class="footer-logo">Royal College of Art</a>
-            <ul class="menu">
-                {% footer_menu %}
+{% load rca_tags static wagtailcore_tags %}
+
+<!-- New Footer Code -->
+
+<div class="footer">
+
+    <div class="footer__container">
+
+        <div class="footer__upper grid">
+            <div class="footer__logo">
+                {% include "rca/includes/modules/logo.html" %}
+            </div>
+
+            <div class="footer__action" role="navigation" aria-label="Tertiary">
+                <div class="audience-nav-item">
+                    <a class="audience-nav-item__link" href="https://www.rca.ac.uk/contact-us/">
+                        <div class="audience-nav-item__label">
+                            Contact us
+                        </div>
+                        <svg class="audience-nav-item__icon" width="12" height="8">
+                            <use xlink:href="#arrow-site-rebuild"></use>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__mid grid">
+            <ul class="footer__social-links">
+                <li class="social-item social-item--twitter">
+                    <a class="social-item__link" href="https://twitter.com/rca" aria-label="Twitter">
+                        <svg class="social-item__icon" width="24" height="24">
+                            <use xlink:href="#twitter">
+                            </use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="social-item social-item--facebook">
+                    <a class="social-item__link" href="https://www.facebook.com/RCA.London/" aria-label="Facebook">
+                        <svg class="social-item__icon" width="24" height="24">
+                            <use xlink:href="#facebook">
+                            </use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="social-item social-item--instagram">
+                    <a class="social-item__link" href="https://www.instagram.com/royalcollegeofart/" aria-label="Instagram">
+                        <svg class="social-item__icon" width="24" height="24">
+                            <use xlink:href="#instagram">
+                            </use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="social-item social-item--youtube">
+                    <a class="social-item__link" href="https://www.youtube.com/user/royalcollegeofart" aria-label="YouTube">
+                        <svg class="social-item__icon" width="24" height="24">
+                            <use xlink:href="#youtube">
+                            </use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="social-item social-item--linkedin">
+                    <a class="social-item__link" href="https://www.linkedin.com/school/royal-college-of-art/" aria-label="LinkedIn">
+                        <svg class="social-item__icon" width="24" height="24">
+                            <use xlink:href="#linkedin">
+                            </use>
+                        </svg>
+                    </a>
+                </li>            
             </ul>
-            <div class="social-wrapper">
-                <h3>Follow the RCA</h3>
-                <ul class="social">
-                    <!-- newer buttons use the svg sprite not the old png one -->
-                    <li>
-                        <a href="https://www.instagram.com/royalcollegeofart/" class="instagram">
-                            <span class="social-hide">Instagram</span>
-                            <svg class="social-icon">
-                                <title>Instagram</title>
-                                <use xlink:href="#instagram"></use>
-                            </svg>
-                        </a>
-                    </li>
-                    <li><a href="https://twitter.com/RCA" class="twitter"><span class="social-hide">Twitter</span></a></li>
-                    <li><a href="https://www.facebook.com/RCA.London" class="facebook"><span class="social-hide">Facebook</span></a></li>
-                    <li>
-                        <a href="https://www.linkedin.com/school/royal-college-of-art/" class="linkedin">
-                            <span class="social-hide">Linkedin</span>
-                            <svg class="social-icon">
-                                <title>Linkedin</title>
-                                <use xlink:href="#linkedin"></use>
-                            </svg>
-                        </a>
-                    </li>
-                    <li><a href="https://www.youtube.com/user/royalcollegeofart" class="youtube"><span class="social-hide">YouTube</span></a></li>
-                    <li><a href="https://vimeo.com/royalcollegeofart" class="vimeo"><span class="social-hide">Vimeo</span></a></li>
-                </ul>
+        </div>
+
+        <div class="footer__lower grid">
+            <div class="footer__links" role="navigation" aria-label="Footer navigation">
+                <div class="footer-link-item" role="presentation">
+                    <a class="footer-link-item__link" href="https://www.rca.ac.uk/contact-us/about-this-website/privacy-cookies/">
+                        Privacy & Cookies
+                    </a>
+                </div>
+                <div class="footer-link-item" role="presentation">
+                    <a class="footer-link-item__link" href="https://www.rca.ac.uk/contact-us/about-this-website/terms-conditions/">
+                        Terms & Conditions
+                    </a>
+                </div>
+                <div class="footer-link-item" role="presentation">
+                    <a class="footer-link-item__link" href="https://www.rca.ac.uk/contact-us/about-this-website/accessibility/">
+                        Accessibility
+                    </a>
+                </div>
             </div>
-            <div class="smallprint">
-                <span class="address">
-                    Royal College of Art, Kensington Gore, London SW7 2EU
-                </span>
-                <ul>
-                    <li><a href="/contact-us/about-this-website/privacy-cookies/">Privacy &amp; Cookies</a></li>
-                    <li><a href="/contact-us/about-this-website/terms-conditions/">Terms &amp; Conditions</a></li>
-                    <li><a href="/contact-us/about-this-website/accessibility/">Accessibility</a></li>
-                </ul>
+            <div class="footer__credit" role="contentinfo">
+                <p class="footer__credit-item">Royal College of Art, Kensington Gore, London SW7 2EU</p>
+                <p class="footer__credit-item">RCA&trade; Royal College of Art&trade; are trademarks of the Royal College of Art </p>
             </div>
-            <div class="trademarks">
-                RCA&#8482; Royal College of Art&#8482; are trademarks of the Royal College of Art
-            </div>
-        </footer>
+
+        </div>
+
     </div>
+
 </div>

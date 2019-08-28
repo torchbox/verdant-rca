@@ -67,7 +67,6 @@ body.lightbox-view{
     }
     .header-wrapper .page-header{
         // we have to make the whole header opaque, so that the fixed page content won't bleed through
-        // TODO: this is not compatible with background images
         background: #fff;
     }
 
@@ -212,6 +211,9 @@ body.lightbox-view{
     }
 }
 
+.header-wrapper .page-header {
+    margin-top: @gutter;
+}
 
 body.lightbox-visible {
     #loading-spinner {

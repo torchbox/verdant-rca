@@ -1,0 +1,221 @@
+.nav {
+    margin-bottom: 1rem;
+
+    &--primary {
+        display: none;
+
+        .menu-active & {
+            display: block;
+        }
+    }
+
+    &--secondary {
+        margin-right: 15px;
+    }
+
+    &--subnav {
+        height: 100%;
+        display: none;
+        max-height: 500px;
+        overflow-y: scroll;
+
+        // hide scrollbars as per clients request
+        scrollbar-width: none; // sass-lint:disable-line no-misspelled-properties
+        -ms-overflow-style: none; // sass-lint:disable-line no-vendor-prefixes
+
+        &::-webkit-scrollbar {
+            // sass-lint:disable-line no-vendor-prefixes
+            display: none;
+        }
+
+        &:hover,
+        &.is-visible {
+            display: block;
+        }
+
+        @media @media-medium {
+            max-height: 500px;
+        }
+
+        @media @media-large {
+            padding-top: (@gutter * 9.5);
+            max-height: 900px;
+
+            .headroom--pinned.headroom--not-top & {
+                padding-top: (@gutter * 8);
+            }
+        }
+    }
+
+    &--tertiary {
+        flex-wrap: wrap;
+        height: auto;
+
+        li:first-child {
+            a {
+                margin-left: 0;
+            }
+        }
+    }
+
+    &--breadcrumb {
+        flex-direction: row;
+        margin-bottom: 10px;
+    }
+
+    &--standout {
+        margin-top: (@gutter * 5);
+    }
+
+    &--standout-desktop {
+        display: none;
+        position: absolute;
+        bottom: 0;
+
+        @media @media-medium {
+            display: block;
+        }
+    }
+
+    &--standout-mobile {
+        @media @media-medium {
+            display: none;
+        }
+    }
+
+    &__item {
+        &--group-heading {
+            display: block;
+
+            @media @media-large {
+                display: none;
+            }
+        }
+
+        &--breadcrumb {
+            width: auto;
+            padding: 0;
+            margin: 0 5px 0 0;
+            font-size: 12px;
+            font-weight: @weight--light;
+            text-transform: uppercase;
+            border-bottom: 0;
+
+            &::after {
+                color: @color--primary;
+                content: '›';
+            }
+
+            &:first-child {
+                a {
+                    margin-left: 0;
+                }
+            }
+
+            &:last-child {
+                margin-left: 10px;
+                border-bottom: 1px solid;
+            }
+        }
+    }
+
+    &__link {
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: @gutter 0;
+        font-family: @font--secondary;
+        color: @color--white;
+
+        &:hover,
+        &:focus,
+        &.is-active {
+            color: @color--white;
+        }
+
+        span {
+            pointer-events: none;
+        }
+
+        @media @media-large {
+            span {
+                position: relative;
+
+                &::after {
+                    content: '';
+                    display: block;
+                    height: 2px;
+                    left: 0;
+                    position: absolute;
+                    background: currentColor;
+                    transition: width @transition, left @transition;
+                    width: 0;
+                    bottom: -2px;
+                }
+            }
+
+            &:hover,
+            &:focus,
+            &.is-active {
+                span {
+                    &::after {
+                        width: 100%;
+                        left: 0;
+                    }
+                }
+            }
+        }
+
+        @media @media-medium {
+            font-size: 18px
+        }
+
+        &--breadcrumb {
+            color: @color--primary;
+
+            &:hover {
+                color: lighten(@color--primary, 20%);
+                border-bottom: 1px solid @color--primary;
+            }
+        }
+
+        &--group-heading {
+            font-size: 18px;
+
+            @media @media-medium {
+                font-size: 20px;
+            }
+        }
+
+        &--base {
+            font-size: 14px;
+            padding: 0;
+            margin-bottom: @gutter;
+            justify-content: flex-start;
+
+            svg {
+                position: relative;
+            }
+        }
+
+        &--standout {
+            color: @color--tertiary;
+
+            &:hover,
+            &:focus,
+            &.is-active {
+                color: @color--tertiary;
+            }
+        }
+    }
+
+    &__icon {
+        fill: @color--white;
+        pointer-events: none;
+
+        @media @media-large {
+            display: none;
+        }
+    }
+}
