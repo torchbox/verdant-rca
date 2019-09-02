@@ -97,7 +97,7 @@
 
     </head>
 
-    <body class="{% block body_class %}{% endblock %} app">
+    <body class="{% block body_class %}{% endblock %} app theme-dark">
 
         <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MJ4J2Q8" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -129,19 +129,6 @@
             </section>
         </div>
 
-        <div class="header__spacer"></div>
-
-        <div class="survey-banner" id="survey-banner">
-            <div class="survey-banner__content">
-                <div class="survey-banner__text-wrapper">
-                    <p class="survey-banner__text">Tell us what you think and as a thank you, we will enter you in a prize draw to <strong class="survey-banner__bold-text">win a £10 Amazon.co.uk gift card!*</strong></p>
-                    <p class="survey-banner__disclaimer">*Restrictions apply, see <a href="https://www.amazon.co.uk/gc-legal">www.amazon.co.uk/gc-legal</a></p>
-                </div>
-                <a href="https://www.surveymonkey.co.uk/r/P6NCMQ6" class="button survey-banner__button">Start survey</a>
-            </div>
-            <a id="survey-banner-close" class="survey-banner__close" href="#" aria-label="Close"></a>
-        </div>
-
         {% block enquiry_form_button %}
             <div class="enquiry-button-wrapper">
             {% if settings.rca.EnquiryFormSettings.form_page %}
@@ -153,35 +140,6 @@
         {% endblock %}
 
         <div class="mobile-content-wrapper">
-            <!-- {# <div class="mobile-menu-button">Inside</div> #}
-
-            <div class="header-wrapper">
-
-                <header class="page-header">
-                    <!- {% block logo %}
-                        <a href="/" class="site-name" tabindex="2"><p>Royal College of Art</p></a>
-                    {% endblock %} ->
-                    <div class="showmenu dl-trigger">Show menu</div>
-                    <div class="showsearch">Show search</div>
-                    <div class="nav-wrapper">
-                        <div class="inner">
-                            <nav>
-                                <h2><a href="javascript: void(0);" class="trigger" tabindex="3">Menu</a></h2>
-                                <ul class="menu dl-menu">
-                                    {% include "rca/menu.html" %}
-                                </ul>
-                            </nav>
-                        </div>
-                        <form class="search" action="{% url 'wagtailsearch_search' %}" method="get">
-                            <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
-                            <input type="submit" value="search" />
-                        </form>
-                    </div>
-                </header>
-
-                <div style="padding-top: 50px; background-color: palegoldenrod"></div>
-                
-            </div> -->
 
             <div class="page-overlay">
                 <div id="loading-spinner"></div>
@@ -194,6 +152,18 @@
             {% block hero %}{% endblock %}
 
             <div class="page-wrapper">
+                
+                <div class="survey-banner" id="survey-banner">
+                    <div class="survey-banner__content">
+                        <div class="survey-banner__text-wrapper">
+                            <p class="survey-banner__text">Tell us what you think and as a thank you, we will enter you in a prize draw to <strong class="survey-banner__bold-text">win a £10 Amazon.co.uk gift card!*</strong></p>
+                            <p class="survey-banner__disclaimer">*Restrictions apply, see <a href="https://www.amazon.co.uk/gc-legal">www.amazon.co.uk/gc-legal</a></p>
+                        </div>
+                        <a href="https://www.surveymonkey.co.uk/r/P6NCMQ6" class="button survey-banner__button">Start survey</a>
+                    </div>
+                    <a id="survey-banner-close" class="survey-banner__close" href="#" aria-label="Close"></a>
+                </div>
+                
                 <div class="page-content">
                     {% block layout %}
                         <div class="inner" id="maincontent">
