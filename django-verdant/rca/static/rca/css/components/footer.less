@@ -12,6 +12,7 @@
     //Background fix for mobile.
     margin-left: -@gutter;
     margin-right: -@gutter;
+    margin-top: (@gutter * 2);
     padding-left: @gutter;
     padding-right: @gutter;
 
@@ -33,22 +34,40 @@
         margin: 0 auto;
         padding-left: 0;
         align-items: end;
+        padding-left: @gutter;
+        padding-right: @gutter;
+        
+        @media @media-desktop-regular {
+            padding-left: (@gutter * 3);
+        	padding-right: (@gutter * 3);
+        }
+        
     }
 
     &__lower {
         margin: 0 auto;
         padding-left: 0;
         padding-top: (@gutter * 3);
+        padding-left: @gutter;
+        padding-right: @gutter;
 
-        @media @media-medium {
+        @media @media-desktop-regular {
             padding-top: (@gutter * 5.5);
+            padding-left: (@gutter * 3);
+        	padding-right: (@gutter * 3);
         }
     }
 
     &__mid {
         margin: 0 auto;
-        padding-left: 0;
         padding-top: (@gutter * 2.5);
+        padding-left: @gutter;
+        padding-right: @gutter;
+        
+        @media @media-desktop-regular {
+            padding-left: (@gutter * 3);
+        	padding-right: (@gutter * 3);
+        }
     }
 
     &__logo {
