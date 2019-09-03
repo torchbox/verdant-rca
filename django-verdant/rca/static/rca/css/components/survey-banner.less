@@ -1,16 +1,12 @@
 .survey-banner {
     background-color: @color-white;
     position: relative;
-    padding-top: 20px;
-    padding-bottom: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
     display: none;
 
     &--show {
         display: block;
-    }
-
-    @media @media-desktop-small {
-        padding: 0;
     }
 
     &__content {
@@ -20,7 +16,7 @@
 
         @media @media-desktop-small {
             max-width: 650px;
-            margin: 0 auto;
+            margin: 0;
             flex-wrap: nowrap;
             align-items: center;
         }

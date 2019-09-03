@@ -30,7 +30,7 @@
         }
     }
 
-    .header-content-dark & {
+    .theme-dark & {
         @{root}__label {
             color: @color--black;
         }
@@ -41,7 +41,7 @@
         }
     }
 
-    .header-content-light &,
+    .theme-light &,
     .headroom--pinned.headroom--not-top &,
     .app__navigation & {
         @{root}__label {
@@ -50,6 +50,7 @@
 
         @{root}__icon {
             fill: @color--white;
+            stroke: @color--white;
         }
     }
 }

@@ -9,18 +9,18 @@
      * light or dark classes, or the bg--light and bg--dark. I'm keeping the site 
      * intergration with backend as simple as possible for the header.
      */
-    background-color: @color--black;
+    background-color: transparent;
 
     &__container {
-        max-width: @site-width;
-        margin: 0 15px;
+        max-width: @site-max-width;
+        margin: 0 auto;
         padding-top: (@gutter * 1.5);
         padding-bottom: (@gutter);
         padding-left: 0;
 
         @media @media-medium {
             padding-top: (@gutter * 2);
-            margin: 0 0 0 5%;
+            margin: 0 auto;
         }
     }
 
@@ -293,14 +293,14 @@
         }
     }
 
-    .header-content-light & {
+    .theme-light & {
         @{root}__search-toggle,
         @{root}__menu-toggle {
             color: @color--white;
         }
     }
 
-    .header-content-dark & {
+    .theme-dark & {
         @{root}__search-toggle,
         @{root}__menu-toggle {
             color: @color--black;
@@ -318,17 +318,5 @@
             color: @color--white;
         }
     }
-
-    &__spacer {
-        /**
-         * 123px is the height of the header currently.
-         * I'm not sure how to structure the header code such that it pushes 
-         * content down automatically to the right height...
-         */
-        padding-bottom: 123px;
-
-        @media @media-medium {
-            padding-bottom: 133px;
-        }
-    }
+    
 }

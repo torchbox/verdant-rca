@@ -14,7 +14,7 @@
     }
 
     &__toggle-label {
-        font-size: 14px;
+        font-size: 12px;
         margin-left: (@gutter / 2);
         color: @color--white;
     }
@@ -23,21 +23,34 @@
         stroke: @color--white;
     }
 
-    .header-content-dark .header & {
+    .theme-dark .header & {
         @{root}__toggle-icon {
-            stroke: @color--white;
+            stroke: @color--black;
+        }
+        
+        @{root}__toggle-label {
+            color: @color--black;
         }
     }
 
-    .header-content-light .header & {
+    .theme-light .header & {
         @{root}__toggle-icon {
             stroke: @color--white;
         }
+        
+        @{root}__toggle-label {
+            color: @color--white;
+        }
     }
+    
 
     .headroom--pinned.headroom--not-top & {
         @{root}__toggle-icon {
             stroke: @color--white;
+        }
+        
+        @{root}__toggle-label {
+            color: @color--white;
         }
     }
 
