@@ -4,7 +4,9 @@
 {% block body_class %}showrca theme-show2015 {% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
 
 {% block logo %}
-    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><img src="{% static 'rca_show/images/logo-2019.png' %}" alt="Show RCA {{ self.show_index.year }}" /></a>
+    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="show-name">
+        <img src="{% static 'rca_show/images/logo-2019.png' %}" alt="Show RCA {{ self.show_index.year }}" />
+    </a>
 {% endblock %}
 
 {% block extra_footer %}
@@ -12,8 +14,8 @@
         <a href="/" class="logo-rca">Royal College of Art</a>
     </div>
 
-    <div class="footer full-width-footer">
-        <div class="footer-wrapper">
+    <div class="show-footer full-width-footer">
+        <div class="standard-wrapper">
             <footer>
                 <ul>
                     <li>
