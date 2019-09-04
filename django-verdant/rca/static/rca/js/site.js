@@ -718,46 +718,6 @@ function onDocumentReady(jQuery, inLightBox){
       return dontShowCookieNotice;
     };
 
-    var displaySurveyBanner = function(context, settings) {
-        var $surveyBanner = $('#survey-banner');
-        // Notice and message
-        $surveyBanner.addClass('survey-banner--show');
-
-        // Close button
-        $(document).on('click', '#survey-banner-close',  function() {
-            $surveyBanner.slideUp("slow");
-            return false;
-        });
-
-        // Set notice to never show again by default.
-        dontShowSurveyBannerAgain();
-      };
-
-      var dontShowSurveyBannerAgain = function() {
-        // domainroot root variable is set in base.html - needed so the same cookie works across all subdomains
-
-        // set or extend the cookie life for a year
-        var exdate = new Date();
-        exdate.setDate(exdate.getDate() + 365);
-        document.cookie = "dontShowSurveyBanner=" + "TRUE; expires=" + exdate.toUTCString() + ";domain=" + domainroot + ";path=/";
-      };
-
-      var pleaseShowSurveyBanner = function() {
-        // Don't show the notice if we have previously set a cookie to hide it
-        var dontShowSurveyBanner = (document.cookie.indexOf("dontShowSurveyBanner") != -1) ? false : true;
-        return dontShowSurveyBanner;
-      };
-
-
-    $('body').once(function(){
-      if (pleaseShowCookieNotice() == true) {
-        displayCookieNotice();
-      }
-      if (pleaseShowSurveyBanner() == true) {
-        displaySurveyBanner();
-      }
-    });
-
     var enquiryForm = function() {
 
         var $trigger            = $( '.js-enquiry-form-trigger' ),
