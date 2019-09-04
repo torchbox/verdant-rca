@@ -15,7 +15,6 @@
     margin-top: (@gutter * 2);
     padding-left: @gutter;
     padding-right: @gutter;
-
     padding-top: (@gutter * 2);
     padding-bottom: @gutter;
     background-color: @color--black;
@@ -28,6 +27,11 @@
     @media @media-large {
         padding-top: (@gutter * 8);
         padding-bottom: (@gutter * 5);
+    }
+    
+    .showrca & {
+        margin-top: 0;
+        padding-top: (@gutter * 4);
     }
 
     &__upper {

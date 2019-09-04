@@ -24,6 +24,10 @@ header .exhibition-date{
     .transition(opacity 0.5s ease);
 }
 
+.show-name {
+    display: block;
+}
+
 body{
     .clearfix(); /* necessary as immediate children are floated */
 }
@@ -172,7 +176,7 @@ header {
 .full-width-footer{
     margin-top:0;
 
-    &.footer{
+    &.show-footer{
         margin-top:@spacing-two;
     }
 }
@@ -181,9 +185,9 @@ header {
     top:20em;
 }
 
-.footer{
+.show-footer{
     footer{
-        padding:1em;
+        padding:2em;
     }
     ul{
         .unlist();
@@ -235,7 +239,7 @@ header {
     margin-right:-1em;
 }
 
-.showrca .footer-logo{
+.showrca .footer-logo {
     display:none;
 }
 
