@@ -718,6 +718,12 @@ function onDocumentReady(jQuery, inLightBox){
       return dontShowCookieNotice;
     };
 
+    $('body').once(function(){
+      if (pleaseShowCookieNotice() == true) {
+        displayCookieNotice();
+      }
+    });
+
     var enquiryForm = function() {
 
         var $trigger            = $( '.js-enquiry-form-trigger' ),
