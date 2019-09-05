@@ -9,11 +9,20 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <link rel="shortcut icon" href="{% static "rca/images/favicon.ico" %}" />
         <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_postfix %} | Royal College of Art{% endblock %}</title>
         <meta name="description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta http-equiv="cleartype" content="on" />
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static "rca/images/apple-touch-icon.png" %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static "rca/images/favicon-32x32.png" %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static "rca/images/favicon-16x16.png" %}">
+        <link rel="manifest" href="{% static "rca/images/site.webmanifest" %}">
+        <link rel="mask-icon" href="{% static "rca/images/safari-pinned-tab.svg" %}" color="#000000">
+        <link rel="shortcut icon" href="{% static "rca/images/favicon.ico" %}">
+        <meta name="msapplication-TileColor" content="#000000">
+        <meta name="msapplication-config" content="{% static "rca/images/browserconfig.xml" %}">
+        <meta name="theme-color" content="#000000">
 
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
