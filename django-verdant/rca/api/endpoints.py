@@ -4,6 +4,7 @@ from wagtail.api.v2.endpoints import PagesAPIEndpoint
 from wagtail.wagtailimages.api.v2.endpoints import ImagesAPIEndpoint
 
 from .serializers import RCAPageSerializer, RCAImageSerializer
+from .filters import RelatedProgrammesFilter, NextEventOrder
 
 
 class RCAPagesAPIEndpoint(PagesAPIEndpoint):
@@ -22,6 +23,15 @@ class RCAPagesAPIEndpoint(PagesAPIEndpoint):
 
     # Allow the parent field to appear on listings
     detail_only_fields = []
+
+    filter_backends = [
+        RelatedProgrammesFilter,
+        NextEventOrder,
+    ] + PagesAPIEndpoint.filter_backends
+    known_query_parameters = PagesAPIEndpoint.known_query_parameters.union([
+        'rp',
+        'event_date_from',
+    ])
 
 
 class RCAImagesAPIEndpoint(ImagesAPIEndpoint):
