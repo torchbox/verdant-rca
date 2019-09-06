@@ -31,4 +31,5 @@ class RCAImagesAPIEndpoint(ImagesAPIEndpoint):
         'thumbnail',
         'original',
         'rca2019_feed_image',
+        'rca2019_feed_image_small',
     ]
