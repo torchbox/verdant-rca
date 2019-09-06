@@ -30,4 +30,5 @@ class RCAImagesAPIEndpoint(ImagesAPIEndpoint):
     body_fields = ImagesAPIEndpoint.body_fields + [
         'thumbnail',
         'original',
+        'rca2019_feed_image',
     ]
