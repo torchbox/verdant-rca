@@ -17,6 +17,11 @@ class RelatedProgrammesFilter(filters.BaseFilterBackend):
             if rp:
                 queryset = queryset.filter(related_programme__slug__in=rp)
 
+        if hasattr(queryset.model, 'programme'):
+            rp = request.GET.getlist('rp', [])
+            if rp:
+                queryset = queryset.filter(programme__slug__in=rp)
+
         if hasattr(queryset.model, 'roles'):
             rp = request.GET.getlist('rp', [])
             if rp:
