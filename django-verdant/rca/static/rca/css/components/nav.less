@@ -1,4 +1,7 @@
 .nav {
+    @sub-nav-height--small: 500px;
+    @sub-nav-height--large: 900px;
+    @gradient-height: 200px;
     margin-bottom: 1rem;
 
     &--primary {
@@ -14,10 +17,13 @@
     }
 
     &--subnav {
+        position: relative;
         height: 100%;
         display: none;
-        max-height: 500px;
+        max-height: @sub-nav-height--small;
         overflow-y: scroll;
+        margin-bottom: 0;
+        padding-bottom: @gradient-height;
 
         // hide scrollbars as per clients request
         scrollbar-width: none; // sass-lint:disable-line no-misspelled-properties
@@ -33,17 +39,34 @@
             display: block;
         }
 
-        @media @media-medium {
-            max-height: 500px;
-        }
-
         @media @media-large {
             padding-top: (@gutter * 9.5);
-            max-height: 900px;
+            max-height: @sub-nav-height--large;
 
             .headroom--pinned.headroom--not-top & {
                 padding-top: (@gutter * 8);
             }
+        }
+        
+        &::after {
+            content: '';
+            display: block;
+            pointer-events: none;
+            position: fixed;
+            top: 340px;
+            left: 0;
+            right: 0;
+            height: @gradient-height;
+            background: linear-gradient(
+                358.73deg,
+                rgba(0, 0, 0, 0.96) 3.08%,
+                rgba(0, 0, 0, 0) 124.08%
+            );
+
+            @media @media-large {
+                top: calc(@sub-nav-height--large - @gradient-height);
+            }
+            
         }
     }
 
