@@ -48,7 +48,6 @@ class Command(BaseCommand):
         updated_count = 0
         created_count = 0
         error_count = 0
-        local_netloc = True
 
         with open(file_path, 'r') as f:
             reader = DictReader(f)
