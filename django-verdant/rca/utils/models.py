@@ -61,7 +61,6 @@ class SocialFields(models.Model):
                                      help_text=help_text('utils.SocialFields', 'social_image'))
     social_text = models.CharField(max_length=255, blank=True, help_text=help_text('utils.SocialFields', 'social_text'))
 
-
     class Meta:
         abstract = True
 
