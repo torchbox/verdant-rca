@@ -12,10 +12,7 @@ def get_page_from_path(path):
     """ Takes a full url. Roughly reproduces wagtail.wagtailcore.views.serve.
     """
     parsed_path = urlparse(path)
-    try:
-        site = Site.objects.get(hostname=parsed_path.netloc)
-    except Site.DoesNotExist:
-        import pdb; pdb.set_trace()
+    site = Site.objects.get(hostname=parsed_path.netloc)
 
     path_components = [component for component in parsed_path.path.split('/')
                        if component]
@@ -53,62 +50,66 @@ class Command(BaseCommand):
             reader = DictReader(f)
 
             for row in reader:
-                old_path = row[from_header]
-                new_path = row[to_header]
+                old_path = row[from_header].strip()
+                new_path = row[to_header].strip()
 
-                if old_path and new_path:
+                if not old_path:
+                    continue
 
-                    # urlparse requires at least a '//' to avoid identifying the
-                    # domain as a path component
-                    if '//' not in old_path:
-                        old_path = '//' + old_path
+                if not new_path:
+                    continue
 
-                    netloc = urlparse(old_path).netloc
-                    if not netloc:
-                        print("Line {} - No domain provided: {}".format(reader.line_num, old_path))
-                        continue
+                # urlparse requires at least a '//' to avoid identifying the
+                # domain as a path component
+                if '//' not in old_path:
+                    old_path = '//' + old_path
 
-                    try:
-                        old_site = Site.objects.get(hostname=netloc)
-                    except Site.DoesNotExist:
-                        print("Line {} - Site does not exist: {}".format(reader.line_num, netloc))
-                        error_count += 1
-                        continue
+                netloc = urlparse(old_path).netloc
+                if not netloc:
+                    print("Line {} - No domain provided: {}".format(reader.line_num, old_path))
+                    continue
 
-                    normalised_path = Redirect.normalise_path(old_path)
+                try:
+                    old_site = Site.objects.get(hostname=netloc)
+                except Site.DoesNotExist:
+                    print("Line {} - Site does not exist: {}".format(reader.line_num, netloc))
+                    error_count += 1
+                    continue
 
-                    if len(normalised_path) > 255:
-                        print(
-                            "Line {} - 'From' path is too long ({} characters, maximum is 255)".format(
-                                reader.line_num, len(normalised_path))
+                normalised_path = Redirect.normalise_path(old_path)
+
+                if len(normalised_path) > 255:
+                    print(
+                        "Line {} - 'From' path is too long ({} characters, maximum is 255)".format(
+                            reader.line_num, len(normalised_path))
                         )
-                        error_count += 1
-                        continue
+                    error_count += 1
+                    continue
 
                     # We don't use .get_or_create because we want to support the
                     # --dry-run flag
-                    with transaction.atomic():
-                        try:
-                            redirect = Redirect.objects.get(site=old_site,
-                                                            old_path=normalised_path)
-                            updated_count += 1
-                        except Redirect.DoesNotExist:
-                            redirect = Redirect(site=old_site,
-                                                old_path=normalised_path)
-                            created_count += 1
 
-                        try:
-                            target_page = get_page_from_path(new_path) #optimally, get Page for redirect
-                            if not dry_run:
-                                redirect.redirect_page = target_page
-                                redirect.save()
-                        except Page.DoesNotExist:
-                            print("Line {} - Page does not exist: {}. Linking to URL.".format(reader.line_num, new_path))
-                            target_url = new_path #else link to URL directly
-                            if not dry_run:
-                                redirect.redirect_link = target_url
-                                redirect.save()
-                            continue
+                try:
+                    redirect = Redirect.objects.get(site=old_site,
+                                                    old_path=normalised_path)
+                    updated_count += 1
+                except Redirect.DoesNotExist:
+                    redirect = Redirect(site=old_site,
+                                        old_path=normalised_path)
+                    created_count += 1
+
+                try:
+                    target_page = get_page_from_path(new_path) #optimally, get Page for redirect
+                    if not dry_run:
+                        redirect.redirect_page = target_page
+                        redirect.save()
+                except Page.DoesNotExist:
+                    print("Line {} - Page does not exist: {}. Linking to URL.".format(reader.line_num, new_path))
+                    target_url = new_path #else link to URL directly
+                    if not dry_run:
+                        redirect.redirect_link = target_url
+                        redirect.save()
+                        continue
 
         print("\n")
         print("Created: {}".format(created_count))
