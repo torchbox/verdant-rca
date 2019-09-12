@@ -90,26 +90,21 @@ class Command(BaseCommand):
                     # --dry-run flag
 
                 try:
-                    redirect = Redirect.objects.get(site=old_site,
-                                                    old_path=normalised_path)
+                    redirect = Redirect.objects.get(site=old_site, old_path=normalised_path)
                     updated_count += 1
                 except Redirect.DoesNotExist:
-                    redirect = Redirect(site=old_site,
-                                        old_path=normalised_path)
+                    redirect = Redirect(site=old_site, old_path=normalised_path)
                     created_count += 1
 
                 try:
                     target_page = get_page_from_path(new_path) #optimally, get Page for redirect
-                    if not dry_run:
-                        redirect.redirect_page = target_page
-                        redirect.save()
+                    redirect.redirect_page = target_page
                 except Page.DoesNotExist:
                     print("Line {} - Page does not exist: {}. Linking to URL.".format(reader.line_num, new_path))
                     target_url = new_path #else link to URL directly
-                    if not dry_run:
-                        redirect.redirect_link = target_url
-                        redirect.save()
-                        continue
+                    redirect.redirect_link = target_url
+                if not dry_run:
+                    redirect.save()
 
         print("\n")
         print("Created: {}".format(created_count))
