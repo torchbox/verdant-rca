@@ -21,12 +21,24 @@
             @media @media-medium {
                 width: 230px;
             }
+            
+            &--dark {
+                display: none;
+            }
         }
     }
 
     .theme-dark .header & {
         @{root}__image {
             fill: @color--black;
+            
+            &--light {
+                display: none;
+            }
+
+            &--dark {
+                display: block;
+            }
         }
     }
 
@@ -36,12 +48,28 @@
             fill: @color--white;
         }
     }
+    
+    .app__navigation & {
+        @{root}__image {
+            &--dark {
+                display: none;
+            }
+        }
+    }
 
     .headroom--pinned.headroom--not-top .header &,
     .headroom--pinned.headroom--not-top .app__navigation & {
         @{root}__image {
             width: 92px;
             fill: @color--white;
+            
+            &--light {
+                display: block;
+            }
+
+            &--dark {
+                display: none;
+            }
         }
     }
 
