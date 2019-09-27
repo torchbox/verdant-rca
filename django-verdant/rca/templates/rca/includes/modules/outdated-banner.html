@@ -7,3 +7,11 @@
         <p class="outdated-banner__copy body body--two">For the best experience, you should upgrade your browser. <a class="link link--tertiary" href="https://www.rca.ac.uk/contact-us/about-this-website/accessibility/">Visit our accessibility page</a> to view a list of supported browsers along with links to download the latest version.</p>
     </div>
 </div>
+
+<style>
+    @supports (display: grid) {
+        .outdated-banner {
+            display: none;
+        }
+   }
+</style>
