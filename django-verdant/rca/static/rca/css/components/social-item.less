@@ -1,0 +1,65 @@
+.social-item {
+    @root: ~".social-item";
+    display: flex;
+    align-items: flex-end;
+    margin-right: (@gutter * 2);
+    width: 24px;
+    height: 24px;
+
+    &--twitter {
+        @{root}__icon {
+            width: 18px;
+        }
+    }
+
+    &--instagram {
+        @{root}__icon {
+            width: 18px;
+        }
+    }
+
+    &--facebook {
+        @{root}__icon {
+            width: 18px;
+        }
+    }
+
+    &--linkedin {
+        @{root}__icon {
+            width: 18px;
+        }
+    }
+
+    &--youtube {
+        @{root}__icon {
+            width: 24px;
+        }
+    }
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    &__link {
+        display: block;
+    }
+
+    &__icon {
+        width: auto;
+        transition: fill @transition;
+    }
+
+    .footer & {
+        @{root}__icon {
+            fill: @color--white;
+        }
+
+        @{root}__link {
+            &:hover {
+                @{root}__icon {
+                    fill: @color--light-grey;
+                }
+            }
+        }
+    }
+}

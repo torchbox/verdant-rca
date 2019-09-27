@@ -12,6 +12,17 @@
 @import "grid.less";
 @import "mixins.less";
 
+.standard-wrapper,
+.page-wrapper,
+.pjax-wrapper {
+	padding-left: (@gutter * 3);
+	padding-right: (@gutter * 3);
+}
+
+.page-wrapper {
+	padding-top: 170px;
+}
+
 .type-programme {
     .programme-details {
         // Head of programme statement etc in left hand column
@@ -98,6 +109,10 @@
         margin-right: 0;
     }
 
+}
+
+.header-wrapper .page-header {
+    margin-top: @gutter;
 }
 
 /* must come at bottom of file*/

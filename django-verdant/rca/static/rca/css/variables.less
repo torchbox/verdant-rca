@@ -38,7 +38,7 @@
 @grid-gutter-width: 16px;
 @grid-max-width: 960px;
 @right-col-width: 180px; /* fixed value at all desktop resolutions */
-@site-max-width: 1300px;
+@site-max-width: 1440px;
 
 /**
  * $Typography
@@ -80,9 +80,9 @@ you would use 'font-weight:bold;', use the '.bold()' mixin instead */
 @font-size-18:  1.200em; /* 18px */
 @font-size-16:  1.067em; /* 16px */
 @font-size-15:  1em;     /* 15px */
-@font-size-14:  0.933em; /* 14px */
-@font-size-13:  0.867em;  /* 13px */
-@font-size-12:  0.800em; /* 12px */
+@font-size-14:  0.933em; /* 14px */ //fontsize(xxs)
+@font-size-13:  0.867em; /* 13px */
+@font-size-12:  0.800em; /* 12px */ //fontsize(xxxs)
 @font-size-11:  0.733em; /* 11px */
 @font-size-10:  0.667em; /* 10px */
 
@@ -122,9 +122,9 @@ you would use 'font-weight:bold;', use the '.bold()' mixin instead */
  * $Media query sizes
  * Used in some mixins to 'bubble' different versions for different media queries
  */
-@media-mobile: ~"screen and (min-width:500px)";
+@media-mobile: ~"screen and (min-width:599px)";
 @media-desktop-small: ~"screen and (min-width:768px)";
-@media-desktop-regular: ~"screen and (min-width:1024px)";
+@media-desktop-regular: ~"screen and (min-width:1023px)";
 @media-desktop-large: ~"screen and (min-width:1280px)";
 @media-retina: ~"(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)";
 
@@ -154,6 +154,7 @@ you would use 'font-weight:bold;', use the '.bold()' mixin instead */
 @color-middle-column-lines: #d6d6d6;
 @color-tab-grey: darken(@color-pale-grey, 10%);
 @color-icon-grey: #cdcdcd;
+
 
 /* highlight colours */
 @color-rca-blue: #001950;
@@ -189,3 +190,77 @@ you would use 'font-weight:bold;', use the '.bold()' mixin instead */
 @header-height-mobile: 67px;
 @share-link-height: 48px;
 @sidebarWidth: 370px;
+
+/**
+ * Other variables ported over for site rebuild. 
+ * Colours
+ */
+
+@color--black: #000;
+@color--white: #fff;
+@color--orange: #ff5d1c;
+@color--light-grey: #797979;
+@color--dark-grey: #676767;
+
+@color--white-12: rgba(255, 255, 255, 0.12);
+@color--white-24: rgba(255, 255, 255, 0.24);
+@color--black-12: rgba(0, 0, 0, 0.12);
+@color--black-80: rgba(0, 0, 0, 0.8);
+@color--black-24: rgba(0, 0, 0, 0.24);
+
+@color--primary: @color--black;
+@color--secondary: @color--white;
+@color--tertiary: @color--orange;
+
+@color--link-lightbg: @color--black;
+@color--link-darkbg: @color--white;
+
+@color--link-lightbg-hover: @color--tertiary;
+@color--link-darkbg-hover: @color--tertiary;
+
+@color--scrollbar-darkbg-bg: @color--white-24;
+@color--scrollbar-lightbg-bg: @color--black-24;
+
+@color--grid-line-light: @color--white-12;
+@color--grid-line-dark: @color--black-12;
+
+@color--meta: @color--light-grey;
+@color--grid-line-light: @color--white-12;
+@color--grid-line-dark: @color--black-12;
+
+/* FONTS
+ * Some typography with font sizes is in the mixin folder.
+ * 
+ */
+
+@font--primary: 'Benton Sans', 'BentonSans', 'Helvetica Neue', Arial, Helvetica,
+    Sans-Serif;
+@font--secondary: 'Benton Sans Medium', 'BentonSans-Medium', 'Helvetica Neue',
+    Arial, Helvetica, Sans-Serif;
+
+// Font weights
+@weight--bold: 700;
+@weight--semibold: 600;
+@weight--medium: 500;
+@weight--normal: 400;
+@weight--light: 200;
+
+// Line heights
+@line-height-large: 122%;
+@base-line-height: 20px;
+
+// Font sizes
+@base-font-size: 18px;
+
+// --------------------------------- Transitions --------------------------------------
+
+@transition: 0.25s ease-out;
+@cubic-transition: 250ms cubic-bezier(0.24, 0.26, 0.2, 1);
+
+// --------------------------------- Grid Dimensions --------------------------------------
+
+@grid: 20px;
+@gutter: @grid;
+
+@media-medium: ~"screen and (min-width: 599px)";
+@media-large: ~"screen and (min-width: 1023px)";

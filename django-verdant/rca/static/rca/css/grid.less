@@ -64,3 +64,20 @@
 .pull-padding(@offset:1, @grid-columns:@grid-columns){
     padding-right: 100%*(@offset / @grid-columns);
 }
+
+.grid-layout() {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 @grid;
+    max-width: @site-max-width;
+    margin: 0 auto;
+
+    @media @media-medium {
+        padding: 0 @grid * 3;
+    }
+
+    @media @media-large {
+        grid-template-columns: 16.74% 1fr 1fr 1fr 16.74%;
+        margin: 0 auto;
+    }
+}

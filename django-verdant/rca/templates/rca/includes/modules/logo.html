@@ -1,0 +1,10 @@
+{% load wagtailcore_tags %}
+
+<a class="logo" href="{% slugurl 'home' %}">
+    <svg class="logo__image logo__image--light" width="162" height="70">
+        <use xlink:href="#logo-light" />
+    </svg>
+    <svg class="logo__image logo__image--dark" width="162" height="70">
+        <use xlink:href="#logo-dark" />
+    </svg>
+</a>

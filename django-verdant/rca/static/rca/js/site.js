@@ -216,7 +216,7 @@ function onDocumentReady(jQuery, inLightBox){
     }
 
     showSearchSubmit();
-    showSearchAutocomplete();
+    //showSearchAutocomplete(); //Removed for the new header and footer.
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul', $('.today').hasClass('expanded'));
     showHideSlide('.related h2', '.related', '.related .wrapper');

@@ -1,0 +1,325 @@
+.header {
+    @root: ~".header";
+
+    //Font update for the new site.
+    font-family: @font--primary;
+
+    /**
+     * Determines the background colour, this isn't related to the header-content
+     * light or dark classes, or the bg--light and bg--dark. I'm keeping the site 
+     * intergration with backend as simple as possible for the header.
+     */
+    background-color: transparent;
+
+    &__container {
+        max-width: @site-max-width;
+        margin: 0 auto;
+        padding-top: (@gutter * 1.5);
+        padding-bottom: @gutter;
+        padding-left: @gutter;
+        padding-right: @gutter;
+
+        @media @media-desktop-regular {
+            padding-top: (@gutter * 2);
+            padding-left: (@gutter * 3);
+            padding-right: (@gutter * 3);
+            margin: 0 auto;
+        }
+    }
+
+    &__navigation-toggle {
+        display: flex;
+        align-items: flex-start;
+
+        .header__menus & {
+            z-index: 80;
+            position: relative;
+            padding-top: (@gutter * 2);
+        }
+
+        // When inside pinned nav
+        .headroom--pinned.headroom--not-top .header__menus & {
+            padding-top: 8px;
+        }
+
+        .headroom--pinned.headroom--not-top & {
+            align-items: center;
+        }
+    }
+
+    &__menu-toggle {
+        margin-top: 4px;
+        margin-left: auto;
+        cursor: pointer;
+        transition: opacity @transition;
+
+        .headroom--pinned.headroom--not-top & {
+            @media @media-medium {
+                margin-top: 0;
+            }
+        }
+
+        &:hover,
+        &:focus,
+        &:active {
+            color: @color--black;
+        }
+
+        @media @media-medium {
+            margin-right: 10%;
+            margin-left: 0;
+        }
+
+        &--small {
+            @media @media-medium {
+                display: none;
+            }
+        }
+
+        &--medium {
+            display: none;
+
+            @media @media-medium {
+                display: flex;
+            }
+        }
+
+        .app__navigation & {
+            margin-top: (@grid * 2.5);
+            opacity: 0.4;
+
+            @media @media-medium {
+                margin-top: 4px;
+            }
+        }
+
+        .menu-active & {
+            opacity: 1;
+        }
+    }
+
+    &__search-toggle {
+        transition: opacity @transition;
+
+        &:hover,
+        &:focus,
+        &:active {
+            opacity: 0.7;
+        }
+
+        .app__navigation & {
+            opacity: 0.4;
+        }
+
+        .search-active & {
+            opacity: 1;
+        }
+    }
+
+    &__menu-close {
+        fill: @color--white;
+        position: absolute;
+        right: 0;
+
+        @media @media-medium {
+            bottom: 0;
+            right: @gutter;
+        }
+    }
+
+    &__menus {
+        .grid-layout();
+
+        @media @media-large {
+            &::before {
+                content: '';
+                background: @color--primary;
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                display: block;
+                transform: translate3d(-100%, 0%, 0);
+            }
+        }
+    }
+
+    &__inner {
+        background: @color--primary;
+        padding-top: (@gutter * 2);
+
+        @media @media-large {
+            height: 100vh;
+        }
+
+        .headroom--pinned.headroom--not-top & {
+            padding-top: (@gutter);
+        }
+
+        &--container {
+            padding-top: 0;
+
+            @media @media-medium {
+                position: relative;
+            }
+        }
+
+        &--menu-container {
+            position: absolute;
+            left: @gutter;
+            width: calc(100% - 40px);
+            margin-top: (@gutter * 3.75);
+            height: 80%;
+
+            .search-active & {
+                margin-top: (@gutter * 5.25);
+            }
+
+            @media @media-medium {
+                left: unset;
+                width: 100%;
+                margin-top: (@gutter * 2.25);
+            }
+
+            @media @media-large {
+                position: static;
+                margin-top: 0;
+            }
+        }
+
+        &--drawer {
+            transition: transform @cubic-transition;
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            display: none;
+            padding-top: 0;
+
+            @media @media-medium {
+                padding-top: (@gutter * 2);
+            }
+
+            @media @media-large {
+                padding-top: 0;
+            }
+
+            .menu-active & {
+                display: block;
+            }
+        }
+
+        &--level-zero {
+            position: relative;
+
+            .search-active & {
+                position: static;
+
+                @media @media-large {
+                    position: relative;
+                }
+            }
+
+            @media @media-medium {
+                height: 100vh;
+            }
+        }
+
+        &--level-one {
+            z-index: 80;
+            position: relative;
+            padding-top: 0;
+            margin-top: -(@gutter * 1.5);
+
+            @media @media-medium {
+                margin-top: 0;
+                padding-top: (@gutter * 2);
+            }
+
+            @media @media-large {
+                padding-top: (@gutter * 6.25);
+                height: 830px;
+
+                .headroom--pinned.headroom--not-top & {
+                    padding-top: (@gutter * 6.25);
+                }
+            }
+        }
+
+        &--level-two {
+            z-index: 80;
+            transform: translate3d(100%, 0, 0);
+
+            &.is-visible {
+                transform: translate3d(0, 0, 0);
+
+                // keep level three attached to level two
+                // to prevent overlapping
+                + @{root}__inner--level-three {
+                    @media @media-large {
+                        z-index: 40;
+                        transform: translate3d(100%, 0, 0);
+                    }
+
+                    // level three open styles
+                    &.is-visible {
+                        z-index: 80;
+                        transform: translate3d(0, 0, 0);
+
+                        @media @media-large {
+                            z-index: 40;
+                            transform: translate3d(200%, 0, 0);
+                        }
+                    }
+                }
+            }
+
+            @media @media-large {
+                z-index: 50;
+                transform: translate3d(0, 0, 0);
+
+                &:hover,
+                &.is-visible {
+                    transform: translate3d(100%, 0, 0);
+                }
+            }
+        }
+
+        // level three closed styles
+        &--level-three {
+            transform: translate3d(100%, 0, 0);
+
+            @media @media-large {
+                transform: translate3d(0, 0, 0);
+                z-index: 50;
+            }
+        }
+    }
+
+    .theme-light & {
+        @{root}__search-toggle,
+        @{root}__menu-toggle {
+            color: @color--white;
+        }
+    }
+
+    .theme-dark & {
+        @{root}__search-toggle,
+        @{root}__menu-toggle {
+            color: @color--black;
+        }
+    }
+
+    // Show when scrolling back up
+    .headroom--pinned.headroom--not-top & {
+        @{root}__container {
+            padding-top: (@gutter);
+        }
+
+        @{root}__search-toggle,
+        @{root}__menu-toggle {
+            color: @color--white;
+        }
+    }
+    
+}

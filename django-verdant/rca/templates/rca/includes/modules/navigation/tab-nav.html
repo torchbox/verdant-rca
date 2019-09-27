@@ -1,0 +1,18 @@
+<nav class="tab-nav"> {# class sticky can be added #}
+    <div class="tab-nav__layout grid">
+        <ul class="tab-nav__container" role="tablist">
+            {% for tab in tabs %}
+                <li id="{{ tab.title|slugify }}" class="tab-item js-tab-item {% if forloop.counter == 1 %}active{% endif %}" role="tab" aria-controls="tab-panel-{{ tab.title|slugify }}" aria-selected="true">
+                    <a class="tab-item__link" href="#">{{ tab.title }}</a>
+                </li>
+            {% endfor %}
+            <li class="tab-item">
+                <a href="#contact" class="tab-item__link link link--tertiary link--down">
+                    <span class="link__label">Contact us</span>
+                    <svg width="12" height="8" class="link__icon"><use xlink:href="#arrow"></use></svg>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="tab-nav__placeholder"></div>

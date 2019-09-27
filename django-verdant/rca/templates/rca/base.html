@@ -9,11 +9,20 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <link rel="shortcut icon" href="{% static "rca/images/favicon.ico" %}" />
         <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_postfix %} | Royal College of Art{% endblock %}</title>
         <meta name="description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta http-equiv="cleartype" content="on" />
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static "rca/images/apple-touch-icon.png" %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static "rca/images/favicon-32x32.png" %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static "rca/images/favicon-16x16.png" %}">
+        <link rel="manifest" href="{% static "rca/images/site.webmanifest" %}">
+        <link rel="mask-icon" href="{% static "rca/images/safari-pinned-tab.svg" %}" color="#000000">
+        <link rel="shortcut icon" href="{% static "rca/images/favicon.ico" %}">
+        <meta name="msapplication-TileColor" content="#000000">
+        <meta name="msapplication-config" content="{% static "rca/images/browserconfig.xml" %}">
+        <meta name="theme-color" content="#000000">
 
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -85,7 +94,7 @@
 
     </head>
 
-    <body class="{% block body_class %}{% endblock %}">
+    <body class="{% block body_class %}{% endblock %} app theme-dark">
 
         <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MJ4J2Q8" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -99,47 +108,26 @@
         {% include "rca/includes/campaigns_trackers.html" %}
 
         {% include "rca/includes/sprites.html" %}
+        {% include "rca/includes/modules/outdated-banner.html" %}
 
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
-        {% block enquiry_form_button %}
-            <div class="enquiry-button-wrapper">
-            {% if settings.rca.EnquiryFormSettings.form_page %}
-                <button class="enquiry-form-trigger enquiry-form-trigger--body js-enquiry-form-trigger">
-                    Enquire to study
-                </button>
-            {% endif %}
-            </div>
-        {% endblock %}
+        <!-- New site header include. -->
+        <header class="app__header">
+            {% include "rca/includes/header.html" %}
+        </header>
+
+        <div class="app__navigation" data-nav-container>
+            <section class="header__menus">
+                {% include "rca/includes/modules/navigation/primarynav.html" %}
+            </section>
+        </div>
+
+        {% block enquiry_form_button %}{% endblock %}
 
         <div class="mobile-content-wrapper">
-            {# <div class="mobile-menu-button">Inside</div> #}
-
-            <div class="header-wrapper">
-                <header class="page-header">
-                    {% block logo %}
-                        <a href="/" class="site-name" tabindex="2"><p>Royal College of Art</p></a>
-                    {% endblock %}
-                    <div class="showmenu dl-trigger">Show menu</div>
-                    <div class="showsearch">Show search</div>
-                    <div class="nav-wrapper">
-                        <div class="inner">
-                            <nav>
-                                <h2><a href="javascript: void(0);" class="trigger" tabindex="3">Menu</a></h2>
-                                <ul class="menu dl-menu">
-                                    {% include "rca/menu.html" %}
-                                </ul>
-                            </nav>
-                        </div>
-                        <form class="search" action="{% url 'wagtailsearch_search' %}" method="get">
-                            <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
-                            <input type="submit" value="search" />
-                        </form>
-                    </div>
-                </header>
-            </div>
 
             <div class="page-overlay">
                 <div id="loading-spinner"></div>
@@ -152,7 +140,9 @@
             {% block hero %}{% endblock %}
 
             <div class="page-wrapper">
+                
                 <div class="page-content">
+                    {% block logo %}{% endblock %}
                     {% block layout %}
                         <div class="inner" id="maincontent">
                             {% block top %}{% endblock %}
@@ -181,6 +171,7 @@
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
             <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
             <script src="https://js.stripe.com/v2/"></script>
+            <script src="/static2/js/main.js"></script>
 
             {% if SILVERPOP_ID %}
                 <script src="https://www.sc.pages05.net/lp/static/js/iMAWebCookie.js?{{ SILVERPOP_ID }}&h=www.pages05.net" type="text/javascript"></script>

@@ -54,13 +54,27 @@
 }
 
 html {
-    background: #5b5a5a ;
+    //background: #5b5a5a ;
 }
 
 body {
     font-size: @font-size-base;
     font-family: @font-family-benton-light;
     -webkit-font-smoothing: antialiased; /* Do not remove! */
+
+    &.nav-open {
+        &::after {
+            z-index: 75;
+            content: '';
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: @color--black-80;
+            opacity: 1;
+        }
+    }
 }
 
 html, body {
@@ -496,6 +510,7 @@ ul {
 .page-wrapper {
     .clearfix();
     margin-top:1em;
+    padding-top: 100px;
 }
 
 .page-content {
@@ -524,53 +539,6 @@ aside {
     color: @color-white;
     .clearfix();
 }
-
-/**
- * $Header
- */
-
-/* header has to match width of page-content below so has left and right
-margins like the wrapper. When page-content scrolls up, especially the full width
-footer, we don't want stuff appearing behind the header. This 100% width wrapper
-makes sure that doesn't happen. NB may no longer be needed if we definitely have a transparent background */
-.header-wrapper {
-    margin:0 -15px ;
-    z-index: 199;
-    .clearfix();
-}
-
-header {
-    .clearfix();
-    height: @header-height-mobile;
-    z-index: 4000;
-    position: relative;
-    .site-name {
-        margin-left:-2px; /* necessary to give space for 2 x 1px gaps beside other headers buttons */
-        display: block;
-        float: left;
-        height:100%;
-        background-color:rgba(250,250,250,0.9);
-        width: 70%;
-    }
-    .site-name p { /* logo */
-        text-indent: -2000px;
-        background-image: url('@{path-static}images/logo-header-mobile.png');
-        background-repeat: no-repeat;
-        display: block;
-        width: 110px;
-        height:100%;
-        margin: 10px 0 0 15px;
-
-        @media @media-retina {
-            background-image: url("@{path-static}images/logo-header.png");
-            background-size:110px 48px;
-        }
-    }
-
-
-}
-
-
 
 /**
  * $Show icons for search and menu at mobile size
@@ -2237,12 +2205,29 @@ a.hidden {
 @import "contact.less";
 
 // New components folder added for home page redesign 2018
+@import "components/app";
+@import "components/link";
 @import "components/hero";
 @import "components/hero-search";
 @import "components/homepage-heading";
 @import "components/homepage-block";
 @import "components/slider";
 @import "components/social";
+@import "components/footer";
+@import "components/social-item";
+@import "components/logo";
+@import "components/audience-nav-item";
+@import "components/footer-link-item";
+@import "components/burger";
+@import "components/search-toggle";
+@import "components/header";
+@import "components/tab-nav";
+@import "components/back-link";
+@import "components/nav";
+@import "components/link";
+@import "components/search";
+@import "components/button";
+@import "components/outdated-banner";
 
 // streamfield blocks
 @import "streamfield-blocks/base.less";
@@ -2254,3 +2239,4 @@ a.hidden {
 @import "streamfield-blocks/two-column-block";
 @import "streamfield-blocks/testimonial";
 @import "streamfield-blocks/events.less";
+
