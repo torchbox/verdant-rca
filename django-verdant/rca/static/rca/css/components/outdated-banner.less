@@ -1,4 +1,5 @@
 .outdated-banner {
+    display: none;
     z-index: 110;
     position: fixed;
     left: 0;
@@ -7,10 +8,6 @@
     height: 100vh;
     overflow: auto;
     background-color: @color--black-80;
-
-    @supports (display: grid) {
-        display: none;
-    }
 
     &__modal {
         z-index: 120;
