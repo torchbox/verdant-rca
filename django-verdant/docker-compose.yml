@@ -1,0 +1,46 @@
+version: "2"
+services:
+  base:
+    build: .
+  db:
+    image: postgres:9.6
+    ports:
+      - "5432"
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: rca
+      POSTGRES_PASSWORD: postgres
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.0.0
+    environment:
+      - "discovery.type=single-node"
+    ports:
+      - "9200:9200"
+  web:
+    build: .
+    environment:
+      DJANGO_SETTINGS_MODULE: rcasite.settings.production
+      ALLOWED_HOSTS: 0.0.0.0
+      SECRET_KEY: local_dev_secret_key
+      REDIS_URL: redis://redis:6379/1
+      DATABASE_URL: postgres://rca:postgres@db:5432/rca
+      STATIC_URL: /static/
+      STATIC_DIR: /app/static/
+      SECURE_SSL_REDIRECT: "false"
+      AWS_STORAGE_BUCKET_NAME:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      SEO_NOINDEX: "true"
+      BASIC_AUTH_ENABLED: "true"
+      ELASTICSEARCH_URL: http://es-docker-client1:9200
+    volumes:
+      - ./:/app/
+    ports:
+      - "8509:8000"
+    depends_on:
+      - db
+      - elasticsearch
+      - redis
+  redis:
+    image: redis

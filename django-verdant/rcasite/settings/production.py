@@ -1,6 +1,5 @@
 import os
 import dj_database_url
-import raven
 
 from .base import *  # noqa
 
@@ -19,22 +18,15 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-
-# Send emails from publications@rca.ac.uk via gmail.com
-DEFAULT_FROM_EMAIL = 'publications@rca.ac.uk'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = DEFAULT_FROM_EMAIL
-EMAIL_HOST_PASSWORD = ''
-
-
 # LDAP authentication
 from rca_ldap.settings import *
 
-AUTH_LDAP_BIND_DN = ''
-AUTH_LDAP_BIND_PASSWORD = ''
-AUTH_LDAP_SERVER_URI = ''
+if 'AUTH_LDAP_BIND_DN' in env:
+    AUTH_LDAP_BIND_DN = env['AUTH_LDAP_BIND_DN']
+if 'AUTH_LDAP_BIND_PASSWORD' in env:
+    AUTH_LDAP_BIND_PASSWORD = env['AUTH_LDAP_BIND_PASSWORD']
+if 'AUTH_LDAP_SERVER_URI' in env:
+    AUTH_LDAP_SERVER_URI = env['AUTH_LDAP_SERVER_URI']
 
 AUTHENTICATION_BACKENDS = (
     'django_auth_ldap.backend.LDAPBackend',
@@ -74,9 +66,11 @@ for key, value in os.environ.items():
     if key.startswith('CFG_'):
         env[key[4:]] = value
 
+# Database
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {'default': dj_database_url.config()}
 
 # Basic configuration
-
 APP_NAME = env.get('APP_NAME', 'rca')
 
 if 'SECRET_KEY' in env:
@@ -112,25 +106,6 @@ if 'MEDIA_URL' in env:
 if 'MEDIA_DIR' in env:
     MEDIA_ROOT = env['MEDIA_DIR']
 
-
-# Database
-
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {'default': dj_database_url.config()}
-
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': env.get('PGDATABASE', APP_NAME),
-            'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
-
-            # User, host and port can be configured by the PGUSER, PGHOST and
-            # PGPORT environment variables (these get picked up by libpq).
-        }
-    }
-
-
 # Redis
 # Redis location can either be passed through with REDIS_HOST or REDIS_SOCKET
 
@@ -164,65 +139,18 @@ if REDIS_LOCATION is not None:
 
 
 # Elasticsearch
-
-if 'ELASTICSEARCH_URL' in env:
+if 'SEARCHBOX_URL' in env:
     WAGTAILSEARCH_BACKENDS = {
         'default': {
-            'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
-            'URLS': [env['ELASTICSEARCH_URL']],
+            'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch',
+            'URLS': [env['SEARCHBOX_URL']],
             'INDEX': APP_NAME,
-            'ATOMIC_REBUILD': True,
+            'TIMEOUT': 30,
+            'OPTIONS': {},
         },
     }
 
-
-# Logging
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-        },
-    },
-    'formatters': {
-        'default': {
-            'verbose': '[%(asctime)s] (%(process)d/%(thread)d) %(name)s %(levelname)s: %(message)s'
-        }
-    },
-    'loggers': {
-        'rca': {
-            'handlers': [],
-            'level': 'INFO',
-            'propagate': False,
-            'formatter': 'verbose',
-        },
-        'wagtail': {
-            'handlers': [],
-            'level': 'INFO',
-            'propagate': False,
-            'formatter': 'verbose',
-        },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-            'formatter': 'verbose',
-        },
-        'django.security': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-            'formatter': 'verbose',
-        },
-    },
-}
-
-
 if 'LOG_DIR' in env:
-    # {{ cookiecutter.project_name }} log
     LOGGING['handlers']['rca_file'] = {
         'level': 'INFO',
         'class': 'cloghandler.ConcurrentRotatingFileHandler',
@@ -259,12 +187,3 @@ try:
 except ImportError:
     pass
 
-
-# Raven (sentry error logging)
-
-# This must be after the .local import as RAVEN_DSN is set in local.py
-if 'RAVEN_DSN' in os.environ:
-    RAVEN_CONFIG = {
-        'dsn': os.environ['RAVEN_DSN'],
-        'release': raven.fetch_git_sha(os.path.dirname(os.path.abspath(PROJECT_ROOT))),
-    }
