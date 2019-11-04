@@ -181,6 +181,14 @@ if 'LOG_DIR' in env:
     LOGGING['loggers']['django.request']['handlers'].append('errors_file')
     LOGGING['loggers']['django.security']['handlers'].append('errors_file')
 
+if 'TWITTER_CONSUMER_KEY' in env:
+    TWITTER_CONSUMER_KEY = env['TWITTER_CONSUMER_KEY']
+if 'TWITTER_CONSUMER_SECRET' in env:
+    TWITTER_CONSUMER_SECRET = env['TWITTER_CONSUMER_SECRET']
+if 'TWITTER_ACCESS_TOKEN' in env:
+    TWITTER_ACCESS_TOKEN = env['TWITTER_ACCESS_TOKEN']
+if 'TWITTER_ACCESS_TOKEN_SECRET' in env:
+    TWITTER_ACCESS_TOKEN_SECRET = env['TWITTER_ACCESS_TOKEN_SECRET']
 
 try:
     from .local import *  # noqa
