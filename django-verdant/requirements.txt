@@ -2,7 +2,7 @@ Django==1.9.13
 wagtail==1.6.3
 django-auth-ldap==1.2.6
 Embedly==0.5.0
-elasticsearch==7.0.5
+elasticsearch==1.6.0
 psycopg2==2.7.4
 stripe==1.9.8
 tweepy==2.1
