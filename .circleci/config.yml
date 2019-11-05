@@ -52,6 +52,15 @@ jobs:
           name: deploy staging to heroku
           command: |
             git push https://heroku:$HEROKU_TOKEN@git.heroku.com/$HEROKU_APP_NAME_STAGING.git master
+  deploy_production:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - run:
+          name: deploy master to heroku
+          command: |
+            git push https://heroku:$HEROKU_TOKEN@git.heroku.com/$HEROKU_APP_NAME_PRODUCTION.git master
 
 workflows:
   version: 2
@@ -61,6 +70,20 @@ workflows:
       - deploy_staging:
           requires:
             - test
+          filters:
+            branches:
+              only: staging
+      - confirm_deploy_production:
+          type: approval
+          requires:
+            - test
+          filters:
+            branches:
+              only: heroku-move
+      - deploy_production:
+          requires:
+            - test
+            - confirm_deploy_production
           filters:
             branches:
               only: heroku-move
