@@ -69,6 +69,12 @@ def push_staging_media(c):
 
 
 @task
+def push_production_media(c):
+    """Push local media content to staging isntance"""
+    push_media_to_s3_heroku(c, PRODUCTION_APP_INSTANCE)
+
+
+@task
 def pull_staging_images(c):
     """Pull images from staging AWS S3"""
     pull_images_from_s3_heroku(c, STAGING_APP_INSTANCE)
