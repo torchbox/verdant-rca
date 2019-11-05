@@ -72,7 +72,7 @@ workflows:
             - test
           filters:
             branches:
-              only: staging
+              only: heroku-move
       - confirm_deploy_production:
           type: approval
           requires:
