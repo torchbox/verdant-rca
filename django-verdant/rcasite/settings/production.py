@@ -18,22 +18,6 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-# LDAP authentication
-from rca_ldap.settings import *
-
-if 'AUTH_LDAP_BIND_DN' in env:
-    AUTH_LDAP_BIND_DN = env['AUTH_LDAP_BIND_DN']
-if 'AUTH_LDAP_BIND_PASSWORD' in env:
-    AUTH_LDAP_BIND_PASSWORD = env['AUTH_LDAP_BIND_PASSWORD']
-if 'AUTH_LDAP_SERVER_URI' in env:
-    AUTH_LDAP_SERVER_URI = env['AUTH_LDAP_SERVER_URI']
-
-AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
-
 # Google Analytics
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-3809199-5'
 
@@ -58,8 +42,22 @@ CACHE_CONTROL_MAX_AGE = 30 * 60
 
 # Configuration from environment variables
 # Alternatively, you can set these in a local.py file on the server
-
 env = os.environ.copy()
+
+# LDAP authentication
+from rca_ldap.settings import *
+
+if 'AUTH_LDAP_BIND_DN' in env:
+    AUTH_LDAP_BIND_DN = env['AUTH_LDAP_BIND_DN']
+if 'AUTH_LDAP_BIND_PASSWORD' in env:
+    AUTH_LDAP_BIND_PASSWORD = env['AUTH_LDAP_BIND_PASSWORD']
+if 'AUTH_LDAP_SERVER_URI' in env:
+    AUTH_LDAP_SERVER_URI = env['AUTH_LDAP_SERVER_URI']
+
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # On Torchbox servers, many environment variables are prefixed with "CFG_"
 for key, value in os.environ.items():
