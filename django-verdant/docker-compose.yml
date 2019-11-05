@@ -34,7 +34,6 @@ services:
       - "8509:8000"
     depends_on:
       - db
-      - elasticsearch
       - redis
   redis:
     image: redis
