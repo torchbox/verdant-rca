@@ -70,7 +70,7 @@ def push_staging_media(c):
 
 @task
 def push_production_media(c):
-    """Push local media content to staging isntance"""
+    """Push local media content to production isntance"""
     push_media_to_s3_heroku(c, PRODUCTION_APP_INSTANCE)
 
 
@@ -192,10 +192,6 @@ def push_media_to_s3_heroku(c, app_instance):
         "proceed:\n>>> ".format(app_instance=make_bold(app_instance))
     )
     if input(prompt_msg) != app_instance:
-        print(app_instance)
-        print(app_instance)
-        print(app_instance)
-        print(app_instance)
         raise Exit("Aborted")
     aws_access_key_id = get_heroku_variable(c, app_instance, "AWS_ACCESS_KEY_ID")
     aws_secret_access_key = get_heroku_variable(
