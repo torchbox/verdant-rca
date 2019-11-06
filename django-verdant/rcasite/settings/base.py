@@ -383,9 +383,6 @@ CORS_ALLOW_METHODS = ['GET', 'OPTIONS']
 
 
 if 'AWS_STORAGE_BUCKET_NAME' in env:
-    # http://bit.ly/2TAVBoQ
-    from boto.s3.connection import OrdinaryCallingFormat
-    AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
 
     # Add django-storages to the installed apps
     INSTALLED_APPS.append('storages')
