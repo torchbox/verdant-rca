@@ -371,15 +371,9 @@ NOCAPTCHA = True
 RECAPTCHA_USE_SSL = True
 
 # CORS settings
+if 'CORS_ORIGIN_WHITELIST' in env:
+    CORS_ORIGIN_WHITELIST = env['CORS_ORIGIN_WHITELIST'].split(',')
 
-CORS_ORIGIN_WHITELIST = [
-    'localhost:8000',
-    'intranet.rca.ac.uk',
-    'inforca-staging.torchboxapps.com',
-    'rca-inforca-production.herokuapp.com',
-    'rca-inforca-staging.herokuapp.com',
-    'beta.intranet.rca.ac.uk',
-]
 
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_METHODS = ['GET', 'OPTIONS']
