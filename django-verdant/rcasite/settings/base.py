@@ -305,6 +305,9 @@ CORS_ORIGIN_WHITELIST = [
     'localhost:8000',
     'intranet.rca.ac.uk',
     'inforca-staging.torchboxapps.com',
+    'rca-inforca-production.herokuapp.com',
+    'rca-inforca-staging.herokuapp.com',
+    'beta.intranet.rca.ac.uk',
 ]
 
 CORS_URLS_REGEX = r'^/api/.*$'
