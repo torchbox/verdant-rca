@@ -1,3 +1,3 @@
 #!/bin/bash
 django-admin compress --force
-gunicorn rcasite.wsgi:application
+bin/proximo gunicorn rcasite.wsgi:application
