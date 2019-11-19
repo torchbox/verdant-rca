@@ -74,7 +74,8 @@ APP_NAME = env.get('APP_NAME', 'rca')
 if 'SECRET_KEY' in env:
     SECRET_KEY = env['SECRET_KEY']
 
-ALLOWED_HOSTS = ['rca-verdant-production.herokuapp.com,beta.rca.ac.uk']
+if 'ALLOWED_HOSTS' in env:
+    ALLOWED_HOSTS = env['ALLOWED_HOSTS'].split(',')
 
 if 'PRIMARY_HOST' in env:
     BASE_URL = 'http://%s/' % env['PRIMARY_HOST']
