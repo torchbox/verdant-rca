@@ -79,5 +79,5 @@ USER verdant-rca
 
 # Run the WSGI server. It reads GUNICORN_CMD_ARGS, PORT and WEB_CONCURRENCY
 # environment variable hence we don't specify a lot options below.
-CMD bin/proximo docker/run.sh
+CMD docker/run.sh
 
