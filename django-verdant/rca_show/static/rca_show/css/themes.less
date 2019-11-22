@@ -1,87 +1,90 @@
 @import "variables.less";
 @import "mixins.less";
 
-@color-arc-1: #FFD100;
-@color-arc-2: #FFE880;
+@color-arc-1: #ffd100;
+@color-arc-2: #ffe880;
 
 @color-des-1: #25c7d1;
 @color-des-2: #92e3e8;
 
 @color-com-1: #ff6e3a;
-@color-com-2: #FFB79D;
+@color-com-2: #ffb79d;
 
 @color-fin-1: #006fb4;
-@color-fin-2: #80B7DA;
+@color-fin-2: #80b7da;
 
 @color-hum-1: #f55262;
-@color-hum-2: #FAA9B0;
+@color-hum-2: #faa9b0;
 
 @color-mat-1: #783cac;
-@color-mat-2: #BB9ED5;
+@color-mat-2: #bb9ed5;
 
+.theme(@code:"", @colorprimary, @colorsecondary, @logowidth, @logoheight) {
+  @mobile-reduction-factor: 0.6;
 
-.theme(@code:'', @colorprimary, @colorsecondary, @logowidth, @logoheight){
-    @mobile-reduction-factor: 0.6;
+  #overlay {
+    color: @colorsecondary;
+    background-color: @colorprimary; /* fallback for ie8 */
 
-    #overlay {
-        color:@colorsecondary;
-        background-color: @colorprimary; /* fallback for ie8 */
-
-        .exhibition-date,
-        .exhibition-name{
-            color:@colorsecondary;
-        }
-    }
-
-    a:hover,a:active,
-    .text-theme-@{code},
     .exhibition-date,
-    .exhibition-name,
+    .exhibition-name {
+      color: @colorsecondary;
+    }
+  }
+  .text-theme-@{code},
+  .exhibition-date,
+  .exhibition-name,
+  h1,
+  .programme-list a,
+  .shownav .jumplist a.active {
+    color: @colorprimary;
+  }
+  .shownav .jumplist.open .toggle,
+  .shownav .jumplist:hover .toggle,
+  .show-footer,
+  .showgallery .content,
+  .bx-wrapper .bx-next:hover,
+  .bx-wrapper .bx-prev:hover,
+  .share:hover,
+  .tab-nav a:hover,
+  .today h2:hover,
+  nav h2 a:hover {
+    background-color: @colorprimary;
+  }
+
+  .showgallery .content h2,
+  .show-footer a:hover,
+  .programme-list a:hover {
+    color: @colorsecondary;
+  }
+
+  /* specific login forms */
+  body&.type-login {
+    background-color: @colorprimary;
+    color: @colorsecondary;
+
     h1,
-    .programme-list a,
-    .shownav .jumplist a.active{
-        color:@colorprimary;
-    }
-    .shownav .jumplist.open .toggle,
-    .shownav .jumplist:hover .toggle,
-    .show-footer,
-    .showgallery .content,
-    .bx-wrapper .bx-next:hover,
-    .bx-wrapper .bx-prev:hover,
-    .share:hover,
-    .tab-nav a:hover,
-    .today h2:hover,
-    nav h2 a:hover{
-        background-color:@colorprimary;
+    .exhibition-date,
+    .exhibition-name {
+      color: @colorsecondary;
     }
 
-    .showgallery .content h2,
-    .show-footer a:hover,
-    .programme-list a:hover{
-        color:@colorsecondary;
+    input[type="submit"],
+    input[type="reset"],
+    input[type="button"],
+    button,
+    .button {
+      background-color: @colorsecondary;
     }
-
-    /* specific login forms */
-    body&.type-login{
-        background-color:@colorprimary;
-        color:@colorsecondary;
-
-        h1,.exhibition-date, .exhibition-name{
-            color:@colorsecondary;
-        }
-
-        input[type=submit], input[type=reset], input[type=button], button, .button{
-            background-color:@colorsecondary;
-        }
-    }
+  }
 }
 
-body{
-    background-color:#F7F7F7;
+body {
+  background-color: #f7f7f7;
 }
 
-.theme-show2015{
-    .theme(2015, #000000, #FFFFFF, 600px, 152px)
+.theme-show2015 {
+  .theme(2015, #000000, #ffffff, 600px, 152px);
 }
 
 /*.theme-schoolofarchitecture{
@@ -144,299 +147,358 @@ body{
     color:@color-mat-1;
 }*/
 
+.theme-show2016 {
+  @mobile-reduction-factor: 0.6;
+  @colorprimary: #2abb64;
+  @colorsecondary: #fff;
+  @colorTertiary: #96e5b5;
 
+  #overlay {
+    color: @colorsecondary;
+    background-color: @colorprimary; /* fallback for ie8 */
 
-.theme-show2016{
-    @mobile-reduction-factor: 0.6;
-    @colorprimary: #2ABB64;
-    @colorsecondary: #fff;
-    @colorTertiary: #96E5B5;
-
-    #overlay {
-        color:@colorsecondary;
-        background-color: @colorprimary; /* fallback for ie8 */
-
-        .exhibition-date,
-        .exhibition-name{
-            color:@colorsecondary;
-        }
-    }
-
-    nav a:hover {
-        color: @colorprimary !important;
-    }
-
-    nav.hovered h2 a,
-    nav.hovered .menu li.open > a,
-    nav.hovered .menu li.open > a:hover:after,
-    a:hover,a:active,a:focus,
-    .text-theme-2016,
     .exhibition-date,
-    .exhibition-name,
+    .exhibition-name {
+      color: @colorsecondary;
+    }
+  }
+
+  nav a:hover {
+    color: @colorprimary !important;
+  }
+
+  nav.hovered h2 a,
+  nav.hovered .menu li.open > a,
+  nav.hovered .menu li.open > a:hover:after,
+  a:hover,
+  a:active,
+  a:focus,
+  .text-theme-2016,
+  .exhibition-date,
+  .exhibition-name,
+  h1,
+  .programme-list a,
+  .shownav .jumplist a.active,
+  .body-text a,
+  .body-text-style a {
+    color: @colorprimary;
+  }
+  .bx-wrapper .bx-next:hover,
+  .bx-wrapper .bx-prev:hover,
+  .share:hover,
+  .tab-nav a:hover,
+  .today h2:hover {
+    background-color: @colorprimary;
+  }
+  .show-footer a,
+  .show-footer li,
+  .shownav .jumplist.open .toggle,
+  .shownav .jumplist:hover .toggle {
+    color: black;
+  }
+  nav h2 a:hover {
+    color: black !important;
+  }
+  .show-footer,
+  .shownav .jumplist.open .toggle,
+  .shownav .jumplist:hover .toggle,
+  nav h2 a:hover {
+    background-color: @colorTertiary;
+  }
+  .showgallery .content {
+    background-color: @colorTertiary;
+    h2 {
+      color: black;
+      .bold();
+    }
+  }
+  .show-footer a:hover,
+  .programme-list a:hover {
+    color: @colorsecondary;
+  }
+
+  /* specific login forms */
+  body&.type-login {
+    background-color: @colorprimary;
+    color: @colorsecondary;
+
     h1,
-    .programme-list a,
-    .shownav .jumplist a.active,
-    .body-text a,
-    .body-text-style a{
-        color:@colorprimary;
-    }
-    .bx-wrapper .bx-next:hover,
-    .bx-wrapper .bx-prev:hover,
-    .share:hover,
-    .tab-nav a:hover,
-    .today h2:hover
-    {
-        background-color:@colorprimary;
-    }
-    .show-footer a,
-    .show-footer li,
-    .shownav .jumplist.open .toggle,
-    .shownav .jumplist:hover .toggle
-    {
-        color: black;
-    }
-    nav h2 a:hover
-    {
-        color: black !important;
-    }
-    .show-footer,
-    .shownav .jumplist.open .toggle,
-    .shownav .jumplist:hover .toggle,
-    nav h2 a:hover
-    {
-        background-color: @colorTertiary;
-    }
-    .showgallery .content {
-        background-color: @colorTertiary;
-        h2 {
-            color: black;
-            .bold();
-        }
-    }
-    .show-footer a:hover,
-    .programme-list a:hover{
-        color:@colorsecondary;
+    .exhibition-date,
+    .exhibition-name {
+      color: @colorsecondary;
     }
 
-    /* specific login forms */
-    body&.type-login{
-        background-color:@colorprimary;
-        color:@colorsecondary;
+    input[type="submit"],
+    input[type="reset"],
+    input[type="button"],
+    button,
+    .button {
+      background-color: @colorsecondary;
+    }
+  }
 
-        h1,.exhibition-date, .exhibition-name{
-            color:@colorsecondary;
-        }
+  /* font reset for this years show pages */
+  .body-text,
+  .body-text-style,
+  section.body-text,
+  div#maincontent.inner,
+  .page-content .inner,
+  #overlay,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6,
+  .exhibition-date {
+    font-family: @font-family-benton-light;
+    font-weight: normal;
+    font-style: normal;
+  }
 
-        input[type=submit], input[type=reset], input[type=button], button, .button{
-            background-color:@colorsecondary;
-        }
+  .body-text b,
+  .body-text-style b,
+  .body-text strong,
+  .body-text-style strong,
+  .body-text h2,
+  .body-text-style h2,
+  .body-text h3,
+  .body-text-style h3,
+  .body-text h5,
+  .body-text-style h5 {
+    font-family: @font-family-benton-bold;
+    font-weight: normal;
+    font-style: normal;
+  }
+  .body-text em,
+  .body-text-style em,
+  .body-text i,
+  .body-text-style i {
+    font-family: @font-family-benton-light;
+    font-weight: 200;
+    font-style: italic;
+  }
+
+  .meta-data dd {
+    font-family: @font-family-benton;
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "CalvertLight";
+    src: url("@{path-static-show}fonts/Calvert-Light.eot");
+    src: url("@{path-static-show}fonts/Calvert-Light.eot?#iefix")
+        format("embedded-opentype"),
+      url("@{path-static-show}fonts/Calvert-Light.woff") format("woff"),
+      url("@{path-static-show}fonts/Calvert-Light.ttf") format("truetype"),
+      url("@{path-static-show}fonts/Calvert-Light.svg#webfont") format("svg");
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  @font-face {
+    font-family: "CalvertBold";
+    src: url("@{path-static-show}fonts/Calvert-Bold.eot");
+    src: url("@{path-static-show}fonts/Calvert-Bold.eot?#iefix")
+        format("embedded-opentype"),
+      url("@{path-static-show}fonts/Calvert-Bold.woff") format("woff"),
+      url("@{path-static-show}fonts/Calvert-Bold.ttf") format("truetype"),
+      url("@{path-static-show}fonts/Calvert-Bold.svg#webfont") format("svg");
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  .exhibition-name,
+  .school-list h2 {
+    font-family: "CalvertBold", serif;
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  a.site-name {
+    width: 90%;
+
+    @media screen and (min-width: 768px) {
+      width: 100%;
     }
 
-    /* font reset for this years show pages */
-    .body-text,
-    .body-text-style,
-    section.body-text, div#maincontent.inner, .page-content .inner, #overlay, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .exhibition-date  {
-        font-family: @font-family-benton-light;
-        font-weight: normal;
-        font-style: normal;
+    @media screen and (min-width: 768px) {
+      margin-left: 0;
     }
-
-    .body-text b, .body-text-style b, .body-text strong, .body-text-style strong,
-    .body-text h2, .body-text-style h2,
-    .body-text h3, .body-text-style h3,
-    .body-text h5, .body-text-style h5 {
-        font-family: @font-family-benton-bold;
-        font-weight: normal;
-        font-style: normal;
-    }
-    .body-text em, .body-text-style em, .body-text i, .body-text-style i {
-        font-family: @font-family-benton-light;
-        font-weight: 200;
-        font-style: italic;
-    }
-
-    .meta-data dd {
-        font-family: @font-family-benton;
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: 'CalvertLight';
-        src: url('@{path-static-show}fonts/Calvert-Light.eot');
-        src: url('@{path-static-show}fonts/Calvert-Light.eot?#iefix') format('embedded-opentype'),
-             url('@{path-static-show}fonts/Calvert-Light.woff') format('woff'),
-             url('@{path-static-show}fonts/Calvert-Light.ttf') format('truetype'),
-             url('@{path-static-show}fonts/Calvert-Light.svg#webfont') format('svg');
-        font-style: normal;
-        font-weight: normal;
-    }
-
-    @font-face {
-        font-family: 'CalvertBold';
-        src: url('@{path-static-show}fonts/Calvert-Bold.eot');
-        src: url('@{path-static-show}fonts/Calvert-Bold.eot?#iefix') format('embedded-opentype'),
-             url('@{path-static-show}fonts/Calvert-Bold.woff') format('woff'),
-             url('@{path-static-show}fonts/Calvert-Bold.ttf') format('truetype'),
-             url('@{path-static-show}fonts/Calvert-Bold.svg#webfont') format('svg');
-        font-style: normal;
-        font-weight: normal;
-    }
-
-
-    .exhibition-name, .school-list h2 {
-        font-family: 'CalvertBold', serif;
-        font-style: normal;
-        font-weight: normal;
-   }
-
-   a.site-name {
-       width: 90%;
-
-       @media screen and (min-width:768px) {
-        width: 100%;
-       }
-
-       @media screen and (min-width: 768px) {
-           margin-left: 0;
-       }
-   }
+  }
 }
 
-.theme-show2017{
-    @mobile-reduction-factor: 0.6;
-    @colorprimary: #95D7E5;
-    @colorsecondary: #fff;
-    @colorTertiary: #95D7E5;
+.theme-show2017 {
+  @mobile-reduction-factor: 0.6;
+  @colorprimary: #95d7e5;
+  @colorsecondary: #fff;
+  @colorTertiary: #95d7e5;
 
-    #overlay {
-        color:@colorsecondary;
-        background-color: @colorprimary; /* fallback for ie8 */
- 
-        .exhibition-date,
-        .exhibition-name{
-            color:@colorsecondary;
-        }
-    }
+  #overlay {
+    color: @colorsecondary;
+    background-color: @colorprimary; /* fallback for ie8 */
 
-    nav a:hover {
-        color: @colorprimary !important;
-    }
-
-    nav.hovered h2 a,
-    nav.hovered .menu li.open > a,
-    nav.hovered .menu li.open > a:hover:after,
-    a:hover,a:active,a:focus,
-    .text-theme-2016,
     .exhibition-date,
-    .exhibition-name,
+    .exhibition-name {
+      color: @colorsecondary;
+    }
+  }
+
+  nav a:hover {
+    color: @colorprimary !important;
+  }
+
+  nav.hovered h2 a,
+  nav.hovered .menu li.open > a,
+  nav.hovered .menu li.open > a:hover:after,
+  a:hover,
+  a:active,
+  a:focus,
+  .text-theme-2016,
+  .exhibition-date,
+  .exhibition-name,
+  h1,
+  .programme-list a,
+  .shownav .jumplist a.active,
+  .body-text a,
+  .body-text-style a {
+    color: @colorprimary;
+  }
+  .bx-wrapper .bx-next:hover,
+  .bx-wrapper .bx-prev:hover,
+  .share:hover,
+  .tab-nav a:hover,
+  .today h2:hover {
+    background-color: @colorprimary;
+  }
+  .show-footer a,
+  .show-footer li,
+  .shownav .jumplist.open .toggle,
+  .shownav .jumplist:hover .toggle {
+    color: black;
+  }
+  nav h2 a:hover {
+    color: black !important;
+  }
+  .show-footer,
+  .shownav .jumplist.open .toggle,
+  .shownav .jumplist:hover .toggle,
+  nav h2 a:hover {
+    background-color: @colorTertiary;
+  }
+  .showgallery .content {
+    background-color: @colorTertiary;
+    h2 {
+      color: black;
+      .bold();
+    }
+  }
+  .show-footer a:hover,
+  .programme-list a:hover {
+    color: @colorsecondary;
+  }
+
+  /* specific login forms */
+  body&.type-login {
+    background-color: @colorprimary;
+    color: @colorsecondary;
+
     h1,
-    .programme-list a,
-    .shownav .jumplist a.active,
-    .body-text a, 
-    .body-text-style a{
-        color:@colorprimary;
-    }
-    .bx-wrapper .bx-next:hover,
-    .bx-wrapper .bx-prev:hover,
-    .share:hover,
-    .tab-nav a:hover,
-    .today h2:hover
-    {
-        background-color:@colorprimary;
-    }
-    .show-footer a,
-    .show-footer li,
-    .shownav .jumplist.open .toggle,
-    .shownav .jumplist:hover .toggle
-    {
-        color: black;
-    }
-    nav h2 a:hover
-    {
-        color: black !important;
-    }
-    .show-footer,
-    .shownav .jumplist.open .toggle,
-    .shownav .jumplist:hover .toggle,
-    nav h2 a:hover
-    {
-        background-color: @colorTertiary;
-    }
-    .showgallery .content {
-        background-color: @colorTertiary;
-        h2 {
-            color: black;
-            .bold();
-        }
-    }
-    .show-footer a:hover,
-    .programme-list a:hover{
-        color:@colorsecondary;
+    .exhibition-date,
+    .exhibition-name {
+      color: @colorsecondary;
     }
 
-    /* specific login forms */
-    body&.type-login{
-        background-color:@colorprimary;
-        color:@colorsecondary;
+    input[type="submit"],
+    input[type="reset"],
+    input[type="button"],
+    button,
+    .button {
+      background-color: @colorsecondary;
+    }
+  }
 
-        h1,.exhibition-date, .exhibition-name{
-            color:@colorsecondary;
-        }
+  /* font reset for this years show pages */
+  .body-text,
+  .body-text-style,
+  section.body-text,
+  div#maincontent.inner,
+  .page-content .inner,
+  #overlay,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6,
+  .exhibition-date {
+    font-family: @font-family-benton-light;
+    font-weight: normal;
+    font-style: normal;
+  }
 
-        input[type=submit], input[type=reset], input[type=button], button, .button{
-            background-color:@colorsecondary;
-        }
+  .body-text b,
+  .body-text-style b,
+  .body-text strong,
+  .body-text-style strong,
+  .body-text h2,
+  .body-text-style h2,
+  .body-text h3,
+  .body-text-style h3,
+  .body-text h5,
+  .body-text-style h5 {
+    font-family: @font-family-benton-bold;
+    font-weight: normal;
+    font-style: normal;
+  }
+  .body-text em,
+  .body-text-style em,
+  .body-text i,
+  .body-text-style i {
+    font-family: @font-family-benton-light;
+    font-weight: 200;
+    font-style: italic;
+  }
+
+  .meta-data dd {
+    font-family: @font-family-benton;
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  .exhibition-name,
+  .school-list h2 {
+    font-family: "CalvertBold", serif;
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  a.site-name {
+    width: 90%;
+
+    @media screen and (min-width: 768px) {
+      width: 100%;
     }
 
-    /* font reset for this years show pages */
-    .body-text,
-    .body-text-style,
-    section.body-text, div#maincontent.inner, .page-content .inner, #overlay, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .exhibition-date  {
-        font-family: @font-family-benton-light;
-        font-weight: normal;
-        font-style: normal;
+    @media screen and (min-width: 768px) {
+      margin-left: 0;
     }
+  }
 
-    .body-text b, .body-text-style b, .body-text strong, .body-text-style strong,
-    .body-text h2, .body-text-style h2,
-    .body-text h3, .body-text-style h3,
-    .body-text h5, .body-text-style h5 {
-        font-family: @font-family-benton-bold;
-        font-weight: normal;
-        font-style: normal;
-    }
-    .body-text em, .body-text-style em, .body-text i, .body-text-style i {
-        font-family: @font-family-benton-light;
-        font-weight: 200;
-        font-style: italic;
-    }
-
-    .meta-data dd {
-        font-family: @font-family-benton;
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    .exhibition-name, .school-list h2 {
-        font-family: 'CalvertBold', serif;
-        font-style: normal;
-        font-weight: normal;
-   }
-
-   a.site-name {
-       width: 90%;
-
-       @media screen and (min-width:768px) {
-        width: 100%;
-       }
-
-       @media screen and (min-width: 768px) {
-           margin-left: 0;
-       }
-   }
-
-   .show-footer footer {
-        padding: 1.5em 0;
-   }
+  .show-footer footer {
+    padding: 1.5em 0;
+  }
 }
