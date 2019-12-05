@@ -7,7 +7,7 @@
     {% include 'rca/includes/modules/navigation/standoutnav.html' with modifier="nav--standout-desktop" %}
     <div class="app__search app__search--tablet">
 
-        <form action="https://www.rca.ac.uk/search" method="get" role="search" class="search2">
+        <form action="/search" method="get" role="search" class="search2">
             <input class="search2__input input" type="text" placeholder="Search…" name="q"{% if search_query %} value="{{ search_query }}"{% endif %}>
             <button class="search2__button button" type="submit">
                 <svg width="12px" height="8px" class="search2__icon"><use xlink:href="#arrow"></use></svg>
@@ -33,7 +33,7 @@
                 <ul data-ul="1" class="nav nav--primary" role="menubar">
                     <li class="nav__item nav__item--primary" role="presentation">
                         <!-- Level 1 <a> -->
-                        <a href="https://www.rca.ac.uk/schools/" class="nav__link" data-nav-level="1" data-menu="1" data-menu-id="1" data-menu-parent="">
+                        <a href="/schools/" class="nav__link" data-nav-level="1" data-menu="1" data-menu-id="1" data-menu-parent="">
                             <span>Degree programmes</span>
                             <svg class="nav__icon" width="6" height="10">
                                 <use xlink:href="#chevron"></use>
@@ -42,7 +42,7 @@
                     </li>
                     <li class="nav__item nav__item--primary" role="presentation">
                         <!-- Level 1 <a> -->
-                        <a href="https://www.rca.ac.uk/short-courses/" class="nav__link" data-nav-level="1" data-menu="2" data-menu-id="2" data-menu-parent="">
+                        <a href="/short-courses/" class="nav__link" data-nav-level="1" data-menu="2" data-menu-id="2" data-menu-parent="">
                             <span>Short courses</span>
                             <svg class="nav__icon" width="6" height="10">
                                 <use xlink:href="#chevron"></use>
@@ -51,7 +51,7 @@
                     </li>
                     <li class="nav__item nav__item--primary" role="presentation">
                         <!-- Level 1 <a> -->
-                        <a href="https://www.rca.ac.uk/research-innovation/" class="nav__link" data-nav-level="1" data-menu="3" data-menu-id="3" data-menu-parent="">
+                        <a href="/research-innovation/" class="nav__link" data-nav-level="1" data-menu="3" data-menu-id="3" data-menu-parent="">
                             <span>Research &amp; innovation</span>
                             <svg class="nav__icon" width="6" height="10">
                                 <use xlink:href="#chevron"></use>
@@ -60,7 +60,7 @@
                     </li>
                     <li class="nav__item nav__item--primary" role="presentation">
                         <!-- Level 1 <a> -->
-                        <a href="https://www.rca.ac.uk/news-and-events/" class="nav__link" data-nav-level="1" data-menu="4" data-menu-id="4" data-menu-parent="">
+                        <a href="/news-and-events/" class="nav__link" data-nav-level="1" data-menu="4" data-menu-id="4" data-menu-parent="">
                             <span>News &amp; events</span>
                             <svg class="nav__icon" width="6" height="10">
                                 <use xlink:href="#chevron"></use>
@@ -69,7 +69,7 @@
                     </li>
                     <li class="nav__item nav__item--primary" role="presentation">
                         <!-- Level 1 <a> -->
-                        <a href="https://www.rca.ac.uk/studying-at-the-rca/" class="nav__link" data-nav-level="1" data-menu="5" data-menu-id="5" data-menu-parent="">
+                        <a href="/studying-at-the-rca/" class="nav__link" data-nav-level="1" data-menu="5" data-menu-id="5" data-menu-parent="">
                             <span>Studying at the RCA</span>
                             <svg class="nav__icon" width="6" height="10">
                                 <use xlink:href="#chevron"></use>
@@ -78,7 +78,7 @@
                     </li>
                     <li class="nav__item nav__item--primary" role="presentation">
                         <!-- Level 1 <a> -->
-                        <a href="https://www.rca.ac.uk/for-alumni/" class="nav__link" data-nav-level="1" data-menu="6" data-menu-id="6" data-menu-parent="">
+                        <a href="/for-alumni/" class="nav__link" data-nav-level="1" data-menu="6" data-menu-id="6" data-menu-parent="">
                             <span>For alumni</span>
                             <svg class="nav__icon" width="6" height="10">
                                 <use xlink:href="#chevron"></use>
@@ -87,7 +87,7 @@
                     </li>
                     <li class="nav__item nav__item--primary" role="presentation">
                         <!-- Level 1 <a> -->
-                        <a href="https://www.rca.ac.uk/showcase/" class="nav__link" data-nav-level="1" data-menu="7" data-menu-id="7" data-menu-parent="">
+                        <a href="/showcase/" class="nav__link" data-nav-level="1" data-menu="7" data-menu-id="7" data-menu-parent="">
                             <span>Showcase</span>
                             <svg class="nav__icon" width="6" height="10">
                                 <use xlink:href="#chevron"></use>
@@ -96,7 +96,7 @@
                     </li>
                     <li class="nav__item nav__item--primary" role="presentation">
                         <!-- Level 1 <a> -->
-                        <a href="https://www.rca.ac.uk/more/" class="nav__link" data-nav-level="1" data-menu="8" data-menu-id="8" data-menu-parent="">
+                        <a href="/more/" class="nav__link" data-nav-level="1" data-menu="8" data-menu-id="8" data-menu-parent="">
                             <span>More about the RCA</span>
                             <svg class="nav__icon" width="6" height="10">
                                 <use xlink:href="#chevron"></use>
@@ -105,7 +105,7 @@
                     </li>
                     <li class="nav__item nav__item--primary" role="presentation">
                         <!-- Level 1 <a> -->
-                        <a href="https://www.rca.ac.uk/contact-us/" class="nav__link" data-nav-level="1" data-menu="9" data-menu-id="9" data-menu-parent="">
+                        <a href="/contact-us/" class="nav__link" data-nav-level="1" data-menu="9" data-menu-id="9" data-menu-parent="">
                             <span>Contact us</span>
                             <svg class="nav__icon" width="6" height="10">
                                 <use xlink:href="#chevron"></use>
@@ -117,7 +117,7 @@
 
             <div class="app__search app__search--desktop" data-search-desktop>
 
-                <form action="https://www.rca.ac.uk/search" method="get" role="search" class="search2">
+                <form action="/search" method="get" role="search" class="search2">
                     <input class="search2__input input" type="text" placeholder="Search…" name="q"{% if search_query %} value="{{ search_query }}"{% endif %}>
                     <button class="search2__button button" type="submit">
                         <svg width="12px" height="8px" class="search2__icon"><use xlink:href="#arrow"></use></svg>
@@ -131,11 +131,11 @@
         <div class="header__inner header__inner--drawer header__inner--level-two" data-nav-level-2="">
             <ul data-ul="2" data-menu-1="" class="nav nav--subnav" role="menu">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/schools/" class="nav__link nav__link--group-heading">Degree programmes</a>
+                    <a href="/schools/" class="nav__link nav__link--group-heading">Degree programmes</a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-architecture/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-1" data-menu="1-1" data-menu-parent="">
+                    <a href="/schools/school-of-architecture/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-1" data-menu="1-1" data-menu-parent="">
                         <span>School of Architecture</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -144,7 +144,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-2" data-menu="1-2" data-menu-parent="">
+                    <a href="/schools/school-of-arts-humanities/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-2" data-menu="1-2" data-menu-parent="">
                         <span>School of Arts &amp; Humanities</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -153,7 +153,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-communication/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-3" data-menu="1-3" data-menu-parent="">
+                    <a href="/schools/school-of-communication/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-3" data-menu="1-3" data-menu-parent="">
                         <span>School of Communication</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -162,7 +162,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-design/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-4" data-menu="1-4" data-menu-parent="">
+                    <a href="/schools/school-of-design/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-4" data-menu="1-4" data-menu-parent="">
                         <span>School of Design</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -177,7 +177,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/mres-degree/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-6" data-menu="1-6" data-menu-parent="">
+                    <a href="/research-innovation/research-degrees/mres-degree/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-6" data-menu="1-6" data-menu-parent="">
                         <span>MRes RCA</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -186,7 +186,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-7" data-menu="1-7" data-menu-parent="">
+                    <a href="/research-innovation/research-degrees/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-7" data-menu="1-7" data-menu-parent="">
                         <span>MPhil/PhD</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -195,18 +195,18 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/critical-historical-studies-college-wide-programme/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-8" data-menu="1-8">
+                    <a href="/schools/critical-historical-studies-college-wide-programme/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="1" data-menu-id="1-8" data-menu="1-8">
                         <span>Critical &amp; Historical Studies</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="2" data-menu-2="" class="nav nav--subnav" role="menu">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/short-courses/" class="nav__link nav__link--group-heading">Short courses</a>
+                    <a href="/short-courses/" class="nav__link nav__link--group-heading">Short courses</a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/executive-education/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-1" data-menu="2-1" data-menu-parent="">
+                    <a href="/short-courses/executive-education/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-1" data-menu="2-1" data-menu-parent="">
                         <span>Executive education</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -215,7 +215,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/summer-schools/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-2" data-menu="2-2" data-menu-parent="">
+                    <a href="/short-courses/summer-schools/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-2" data-menu="2-2" data-menu-parent="">
                         <span>Summer courses</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -224,7 +224,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-3" data-menu="2-3" data-menu-parent="">
+                    <a href="/short-courses/custom-executive-education/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-3" data-menu="2-3" data-menu-parent="">
                         <span>Custom executive education</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -233,42 +233,42 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/register-interest/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-4" data-menu="2-4">
+                    <a href="/short-courses/register-interest/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-4" data-menu="2-4">
                         <span>Register Interest</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/booking/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-5" data-menu="2-5">
+                    <a href="/short-courses/booking/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-5" data-menu="2-5">
                         <span>Booking</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/terms-conditions/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-6" data-menu="2-6">
+                    <a href="/short-courses/terms-conditions/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-6" data-menu="2-6">
                         <span>Terms &amp; conditions</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/rca-short-courses-frequently-asked-questions/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-7" data-menu="2-7">
+                    <a href="/short-courses/rca-short-courses-frequently-asked-questions/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-7" data-menu="2-7">
                         <span>RCA Short courses frequently asked questions</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/rca-short-courses-participant-testimonies/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-8" data-menu="2-8">
+                    <a href="/short-courses/rca-short-courses-participant-testimonies/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="2" data-menu-id="2-8" data-menu="2-8">
                         <span>RCA Short courses participant testimonies</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="2" data-menu-3="" class="nav nav--subnav" role="menu">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/research-innovation/" class="nav__link nav__link--group-heading">Research &amp; innovation</a>
+                    <a href="/research-innovation/" class="nav__link nav__link--group-heading">Research &amp; innovation</a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-highlights/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-1" data-menu="3-1" data-menu-parent="">
+                    <a href="/research-innovation/research-highlights/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-1" data-menu="3-1" data-menu-parent="">
                         <span>Research highlights</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -277,7 +277,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-2" data-menu="3-2" data-menu-parent="">
+                    <a href="/research-innovation/research-degrees/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-2" data-menu="3-2" data-menu-parent="">
                         <span>Research degrees</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -286,7 +286,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-centres/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-3" data-menu="3-3" data-menu-parent="">
+                    <a href="/research-innovation/research-centres/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-3" data-menu="3-3" data-menu-parent="">
                         <span>Research centers</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -295,13 +295,13 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/enterprise/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-4" data-menu="3-4">
+                    <a href="/research-innovation/enterprise/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-4" data-menu="3-4">
                         <span>Enterprise</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/knowledge-exchange/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-5" data-menu="3-5" data-menu-parent="">
+                    <a href="/research-innovation/knowledge-exchange/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-5" data-menu="3-5" data-menu-parent="">
                         <span>Knowledge exchange</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -310,7 +310,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/innovationrca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-6" data-menu="3-6" data-menu-parent="">
+                    <a href="/research-innovation/innovationrca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-6" data-menu="3-6" data-menu-parent="">
                         <span>InnovationRCA</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -319,7 +319,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-rca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-7" data-menu="3-7" data-menu-parent="">
+                    <a href="/research-innovation/research-rca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="3" data-menu-id="3-7" data-menu="3-7" data-menu-parent="">
                         <span>Research at The RCA</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -329,58 +329,58 @@
             </ul>
             <ul data-ul="2" data-menu-4="" class="nav nav--subnav" role="menu">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/news-and-events/" class="nav__link nav__link--group-heading">News &amp; events</a>
+                    <a href="/news-and-events/" class="nav__link nav__link--group-heading">News &amp; events</a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/news-and-events/news/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-1" data-menu="4-1">
+                    <a href="/news-and-events/news/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-1" data-menu="4-1">
                         <span>News</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/news-and-events/events/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-2" data-menu="4-2">
+                    <a href="/news-and-events/events/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-2" data-menu="4-2">
                         <span>Events</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/news-and-events/rca-stories/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-3" data-menu="4-3">
+                    <a href="/news-and-events/rca-stories/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-3" data-menu="4-3">
                         <span>RCA Stories</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/news-and-events/press-releases/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-4" data-menu="4-4">
+                    <a href="/news-and-events/press-releases/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-4" data-menu="4-4">
                         <span>Press releases</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/news-and-events/rca-talks/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-5" data-menu="4-5">
+                    <a href="/news-and-events/rca-talks/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-5" data-menu="4-5">
                         <span>RCA talks</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/news-and-events/rca-images/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-6" data-menu="4-6">
+                    <a href="/news-and-events/rca-images/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-6" data-menu="4-6">
                         <span>RCA images</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/news-and-events/community-engagement/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-7" data-menu="4-7">
+                    <a href="/news-and-events/community-engagement/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="4" data-menu-id="4-7" data-menu="4-7">
                         <span>community engagement</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="2" data-menu-5="" class="nav nav--subnav" role="menu">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/" class="nav__link nav__link--group-heading">Studying at the RCA</a>
+                    <a href="/studying-at-the-rca/" class="nav__link nav__link--group-heading">Studying at the RCA</a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-1" data-menu="5-1" data-menu-parent="">
+                    <a href="/studying-at-the-rca/apply/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-1" data-menu="5-1" data-menu-parent="">
                         <span>Apply</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -389,7 +389,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/fees-funding/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-2" data-menu="5-2" data-menu-parent="">
+                    <a href="/studying-at-the-rca/fees-funding/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-2" data-menu="5-2" data-menu-parent="">
                         <span>Fees &amp; Funding</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -398,7 +398,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/facilities/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-3" data-menu="5-3" data-menu-parent="">
+                    <a href="/studying-at-the-rca/facilities/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-3" data-menu="5-3" data-menu-parent="">
                         <span>Facilities</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -407,7 +407,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/support/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-4" data-menu="5-4" data-menu-parent="">
+                    <a href="/studying-at-the-rca/support/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-4" data-menu="5-4" data-menu-parent="">
                         <span>Support</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -416,7 +416,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/the-rca-experience/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-5" data-menu="5-5" data-menu-parent="">
+                    <a href="/studying-at-the-rca/the-rca-experience/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-5" data-menu="5-5" data-menu-parent="">
                         <span>The RCA experience</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -425,59 +425,59 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/rca-and-european-union/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-6" data-menu="5-6">
+                    <a href="/studying-at-the-rca/rca-and-european-union/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="5" data-menu-id="5-6" data-menu="5-6">
                         <span>The RCA and the European Union</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="2" data-menu-6="" class="nav nav--subnav" role="menu">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/for-alumni/" class="nav__link nav__link--group-heading">For alumni</a>
+                    <a href="/for-alumni/" class="nav__link nav__link--group-heading">For alumni</a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/for-alumni/new-graduates/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-1" data-menu="6-1">
+                    <a href="/for-alumni/new-graduates/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-1" data-menu="6-1">
                         <span>New Graduates</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/for-alumni/alumni-benefits/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-2" data-menu="6-2">
+                    <a href="/for-alumni/alumni-benefits/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-2" data-menu="6-2">
                         <span>Alumni Benefits</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/for-alumni/update-your-details/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-3" data-menu="6-3">
+                    <a href="/for-alumni/update-your-details/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-3" data-menu="6-3">
                         <span>Stay In Touch</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/for-alumni/alumni-events-listing/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-4" data-menu="6-4">
+                    <a href="/for-alumni/alumni-events-listing/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-4" data-menu="6-4">
                         <span>Alumni Events Listing</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/for-alumni/magazine/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-5" data-menu="6-5">
+                    <a href="/for-alumni/magazine/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-5" data-menu="6-5">
                         <span>'A' Magazine</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/for-alumni/volunteering-opportunities/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-6" data-menu="6-6">
+                    <a href="/for-alumni/volunteering-opportunities/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="6" data-menu-id="6-6" data-menu="6-6">
                         <span>Volunteering Opportunities</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="2" data-menu-7="" class="nav nav--subnav" role="menu">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/showcase/" class="nav__link nav__link--group-heading">Showcase</a>
+                    <a href="/showcase/" class="nav__link nav__link--group-heading">Showcase</a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/showcase/show-2019/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="7" data-menu-id="7-1" data-menu="7-1" data-menu-parent="">
+                    <a href="/showcase/show-2019/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="7" data-menu-id="7-1" data-menu="7-1" data-menu-parent="">
                         <span>Show 2019</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -486,18 +486,18 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/showcase/show-rca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="7" data-menu-id="7-2" data-menu="7-2">
+                    <a href="/showcase/show-rca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="7" data-menu-id="7-2" data-menu="7-2">
                         <span>Show RCA Archive</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="2" data-menu-8="" class="nav nav--subnav" role="menu">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/more/" class="nav__link nav__link--group-heading">More about the RCA</a>
+                    <a href="/more/" class="nav__link nav__link--group-heading">More about the RCA</a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/more/about-rca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-1" data-menu="8-1" data-menu-parent="">
+                    <a href="/more/about-rca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-1" data-menu="8-1" data-menu-parent="">
                         <span>About the RCA</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -506,7 +506,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-2" data-menu="8-2" data-menu-parent="">
+                    <a href="/more/support-generationrca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-2" data-menu="8-2" data-menu-parent="">
                         <span>Support GenerationRCA</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -515,7 +515,7 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/more/work-rca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-3" data-menu="8-3" data-menu-parent="">
+                    <a href="/more/work-rca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-3" data-menu="8-3" data-menu-parent="">
                         <span>Work at the RCA</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -524,19 +524,19 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/more/staff/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-4" data-menu="8-4">
+                    <a href="/more/staff/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-4" data-menu="8-4">
                         <span>Staff</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/more/building-battersea/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-5" data-menu="8-5">
+                    <a href="/more/building-battersea/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-5" data-menu="8-5">
                         <span>RCA new Battersea Campus</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/more/special-collections/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-6" data-menu="8-6" data-menu-parent="">
+                    <a href="/more/special-collections/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-6" data-menu="8-6" data-menu-parent="">
                         <span>Special Collections</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -545,24 +545,24 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/more/rapidformrca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-7" data-menu="8-7">
+                    <a href="/more/rapidformrca/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-7" data-menu="8-7">
                         <span>RapidformRCA</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/more/mobility-exchanges/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-8" data-menu="8-8">
+                    <a href="/more/mobility-exchanges/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="8" data-menu-id="8-8" data-menu="8-8">
                         <span>Mobility &amp; Exchanges</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="2" data-menu-9="" class="nav nav--subnav" role="menu">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/contact-us/" class="nav__link nav__link--group-heading">Contact us</a>
+                    <a href="/contact-us/" class="nav__link nav__link--group-heading">Contact us</a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/contact-us/maps-visiting/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="9" data-menu-id="9-1" data-menu="9-1" data-menu-parent="">
+                    <a href="/contact-us/maps-visiting/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="9" data-menu-id="9-1" data-menu="9-1" data-menu-parent="">
                         <span>Maps &amp; Visiting</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -571,13 +571,13 @@
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/contact-us/teaching-dates-hours/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="9" data-menu-id="9-2" data-menu="9-2">
+                    <a href="/contact-us/teaching-dates-hours/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="9" data-menu-id="9-2" data-menu="9-2">
                         <span>Teaching Dates &amp; College Hours</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <!-- Level 2 <a> -->
-                    <a href="https://www.rca.ac.uk/contact-us/about-this-website/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="9" data-menu-id="9-3" data-menu="9-3" data-menu-parent="">
+                    <a href="/contact-us/about-this-website/" class="nav__link" data-menu-child="" data-nav-level="2" data-parent-id="9" data-menu-id="9-3" data-menu="9-3" data-menu-parent="">
                         <span>About this website</span>
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
@@ -591,7 +591,7 @@
         <div class="header__inner header__inner--drawer header__inner--level-three" data-nav-level-3="">
             <ul data-ul="3" data-menu-1-1="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/schools/school-of-architecture/" class="nav__link nav__link--group-heading">School of Architecture</a>
+                    <a href="/schools/school-of-architecture/" class="nav__link nav__link--group-heading">School of Architecture</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
@@ -631,20 +631,20 @@
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-architecture/current-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-1-7" data-parent-id="1-1">
+                    <a href="/schools/school-of-architecture/current-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-1-7" data-parent-id="1-1">
                         <span>Current research</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-architecture/school-architecture-events/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-1-8" data-parent-id="1-1">
+                    <a href="/schools/school-of-architecture/school-architecture-events/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-1-8" data-parent-id="1-1">
                         <span>School of Architecture events</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-1-2="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/" class="nav__link nav__link--group-heading">School of Arts &amp; Humanities</a>
+                    <a href="/schools/school-of-arts-humanities/" class="nav__link nav__link--group-heading">School of Arts &amp; Humanities</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
@@ -720,56 +720,56 @@
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/current-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-13" data-parent-id="1-2">
+                    <a href="/schools/school-of-arts-humanities/current-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-13" data-parent-id="1-2">
                         <span>Current research</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/funded-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-14" data-parent-id="1-2">
+                    <a href="/schools/school-of-arts-humanities/funded-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-14" data-parent-id="1-2">
                         <span>Funded research</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/arts-and-humanities-research-gallery/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-15" data-parent-id="1-2">
+                    <a href="/schools/school-of-arts-humanities/arts-and-humanities-research-gallery/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-15" data-parent-id="1-2">
                         <span>Arts &amp; Humanities research gallery</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/facilities/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-16" data-parent-id="1-2">
+                    <a href="/schools/school-of-arts-humanities/facilities/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-16" data-parent-id="1-2">
                         <span>Facilities</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/visual-cultures/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-17" data-parent-id="1-2">
+                    <a href="/schools/school-of-arts-humanities/visual-cultures/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-17" data-parent-id="1-2">
                         <span>SOAH research presents</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/studiorca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-18" data-parent-id="1-2">
+                    <a href="/schools/school-of-arts-humanities/studiorca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-18" data-parent-id="1-2">
                         <span>StudioRCA</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/dyson-gallery-rise-envision-exhibition-series/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-19" data-parent-id="1-2">
+                    <a href="/schools/school-of-arts-humanities/dyson-gallery-rise-envision-exhibition-series/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-19" data-parent-id="1-2">
                         <span>Dyson Gallery</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-arts-humanities/peter-dormer/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-20" data-parent-id="1-2">
+                    <a href="/schools/school-of-arts-humanities/peter-dormer/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-2-20" data-parent-id="1-2">
                         <span>The Peter Dormer lecture</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-1-3="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/schools/school-of-communication/" class="nav__link nav__link--group-heading">School of Communication</a>
+                    <a href="/schools/school-of-communication/" class="nav__link nav__link--group-heading">School of Communication</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
@@ -809,20 +809,20 @@
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-communication/communication-research-gallery/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-3-7" data-parent-id="1-3">
+                    <a href="/schools/school-of-communication/communication-research-gallery/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-3-7" data-parent-id="1-3">
                         <span>Communication research gallery</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-communication/facilities/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-3-8" data-parent-id="1-3">
+                    <a href="/schools/school-of-communication/facilities/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-3-8" data-parent-id="1-3">
                         <span>Facilities</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-1-4="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/schools/school-of-design/" class="nav__link nav__link--group-heading">School of Design</a>
+                    <a href="/schools/school-of-design/" class="nav__link nav__link--group-heading">School of Design</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
@@ -886,38 +886,38 @@
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-design/design-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-11" data-parent-id="1-4">
+                    <a href="/schools/school-of-design/design-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-11" data-parent-id="1-4">
                         <span>Current research</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-design/design-research-gallery/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-12" data-parent-id="1-4">
+                    <a href="/schools/school-of-design/design-research-gallery/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-12" data-parent-id="1-4">
                         <span>Design research gallery</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-design/funded-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-13" data-parent-id="1-4">
+                    <a href="/schools/school-of-design/funded-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-13" data-parent-id="1-4">
                         <span>Funded research</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-design/facilities/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-14" data-parent-id="1-4">
+                    <a href="/schools/school-of-design/facilities/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-14" data-parent-id="1-4">
                         <span>Facilities</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/schools/school-of-design/rca-x-cern-grand-challenge/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-15" data-parent-id="1-4">
+                    <a href="/schools/school-of-design/rca-x-cern-grand-challenge/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="1" data-menu-id="1-4-15" data-parent-id="1-4">
                         <span>RCA x CERN - The Grand Challenge</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-1-6="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/mres-degree/" class="nav__link nav__link--group-heading">MRes RCA</a>
+                    <a href="/research-innovation/research-degrees/mres-degree/" class="nav__link nav__link--group-heading">MRes RCA</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
@@ -946,7 +946,7 @@
             </ul>
             <ul data-ul="3" data-menu-1-7="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/" class="nav__link nav__link--group-heading">MPhil/PhD</a>
+                    <a href="/research-innovation/research-degrees/" class="nav__link nav__link--group-heading">MPhil/PhD</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
@@ -975,741 +975,741 @@
             </ul>
             <ul data-ul="3" data-menu-2-1="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/short-courses/executive-education/" class="nav__link nav__link--group-heading">Executive education</a>
+                    <a href="/short-courses/executive-education/" class="nav__link nav__link--group-heading">Executive education</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/executive-education/design-thinking-innovation/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-1-1" data-parent-id="2-1">
+                    <a href="/short-courses/executive-education/design-thinking-innovation/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-1-1" data-parent-id="2-1">
                         <span>Design thinking &amp; innovation in collaboration with the Design Museum</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/executive-education/service-design-masterclass/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-1-2" data-parent-id="2-1">
+                    <a href="/short-courses/executive-education/service-design-masterclass/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-1-2" data-parent-id="2-1">
                         <span>Service design masterclass</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/executive-education/creative-leadership/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-1-3" data-parent-id="2-1">
+                    <a href="/short-courses/executive-education/creative-leadership/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-1-3" data-parent-id="2-1">
                         <span>Creative leadership</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/executive-education/designing-services-products-artificiai-intelligence/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-1-4" data-parent-id="2-1">
+                    <a href="/short-courses/executive-education/designing-services-products-artificiai-intelligence/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-1-4" data-parent-id="2-1">
                         <span>Designing services &amp; products with artificial intelligence</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-2-2="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/short-courses/summer-schools/" class="nav__link nav__link--group-heading">Summer courses</a>
+                    <a href="/short-courses/summer-schools/" class="nav__link nav__link--group-heading">Summer courses</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/summer-schools/interior-design-future-retail-design/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-2-1" data-parent-id="2-2">
+                    <a href="/short-courses/summer-schools/interior-design-future-retail-design/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-2-1" data-parent-id="2-2">
                         <span>Interior design: the future of retail design</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/summer-schools/architecture-summer-school/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-2-2" data-parent-id="2-2">
+                    <a href="/short-courses/summer-schools/architecture-summer-school/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-2-2" data-parent-id="2-2">
                         <span>Architecture Summer School</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/summer-schools/criticism-and-curating/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-2-3" data-parent-id="2-2">
+                    <a href="/short-courses/summer-schools/criticism-and-curating/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-2-3" data-parent-id="2-2">
                         <span>Curating contemporary ART &amp; Design: Theory &amp; Practice</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/summer-schools/contemporary-art/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-2-4" data-parent-id="2-2">
+                    <a href="/short-courses/summer-schools/contemporary-art/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-2-4" data-parent-id="2-2">
                         <span>Contemporary ART Summer School</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-2-3="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/" class="nav__link nav__link--group-heading">Custom executive education</a>
+                    <a href="/short-courses/custom-executive-education/" class="nav__link nav__link--group-heading">Custom executive education</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/fujitsu-hackathon/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-1" data-parent-id="2-3">
+                    <a href="/short-courses/custom-executive-education/fujitsu-hackathon/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-1" data-parent-id="2-3">
                         <span>Fujitsu Hackathon</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/qatar-social-innovation-bootcamps/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-2" data-parent-id="2-3">
+                    <a href="/short-courses/custom-executive-education/qatar-social-innovation-bootcamps/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-2" data-parent-id="2-3">
                         <span>Qatar social innovation bootcamps</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/samsung-design-ambassadors/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-3" data-parent-id="2-3">
+                    <a href="/short-courses/custom-executive-education/samsung-design-ambassadors/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-3" data-parent-id="2-3">
                         <span>Samsung design ambassadors</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/downing-street-design-summit/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-4" data-parent-id="2-3">
+                    <a href="/short-courses/custom-executive-education/downing-street-design-summit/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-4" data-parent-id="2-3">
                         <span>Downing Street Design Summit</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/national-university-singapore-business-school/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-5" data-parent-id="2-3">
+                    <a href="/short-courses/custom-executive-education/national-university-singapore-business-school/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-5" data-parent-id="2-3">
                         <span>National University Of Singapore business School</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/shanghai-academy-fine-arts-shanghai-university/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-6" data-parent-id="2-3">
+                    <a href="/short-courses/custom-executive-education/shanghai-academy-fine-arts-shanghai-university/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-6" data-parent-id="2-3">
                         <span>Shanghai academy Of fine ARTS (Shanghai University)</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/kfas-innovation-challenge-2017/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-7" data-parent-id="2-3">
+                    <a href="/short-courses/custom-executive-education/kfas-innovation-challenge-2017/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-7" data-parent-id="2-3">
                         <span>Kfas innovation challenge 2017</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/ebu-academy-european-broadcasting-union/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-8" data-parent-id="2-3">
+                    <a href="/short-courses/custom-executive-education/ebu-academy-european-broadcasting-union/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-8" data-parent-id="2-3">
                         <span>Ebu Academy European broadcasting union</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/short-courses/custom-executive-education/korean-institute-design-promotion-kidp-and-daegu-gyeongbuk-design-center-dgdc/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-9" data-parent-id="2-3">
+                    <a href="/short-courses/custom-executive-education/korean-institute-design-promotion-kidp-and-daegu-gyeongbuk-design-center-dgdc/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="2" data-menu-id="2-3-9" data-parent-id="2-3">
                         <span>Korean institute Of design promotion (KIDP) and the daegu gyeongbuk design center (DGDC)</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-3-1="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/research-innovation/research-highlights/" class="nav__link nav__link--group-heading">Research highlights</a>
+                    <a href="/research-innovation/research-highlights/" class="nav__link nav__link--group-heading">Research highlights</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-highlights/current-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-1-1" data-parent-id="3-1">
+                    <a href="/research-innovation/research-highlights/current-research/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-1-1" data-parent-id="3-1">
                         <span>Current research</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-3-2="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/" class="nav__link nav__link--group-heading">Research degrees</a>
+                    <a href="/research-innovation/research-degrees/" class="nav__link nav__link--group-heading">Research degrees</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/mres-degree/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-2-1" data-parent-id="3-2">
+                    <a href="/research-innovation/research-degrees/mres-degree/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-2-1" data-parent-id="3-2">
                         <span>Mres RCA</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/research-student-supervisors/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-2-2" data-parent-id="3-2">
+                    <a href="/research-innovation/research-degrees/research-student-supervisors/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-2-2" data-parent-id="3-2">
                         <span>Research student supervisors</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/research-students/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-2-3" data-parent-id="3-2">
+                    <a href="/research-innovation/research-degrees/research-students/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-2-3" data-parent-id="3-2">
                         <span>Current research student profiles</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-degrees/mphil-phd-registration-periods/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-2-4" data-parent-id="3-2">
+                    <a href="/research-innovation/research-degrees/mphil-phd-registration-periods/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-2-4" data-parent-id="3-2">
                         <span>MPHIL/PHD registration periods</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-3-3="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/research-innovation/research-centres/" class="nav__link nav__link--group-heading">Research centers</a>
+                    <a href="/research-innovation/research-centres/" class="nav__link nav__link--group-heading">Research centers</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-centres/helen-hamlyn-centre/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-1" data-parent-id="3-3">
+                    <a href="/research-innovation/research-centres/helen-hamlyn-centre/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-1" data-parent-id="3-3">
                         <span>The Helen Hamlyn centre for design</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-centres/intelligent-mobility-design-centre/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-2" data-parent-id="3-3">
+                    <a href="/research-innovation/research-centres/intelligent-mobility-design-centre/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-2" data-parent-id="3-3">
                         <span>Intelligent mobility design centre</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-centres/helix-centre/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-3" data-parent-id="3-3">
+                    <a href="/research-innovation/research-centres/helix-centre/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-3" data-parent-id="3-3">
                         <span>Helix centre</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-centres/materials-science-research-centre/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-4" data-parent-id="3-3">
+                    <a href="/research-innovation/research-centres/materials-science-research-centre/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-4" data-parent-id="3-3">
                         <span>Materials Science research centre</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-centres/rca-robotics-laboratory/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-5" data-parent-id="3-3">
+                    <a href="/research-innovation/research-centres/rca-robotics-laboratory/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-3-5" data-parent-id="3-3">
                         <span>RCA Robotics Laboratory</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-3-5="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/research-innovation/knowledge-exchange/" class="nav__link nav__link--group-heading">Knowledge exchange</a>
+                    <a href="/research-innovation/knowledge-exchange/" class="nav__link nav__link--group-heading">Knowledge exchange</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/knowledge-exchange/collaboration-industry/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-5-1" data-parent-id="3-5">
+                    <a href="/research-innovation/knowledge-exchange/collaboration-industry/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-5-1" data-parent-id="3-5">
                         <span>Collaboration with industry</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/knowledge-exchange/studio-projects/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-5-2" data-parent-id="3-5">
+                    <a href="/research-innovation/knowledge-exchange/studio-projects/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-5-2" data-parent-id="3-5">
                         <span>Studio projects</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-3-6="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/research-innovation/innovationrca/" class="nav__link nav__link--group-heading">InnovationRCA</a>
+                    <a href="/research-innovation/innovationrca/" class="nav__link nav__link--group-heading">InnovationRCA</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/innovationrca/about/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-1" data-parent-id="3-6">
+                    <a href="/research-innovation/innovationrca/about/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-1" data-parent-id="3-6">
                         <span>About</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/innovationrca/innovationrca-start-ups/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-2" data-parent-id="3-6">
+                    <a href="/research-innovation/innovationrca/innovationrca-start-ups/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-2" data-parent-id="3-6">
                         <span>Start-Ups</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/innovationrca/innovationrca-creative-brands/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-3" data-parent-id="3-6">
+                    <a href="/research-innovation/innovationrca/innovationrca-creative-brands/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-3" data-parent-id="3-6">
                         <span>Creative brands</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/innovationrca/our-programmes/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-4" data-parent-id="3-6">
+                    <a href="/research-innovation/innovationrca/our-programmes/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-4" data-parent-id="3-6">
                         <span>Our Programmes</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/innovationrca/angelclubrca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-5" data-parent-id="3-6">
+                    <a href="/research-innovation/innovationrca/angelclubrca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-5" data-parent-id="3-6">
                         <span>AngelclubRCA</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/innovationrca/innovationrca-fund-1/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-6" data-parent-id="3-6">
+                    <a href="/research-innovation/innovationrca/innovationrca-fund-1/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-6" data-parent-id="3-6">
                         <span>InnovationRCA Fund 1</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/innovationrca/jobs-board/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-7" data-parent-id="3-6">
+                    <a href="/research-innovation/innovationrca/jobs-board/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-6-7" data-parent-id="3-6">
                         <span>Jobs Board</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-3-7="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/research-innovation/research-rca/" class="nav__link nav__link--group-heading">Research at The RCA</a>
+                    <a href="/research-innovation/research-rca/" class="nav__link nav__link--group-heading">Research at The RCA</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-rca/research-environment-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-7-1" data-parent-id="3-7">
+                    <a href="/research-innovation/research-rca/research-environment-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-7-1" data-parent-id="3-7">
                         <span>Research environment &amp; support</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-rca/research-excellence-framework-ref/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-7-2" data-parent-id="3-7">
+                    <a href="/research-innovation/research-rca/research-excellence-framework-ref/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-7-2" data-parent-id="3-7">
                         <span>Research excellence framework (REF)</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-rca/research-funders-partners/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-7-3" data-parent-id="3-7">
+                    <a href="/research-innovation/research-rca/research-funders-partners/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-7-3" data-parent-id="3-7">
                         <span>Research funders &amp; partners</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/research-innovation/research-rca/research-committee/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-7-4" data-parent-id="3-7">
+                    <a href="/research-innovation/research-rca/research-committee/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="3" data-menu-id="3-7-4" data-parent-id="3-7">
                         <span>Research committee</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-5-1="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/" class="nav__link nav__link--group-heading">Apply</a>
+                    <a href="/studying-at-the-rca/apply/" class="nav__link nav__link--group-heading">Apply</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/applications-201920/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-1" data-parent-id="5-1">
+                    <a href="/studying-at-the-rca/apply/applications-201920/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-1" data-parent-id="5-1">
                         <span>Applications 2019/20</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/application-process/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-2" data-parent-id="5-1">
+                    <a href="/studying-at-the-rca/apply/application-process/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-2" data-parent-id="5-1">
                         <span>Application process</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/entrance-requirements/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-3" data-parent-id="5-1">
+                    <a href="/studying-at-the-rca/apply/entrance-requirements/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-3" data-parent-id="5-1">
                         <span>Entrance requirements</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/equal-opportunities-policy/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-4" data-parent-id="5-1">
+                    <a href="/studying-at-the-rca/apply/equal-opportunities-policy/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-4" data-parent-id="5-1">
                         <span>Equal opportunities policy</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/open-days/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-5" data-parent-id="5-1">
+                    <a href="/studying-at-the-rca/apply/open-days/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-5" data-parent-id="5-1">
                         <span>Open Days</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/registration/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-6" data-parent-id="5-1">
+                    <a href="/studying-at-the-rca/apply/registration/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-6" data-parent-id="5-1">
                         <span>Registration</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/eu-students/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-7" data-parent-id="5-1">
+                    <a href="/studying-at-the-rca/apply/eu-students/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-7" data-parent-id="5-1">
                         <span>EU students</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/admissions-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-8" data-parent-id="5-1">
+                    <a href="/studying-at-the-rca/apply/admissions-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-8" data-parent-id="5-1">
                         <span>Admissions Support</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/apply/terms-conditions-students/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-9" data-parent-id="5-1">
+                    <a href="/studying-at-the-rca/apply/terms-conditions-students/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-1-9" data-parent-id="5-1">
                         <span>Terms &amp; Conditions for Students</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-5-2="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/fees-funding/" class="nav__link nav__link--group-heading">Fees &amp; Funding</a>
+                    <a href="/studying-at-the-rca/fees-funding/" class="nav__link nav__link--group-heading">Fees &amp; Funding</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/fees-funding/fee-payment/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-2-1" data-parent-id="5-2">
+                    <a href="/studying-at-the-rca/fees-funding/fee-payment/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-2-1" data-parent-id="5-2">
                         <span>Payment Of fees</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/fees-funding/tuition-fees/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-2-2" data-parent-id="5-2">
+                    <a href="/studying-at-the-rca/fees-funding/tuition-fees/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-2-2" data-parent-id="5-2">
                         <span>Tuition Fees</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/fees-funding/financial-help-/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-2-3" data-parent-id="5-2">
+                    <a href="/studying-at-the-rca/fees-funding/financial-help-/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-2-3" data-parent-id="5-2">
                         <span>Financial Help</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-5-3="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/facilities/" class="nav__link nav__link--group-heading">Facilities</a>
+                    <a href="/studying-at-the-rca/facilities/" class="nav__link nav__link--group-heading">Facilities</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/facilities/college-shop/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-1" data-parent-id="5-3">
+                    <a href="/studying-at-the-rca/facilities/college-shop/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-1" data-parent-id="5-3">
                         <span>College shop</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/facilities/lecture-theatres/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-2" data-parent-id="5-3">
+                    <a href="/studying-at-the-rca/facilities/lecture-theatres/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-2" data-parent-id="5-3">
                         <span>Lecture Theaters</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/facilities/eating-and-drinking/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-3" data-parent-id="5-3">
+                    <a href="/studying-at-the-rca/facilities/eating-and-drinking/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-3" data-parent-id="5-3">
                         <span>Eating &amp; Drinking</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/facilities/facilities-at-imperial-college-london/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-4" data-parent-id="5-3">
+                    <a href="/studying-at-the-rca/facilities/facilities-at-imperial-college-london/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-4" data-parent-id="5-3">
                         <span>Facilities At Imperial</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/facilities/rapidformrca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-5" data-parent-id="5-3">
+                    <a href="/studying-at-the-rca/facilities/rapidformrca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-5" data-parent-id="5-3">
                         <span>Rapid Prototyping (RapidformRCA)</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/facilities/library/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-6" data-parent-id="5-3">
+                    <a href="/studying-at-the-rca/facilities/library/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-6" data-parent-id="5-3">
                         <span>Library</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/facilities/special-collections-and-archives/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-7" data-parent-id="5-3">
+                    <a href="/studying-at-the-rca/facilities/special-collections-and-archives/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-3-7" data-parent-id="5-3">
                         <span>Special Collections</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-5-4="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/support/" class="nav__link nav__link--group-heading">Support</a>
+                    <a href="/studying-at-the-rca/support/" class="nav__link nav__link--group-heading">Support</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/support/living-london/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-1" data-parent-id="5-4">
+                    <a href="/studying-at-the-rca/support/living-london/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-1" data-parent-id="5-4">
                         <span>Living in London</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/support/international-student-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-2" data-parent-id="5-4">
+                    <a href="/studying-at-the-rca/support/international-student-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-2" data-parent-id="5-4">
                         <span>International Student Support</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/support/welfare/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-3" data-parent-id="5-4">
+                    <a href="/studying-at-the-rca/support/welfare/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-3" data-parent-id="5-4">
                         <span>Welfare</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/support/learning-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-4" data-parent-id="5-4">
+                    <a href="/studying-at-the-rca/support/learning-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-4" data-parent-id="5-4">
                         <span>Learning Support</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/support/professional-development/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-5" data-parent-id="5-4">
+                    <a href="/studying-at-the-rca/support/professional-development/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-5" data-parent-id="5-4">
                         <span>Professional Development</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/support/student-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-6" data-parent-id="5-4">
+                    <a href="/studying-at-the-rca/support/student-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-6" data-parent-id="5-4">
                         <span>Student Support</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/support/students-union/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-7" data-parent-id="5-4">
+                    <a href="/studying-at-the-rca/support/students-union/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-4-7" data-parent-id="5-4">
                         <span>Students Union</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-5-5="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/the-rca-experience/" class="nav__link nav__link--group-heading">The RCA experience</a>
+                    <a href="/studying-at-the-rca/the-rca-experience/" class="nav__link nav__link--group-heading">The RCA experience</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/the-rca-experience/a-global-creative-hub/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-1" data-parent-id="5-5">
+                    <a href="/studying-at-the-rca/the-rca-experience/a-global-creative-hub/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-1" data-parent-id="5-5">
                         <span>A Global Creative Hub</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/the-rca-experience/our-campus/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-2" data-parent-id="5-5">
+                    <a href="/studying-at-the-rca/the-rca-experience/our-campus/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-2" data-parent-id="5-5">
                         <span>Our Campus</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/the-rca-experience/student-voices/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-3" data-parent-id="5-5">
+                    <a href="/studying-at-the-rca/the-rca-experience/student-voices/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-3" data-parent-id="5-5">
                         <span>Student voices</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/the-rca-experience/innovation/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-4" data-parent-id="5-5">
+                    <a href="/studying-at-the-rca/the-rca-experience/innovation/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-4" data-parent-id="5-5">
                         <span>Innovation</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/the-rca-experience/interdisciplinary-working/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-5" data-parent-id="5-5">
+                    <a href="/studying-at-the-rca/the-rca-experience/interdisciplinary-working/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-5" data-parent-id="5-5">
                         <span>Interdisciplinary Working</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/studying-at-the-rca/the-rca-experience/technical-expertise/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-6" data-parent-id="5-5">
+                    <a href="/studying-at-the-rca/the-rca-experience/technical-expertise/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="5" data-menu-id="5-5-6" data-parent-id="5-5">
                         <span>Technical Expertise</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-7-1="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/showcase/show-2019/" class="nav__link nav__link--group-heading">Show 2019</a>
+                    <a href="/showcase/show-2019/" class="nav__link nav__link--group-heading">Show 2019</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/showcase/show-2019/information/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="7" data-menu-id="7-1-1" data-parent-id="7-1">
+                    <a href="/showcase/show-2019/information/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="7" data-menu-id="7-1-1" data-parent-id="7-1">
                         <span>Information</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/showcase/show-2019/fashion-video/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="7" data-menu-id="7-1-2" data-parent-id="7-1">
+                    <a href="/showcase/show-2019/fashion-video/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="7" data-menu-id="7-1-2" data-parent-id="7-1">
                         <span>Fashion Video</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/showcase/show-2019/events-performances/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="7" data-menu-id="7-1-3" data-parent-id="7-1">
+                    <a href="/showcase/show-2019/events-performances/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="7" data-menu-id="7-1-3" data-parent-id="7-1">
                         <span>Events &amp; Performances</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-8-1="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/more/about-rca/" class="nav__link nav__link--group-heading">About the RCA</a>
+                    <a href="/more/about-rca/" class="nav__link nav__link--group-heading">About the RCA</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/about-rca/our-campus/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-1-1" data-parent-id="8-1">
+                    <a href="/more/about-rca/our-campus/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-1-1" data-parent-id="8-1">
                         <span>Our Campus</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/about-rca/official-information/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-1-2" data-parent-id="8-1">
+                    <a href="/more/about-rca/official-information/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-1-2" data-parent-id="8-1">
                         <span>Official Information</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/about-rca/our-history/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-1-3" data-parent-id="8-1">
+                    <a href="/more/about-rca/our-history/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-1-3" data-parent-id="8-1">
                         <span>Our History</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-8-2="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/" class="nav__link nav__link--group-heading">Support GenerationRCA</a>
+                    <a href="/more/support-generationrca/" class="nav__link nav__link--group-heading">Support GenerationRCA</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/generationrca-people/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-1" data-parent-id="8-2">
+                    <a href="/more/support-generationrca/generationrca-people/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-1" data-parent-id="8-2">
                         <span>GenerationRCA: People</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/generationrca-places/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-2" data-parent-id="8-2">
+                    <a href="/more/support-generationrca/generationrca-places/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-2" data-parent-id="8-2">
                         <span>GenerationRCA: Places</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/generationrca-projects/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-3" data-parent-id="8-2">
+                    <a href="/more/support-generationrca/generationrca-projects/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-3" data-parent-id="8-2">
                         <span>GenerationRCA: Projects</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/make-gift-generation-rca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-4" data-parent-id="8-2">
+                    <a href="/more/support-generationrca/make-gift-generation-rca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-4" data-parent-id="8-2">
                         <span>Make a Gift to GenerationRCA</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/legacies-and-bequests/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-5" data-parent-id="8-2">
+                    <a href="/more/support-generationrca/legacies-and-bequests/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-5" data-parent-id="8-2">
                         <span>Legacies &amp; Bequests</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/recognising-your-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-6" data-parent-id="8-2">
+                    <a href="/more/support-generationrca/recognising-your-support/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-6" data-parent-id="8-2">
                         <span>Recognising  Your Support</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/rca-fund/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-7" data-parent-id="8-2">
+                    <a href="/more/support-generationrca/rca-fund/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-7" data-parent-id="8-2">
                         <span>The RCA fund</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/support-generationrca/contact-development/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-8" data-parent-id="8-2">
+                    <a href="/more/support-generationrca/contact-development/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-2-8" data-parent-id="8-2">
                         <span>Contact The Development Office</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-8-3="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/more/work-rca/" class="nav__link nav__link--group-heading">Work at the RCA</a>
+                    <a href="/more/work-rca/" class="nav__link nav__link--group-heading">Work at the RCA</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/work-rca/current-vacancies/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-1" data-parent-id="8-3">
+                    <a href="/more/work-rca/current-vacancies/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-1" data-parent-id="8-3">
                         <span>Current Vacancies</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/work-rca/how-apply/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-2" data-parent-id="8-3">
+                    <a href="/more/work-rca/how-apply/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-2" data-parent-id="8-3">
                         <span>How to apply</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/work-rca/staff-benefits/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-3" data-parent-id="8-3">
+                    <a href="/more/work-rca/staff-benefits/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-3" data-parent-id="8-3">
                         <span>Staff Benefits</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/work-rca/about-college/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-4" data-parent-id="8-3">
+                    <a href="/more/work-rca/about-college/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-4" data-parent-id="8-3">
                         <span>About the College</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/work-rca/equality-and-diversity/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-5" data-parent-id="8-3">
+                    <a href="/more/work-rca/equality-and-diversity/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-5" data-parent-id="8-3">
                         <span>Equality &amp; Diversity</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/work-rca/policies/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-6" data-parent-id="8-3">
+                    <a href="/more/work-rca/policies/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-6" data-parent-id="8-3">
                         <span>Employment Policies</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/work-rca/visiting-lecturers-and-casual-workers/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-7" data-parent-id="8-3">
+                    <a href="/more/work-rca/visiting-lecturers-and-casual-workers/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-3-7" data-parent-id="8-3">
                         <span>Visiting Lecturers &amp; Casual Workers</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-8-6="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/more/special-collections/" class="nav__link nav__link--group-heading">Special Collections</a>
+                    <a href="/more/special-collections/" class="nav__link nav__link--group-heading">Special Collections</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/special-collections/royal-college-art-archive-and-related-collections/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-1" data-parent-id="8-6">
+                    <a href="/more/special-collections/royal-college-art-archive-and-related-collections/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-1" data-parent-id="8-6">
                         <span>Royal College of ART archive and related collections</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/special-collections/other-archives-and-manuscripts/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-2" data-parent-id="8-6">
+                    <a href="/more/special-collections/other-archives-and-manuscripts/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-2" data-parent-id="8-6">
                         <span>Other archives and manuscripts</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/special-collections/fine-art-and-design-collections/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-3" data-parent-id="8-6">
+                    <a href="/more/special-collections/fine-art-and-design-collections/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-3" data-parent-id="8-6">
                         <span>Fine ART &amp; Design collections</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/special-collections/special-collections-books/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-4" data-parent-id="8-6">
+                    <a href="/more/special-collections/special-collections-books/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-4" data-parent-id="8-6">
                         <span>Special collections Books</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/special-collections/access-location-and-appointments/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-5" data-parent-id="8-6">
+                    <a href="/more/special-collections/access-location-and-appointments/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-5" data-parent-id="8-6">
                         <span>Special collections Access location and appointments</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/special-collections/remembrance-royal-college-art-and-first-world-war/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-6" data-parent-id="8-6">
+                    <a href="/more/special-collections/remembrance-royal-college-art-and-first-world-war/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-6" data-parent-id="8-6">
                         <span>Remembrance: The Royal College of ART and the First World War</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/more/special-collections/lion-unicorn-press/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-7" data-parent-id="8-6">
+                    <a href="/more/special-collections/lion-unicorn-press/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="8" data-menu-id="8-6-7" data-parent-id="8-6">
                         <span>Lion and Unicorn Press</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-9-1="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/contact-us/maps-visiting/" class="nav__link nav__link--group-heading">Maps &amp; Visiting</a>
+                    <a href="/contact-us/maps-visiting/" class="nav__link nav__link--group-heading">Maps &amp; Visiting</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/contact-us/maps-visiting/travelling-to-from-the-rca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-1-1" data-parent-id="9-1">
+                    <a href="/contact-us/maps-visiting/travelling-to-from-the-rca/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-1-1" data-parent-id="9-1">
                         <span>Travelling to/From the RCA</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/contact-us/maps-visiting/gallery-access/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-1-2" data-parent-id="9-1">
+                    <a href="/contact-us/maps-visiting/gallery-access/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-1-2" data-parent-id="9-1">
                         <span>Gallery Access</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/contact-us/maps-visiting/eduroam-wifi-access/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-1-3" data-parent-id="9-1">
+                    <a href="/contact-us/maps-visiting/eduroam-wifi-access/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-1-3" data-parent-id="9-1">
                         <span>Eduroam WIFI access</span>
                     </a>
                 </li>
             </ul>
             <ul data-ul="3" data-menu-9-3="" class="nav nav--subnav">
                 <li class="nav__item nav__item--group-heading">
-                    <a href="https://www.rca.ac.uk/contact-us/about-this-website/" class="nav__link nav__link--group-heading">About this website</a>
+                    <a href="/contact-us/about-this-website/" class="nav__link nav__link--group-heading">About this website</a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/contact-us/about-this-website/accessibility/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-3-1" data-parent-id="9-3">
+                    <a href="/contact-us/about-this-website/accessibility/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-3-1" data-parent-id="9-3">
                         <span>Accessibility</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/contact-us/about-this-website/privacy-cookies/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-3-2" data-parent-id="9-3">
+                    <a href="/contact-us/about-this-website/privacy-cookies/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-3-2" data-parent-id="9-3">
                         <span>Data protection. privacy &amp; cookies</span>
                     </a>
                 </li>
                 <li>
                     <!-- Level 3 <a> -->
-                    <a href="https://www.rca.ac.uk/contact-us/about-this-website/terms-conditions/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-3-3" data-parent-id="9-3">
+                    <a href="/contact-us/about-this-website/terms-conditions/" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="9" data-menu-id="9-3-3" data-parent-id="9-3">
                         <span>Terms &amp; Conditions</span>
                     </a>
                 </li>
