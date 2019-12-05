@@ -38,6 +38,22 @@ if ! command -v lessc; then
     npm install -g less
 fi
 
+# Install Heroku CLI
+curl -sSL https://cli-assets.heroku.com/install-ubuntu.sh | sh
+
+# Install Fabric 2
+apt-get remove -y fabric
+su - vagrant -c "$PIP install Fabric==2.1.3"
+
+# Install AWS CLI
+apt-get update -y
+apt-get install -y unzip
+rm -rf /tmp/awscli-bundle || true
+rm -rf /tmp/awscli-bundle.zip || true
+curl -sSL "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "/tmp/awscli-bundle.zip"
+unzip -q /tmp/awscli-bundle.zip -d /tmp
+/tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+
 # use YAML for test fixtures
 apt-get install -y libyaml-dev
 

@@ -38,4 +38,5 @@ def global_vars(request):
         'GOOGLE_ANALYTICS_ACCOUNT': settings.GOOGLE_ANALYTICS_ACCOUNT,
         'SILVERPOP_ID': settings.SILVERPOP_ID,
         'SILVERPOP_BRANDEDDOMAINS': settings.SILVERPOP_BRANDEDDOMAINS,
+        'SEO_NOINDEX': settings.SEO_NOINDEX,
     }

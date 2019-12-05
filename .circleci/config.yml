@@ -1,0 +1,89 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/python:2.7-jessie
+        environment:
+          SECRET_KEY: testingsecretkey
+          SECURE_SSL_REDIRECT: false
+          ALLOWED_HOSTS: localhost
+          DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
+          DJANGO_SETTINGS_MODULE: rcasite.settings.production
+          CFG_SECRET_KEY: iamnotsosecret
+          CFG_ALLOWED_HOSTS: localhost
+      - image: circleci/postgres:9.6
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle_test
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install ldap
+          command: |
+            sudo apt-get install -y apt-transport-https rsync libldap2-dev libsasl2-dev
+      - run:
+          name: Pip install wheel
+          command: |
+            pip install wheel
+      - run:
+          name: install python dependencies
+          command: |
+            pip install -r django-verdant/requirements.txt --user
+      - run:
+          name: Run system checks
+          command: |
+            python django-verdant/manage.py check
+      - run:
+          name: Check for missing migrations... this will take a while
+          command: |
+            python django-verdant/manage.py makemigrations --dry-run --noinput
+      - run:
+          name: Run tests
+          command: |
+            python django-verdant/manage.py test
+
+  deploy_staging:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - run:
+          name: deploy staging to heroku
+          command: |
+            git push https://heroku:$HEROKU_TOKEN@git.heroku.com/$HEROKU_APP_NAME_STAGING.git master
+  deploy_production:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - run:
+          name: deploy master to heroku
+          command: |
+            git push https://heroku:$HEROKU_TOKEN@git.heroku.com/$HEROKU_APP_NAME_PRODUCTION.git master
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - test
+      - deploy_staging:
+          requires:
+            - test
+          filters:
+            branches:
+              only: heroku-move
+      - confirm_deploy_production:
+          type: approval
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - deploy_production:
+          requires:
+            - test
+            - confirm_deploy_production
+          filters:
+            branches:
+              only: master

@@ -1,5 +1,7 @@
 # Getting Started
 
+## Vagrant
+
 * Install [Vagrant](https://wiki.torchbox.com/view/Vagrant)
 * ```git clone git@github.com:torchbox/verdant-rca.git```
 * ```cd verdant-rca```
@@ -7,8 +9,23 @@
 * ```vagrant ssh```
 * ```djrun```
 * Edit your code locally, browse at [localhost:8000](http://localhost:8000/)
-*
 
+## Docker
+
+There is a docker-compose file included in djang-verdant/docker-compose. Run with `docker-compose up`
+the site will be available on 0.0.0.0:8509.
+
+# Deployments
+
+Deployments are handled by [CircleCi](https://circleci.com/gh/torchbox/workflows/verdant-rca).
+
+### Staging
+
+Merging to the `staging` branch will trigger an automatic deployment to the stage site.
+
+### Production
+
+Merging to the `master` branch will trigger a deployment to production, however Circle will await a manual approval before releasing the build to production.
 
 # Gotchas
 
