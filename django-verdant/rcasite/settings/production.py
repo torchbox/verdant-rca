@@ -139,11 +139,19 @@ if REDIS_LOCATION is not None:
 
 
 # Elasticsearch
-if 'SEARCHBOX_URL' in env:
+ELASTICSEARCH_URL = None
+
+if 'ELASTICSEARCH_URL' in env:
+    ELASTICSEARCH_URL = env['ELASTICSEARCH_URL']
+
+elif 'SEARCHBOX_URL' in env:
+    ELASTICSEARCH_URL = env['SEARCHBOX_URL']
+
+if ELASTICSEARCH_URL is not None:
     WAGTAILSEARCH_BACKENDS = {
         'default': {
             'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch',
-            'URLS': [env['SEARCHBOX_URL']],
+            'URLS': [ELASTICSEARCH_URL],
             'INDEX': APP_NAME,
             'TIMEOUT': 30,
             'OPTIONS': {},
