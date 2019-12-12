@@ -12,12 +12,12 @@
 
 ## Docker
 
-There is a docker-compose file included in djang-verdant/docker-compose. Run with `docker-compose up`
-the site will be available on 0.0.0.0:8509.
+There is a docker-compose file included in `django-verdant/docker-compose`. Run with `docker-compose up`
+the site will be available on `0.0.0.0:8509`.
 
 # Deployments
 
-Deployments are handled by [CircleCi](https://circleci.com/gh/torchbox/workflows/verdant-rca).
+Deployments are handled by [CircleCI](https://circleci.com/gh/torchbox/workflows/verdant-rca).
 
 ### Staging
 
@@ -29,7 +29,7 @@ Merging to the `master` branch will trigger a deployment to production, however 
 
 # Gotchas
 
-You may encounter a "Invalid input of type: 'CacheKey'" error when running a new box locally. This is due to a bug in django-redis (see https://github.com/niwinz/django-redis/issues/342) and can be worked around by adding:
+You may encounter a "Invalid input of type: 'CacheKey'" error when running a new box locally. This is due to a bug in `django-redis`` (see https://github.com/niwinz/django-redis/issues/342) and can be worked around by adding:
 
 `redis==2.10.6` to `django-verdant/requirements.txt` and then running `pip install -r requirements.txt`
 
@@ -63,7 +63,7 @@ Also you will need to add the following user groups (with same ID)
 
 It was orignally built to a design provided by an external agency, and some of the terminology e.g. 'modules' and the names of the text styles are based on their original terminology.
 
-There is no tooling, and the site uses django compressor.
+There is no tooling, and the site uses `django-compressor`.
 
 
 ### CSS
