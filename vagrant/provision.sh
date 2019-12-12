@@ -8,6 +8,15 @@ PIP=$VIRTUALENV_DIR/bin/pip
 
 NODE_VERSION=v4.2.3
 
+# PostgreSQL
+apt-get remove -y --purge postgresql*
+echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+cat /vagrant/vagrant/ACCC4CF8.asc | apt-key add -
+apt-get update -y
+apt-get install -y postgresql-9.6 postgresql-client-9.6 postgresql-contrib-9.6 libpq-dev
+
+su - postgres -c "createuser -s vagrant"
+
 # Dependencies for LDAP
 apt-get update -y
 apt-get install -y libldap2-dev libsasl2-dev
