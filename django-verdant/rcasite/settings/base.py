@@ -407,6 +407,11 @@ if 'AWS_STORAGE_BUCKET_NAME' in env:
     # https://github.com/jschneier/django-storages/blob/10d1929de5e0318dbd63d715db4bebc9a42257b5/storages/backends/s3boto3.py#L217
     AWS_S3_URL_PROTOCOL = env.get('AWS_S3_URL_PROTOCOL', 'https:')
 
+    # Set S3 calling format
+    # See https://torchbox.slack.com/archives/C03QAAC93/p1575976449104900
+    from boto.s3.connection import OrdinaryCallingFormat
+    AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
+
 if 'FRONTEND_CACHE_CLOUDFLARE_TOKEN' in env:
     INSTALLED_APPS.append('wagtail.contrib.frontend_cache')
     WAGTAILFRONTENDCACHE = {
