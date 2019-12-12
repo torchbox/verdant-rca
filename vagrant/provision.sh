@@ -68,7 +68,7 @@ unzip -q /tmp/awscli-bundle.zip -d /tmp
 apt-get install -y libyaml-dev
 
 # Create database
-su - vagrant -c "createdb verdant"
+su - vagrant -c "createdb rca"
 
 
 # Virtualenv setup for project
@@ -92,7 +92,8 @@ chmod a+x $PROJECT_DIR/manage.py
 cat << EOF >> /home/vagrant/.bashrc
 export PYTHONPATH=$PROJECT_DIR
 export DJANGO_SETTINGS_MODULE=rcasite.settings.dev
-export DATABASE_URL=postgres:///verdant
+export DATABASE_URL=postgres:///rca
+export PGDATABASE=rca
 
 alias dj="django-admin.py"
 alias djrun="dj runserver 0.0.0.0:8000"
