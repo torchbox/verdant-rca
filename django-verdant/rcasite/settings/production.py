@@ -1,5 +1,4 @@
 import os
-import dj_database_url
 
 from .base import *  # noqa
 
@@ -63,10 +62,6 @@ AUTHENTICATION_BACKENDS = (
 for key, value in os.environ.items():
     if key.startswith('CFG_'):
         env[key[4:]] = value
-
-# Database
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {'default': dj_database_url.config()}
 
 # Basic configuration
 APP_NAME = env.get('APP_NAME', 'rca')

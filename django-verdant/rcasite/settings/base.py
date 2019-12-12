@@ -3,6 +3,7 @@
 import os
 import sys
 import raven
+import dj_database_url
 from raven.exceptions import InvalidGitRepository
 
 env = os.environ.copy()
@@ -22,6 +23,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# Database
+if 'DATABASE_URL' in env:
+    DATABASES = {'default': dj_database_url.config()}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
