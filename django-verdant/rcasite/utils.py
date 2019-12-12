@@ -1,6 +1,5 @@
 from django.conf import settings
 
-from rca_show.models import ShowIndexPage
 from rca_show.utils import get_base_show_template
 
 
@@ -10,18 +9,9 @@ def offline_context():
     so we need to pass correct base_template into context
     during offline compression.
     """
-
-    years = ShowIndexPage.objects.order_by().values_list('year', flat=True).distinct()
-
-    for year in years:
+    # These years correspond to the years that we have base templates for in `rca_show/templates`
+    for year in ['2016', '2017', '2018', '2019']:
         yield {
             'STATIC_URL': settings.STATIC_URL,
             'base_template': get_base_show_template(year),
-        }
-
-    # Make sure we always yield something so django-compressor doesn't break
-    # See https://github.com/django-compressor/django-compressor/issues/818
-    if not years:
-        yield {
-            'STATIC_URL': settings.STATIC_URL,
         }
