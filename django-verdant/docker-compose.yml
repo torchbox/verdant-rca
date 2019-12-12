@@ -38,4 +38,4 @@ services:
       - db
       - redis
   redis:
-    image: redis
+    image: redis:5.0
