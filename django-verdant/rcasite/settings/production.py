@@ -75,10 +75,6 @@ if 'ALLOWED_HOSTS' in env:
 if 'PRIMARY_HOST' in env:
     BASE_URL = 'http://%s' % env['PRIMARY_HOST']
 
-if 'SERVER_EMAIL' in env:
-    SERVER_EMAIL = env['SERVER_EMAIL']
-
-
 if 'MAILGUN_ACCESS_KEY' in env:
     EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
     MAILGUN_ACCESS_KEY = envp['MAILGUN_ACCESS_KEY']
