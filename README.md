@@ -12,8 +12,10 @@
 
 ## Docker
 
-There is a docker-compose file included in `django-verdant/docker-compose`. Run with `docker-compose up`
+There is a `docker-compose` file included in `django-verdant/docker-compose`. Run with `docker-compose up`
 the site will be available on `0.0.0.0:8509`.
+
+Note: this was developed for testing the `Dockerfile` during the Heroku move. It isn't completely working yet for local development.
 
 # Deployments
 
