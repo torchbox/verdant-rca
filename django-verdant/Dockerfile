@@ -54,6 +54,9 @@ WORKDIR /app
 # COPY --chown=verdant-rca ./package.json ./package-lock.json ./
 # RUN npm install
 
+# Install less
+RUN npm install less -g
+
 # Install your app's Python requirements.
 COPY requirements.txt ./requirements.txt
 RUN pip install -r ./requirements.txt
@@ -64,13 +67,14 @@ COPY gunicorn-conf.py ./
 # Copy application code.
 COPY --chown=verdant-rca . .
 
-# Install less
-RUN npm install less -g
-
 # Collect static. This command will move static files from application
 # directories and "static_compiled" folder to the main static directory that
 # will be served by the WSGI server.
 RUN SECRET_KEY=none django-admin collectstatic --noinput --clear
+
+# Compress. This command will build static bundles by scraping {% compress %} tags
+# out of templates
+RUN SECRET_KEY=none DJANGO_SETTINGS_MODULE=rcasite.settings.production django-admin compress
 
 # Don't use the root user as it's an anti-pattern and Heroku does not run
 # containers as root either.
