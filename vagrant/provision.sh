@@ -43,7 +43,8 @@ curl -sSL https://cli-assets.heroku.com/install-ubuntu.sh | sh
 
 # Install Fabric 2
 apt-get remove -y fabric
-su - vagrant -c "$PIP install Fabric==2.1.3"
+pip3 install --upgrade pip
+python3 -m pip install Fabric==2.1.3
 
 # Install AWS CLI
 apt-get update -y
