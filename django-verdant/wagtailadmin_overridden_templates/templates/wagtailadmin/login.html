@@ -1,4 +1,4 @@
-{% extends "student_profiles/admin_base.html" %}
+{% extends "wagtailadmin/admin_base.html" %}
 {% load staticfiles i18n %}
 {% block titletag %}{% trans "Sign in" %}{% endblock %}
 {% block bodyclass %}login{% endblock %}
@@ -27,13 +27,13 @@
             </div>
         {% endif %}
 
-        <form action="{% url 'student-profiles:login' %}" method="post" autocomplete="off" novalidate>
+        <form action="{% url 'wagtailadmin_login' %}" method="post" autocomplete="off" novalidate>
             {% csrf_token %}
 
-            {% url 'student-profiles:overview' as home_url %}
+            {% url 'wagtailadmin_home' as home_url %}
             <input type="hidden" name="next" value="{{ next|default:home_url }}" />
 
-            <h1>{% block branding_login %}{% trans "Sign in to My RCA" %}{% endblock %}</h1>
+            <h1>{% block branding_login %}{% trans "Sign in to Wagtail" %}{% endblock %}</h1>
 
             <ul class="fields">
                 <li class="full">
@@ -51,7 +51,18 @@
                             {{ form.password }}
                         </div>
                     </div>
+                    {% if show_password_reset %}
+                        <p class="help"><a href="{% url 'wagtailadmin_password_reset' %}">{% trans "Forgotten it?" %}</a></p>
+                    {% endif %}
                 </li>
+                {% comment %}
+                    Removed until functionality exists
+                    <li class="checkbox">
+                        <div class="field">
+                            <label><input type="checkbox" />{% trans "Remember me" %}</label>
+                        </div>
+                    </li>
+                {% endcomment %}
                 <li class="submit">
                     <button type="submit" class="button button-longrunning" tabindex="3" data-clicked-text="{% trans 'Signing in...' %}"><span class="icon icon-spinner"></span><em>{% trans 'Sign in' %}</em></button>
                 </li>

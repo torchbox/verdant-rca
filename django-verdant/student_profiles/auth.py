@@ -14,6 +14,14 @@ from wagtail.wagtailadmin import forms
 @sensitive_post_parameters()
 @never_cache
 def login(request):
+    if settings.RCA_LOGIN_DISABLED and request.method == "POST":
+        # Redirect back to this view and ignore the POST request
+        redirect_to = request.path
+        if request.POST.get('next', None) is not None:
+            redirect_to += '?next=' + request.POST['next']
+
+        return redirect(redirect_to)
+
     if request.user.is_authenticated():
         return redirect('student-profiles:overview')
     else:
