@@ -39,12 +39,6 @@ COMPRESS_CSS_HASHING_METHOD = 'content'
 CACHE_CONTROL_MAX_AGE = 30 * 60
 
 
-# Use django-mailer email backend
-# This is because there are many moderators on this site and emailing
-# them all at the same time causes a heroku timeout
-EMAIL_BACKEND = "mailer.backend.DbBackend"
-
-
 # Configuration from environment variables
 # Alternatively, you can set these in a local.py file on the server
 env = os.environ.copy()
