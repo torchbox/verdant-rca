@@ -163,13 +163,6 @@ if 'TWITTER_ACCESS_TOKEN' in env:
 if 'TWITTER_ACCESS_TOKEN_SECRET' in env:
     TWITTER_ACCESS_TOKEN_SECRET = env['TWITTER_ACCESS_TOKEN_SECRET']
 
-# Mailgun
-
-if 'MAILGUN_ACCESS_KEY' in env and 'MAILGUN_SERVER_NAME' in env:
-    EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-    MAILGUN_ACCESS_KEY = env['MAILGUN_ACCESS_KEY']
-    MAILGUN_SERVER_NAME = env['MAILGUN_SERVER_NAME']
-
 try:
     from .local import *  # noqa
 except ImportError:
