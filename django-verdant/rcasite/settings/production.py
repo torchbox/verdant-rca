@@ -77,9 +77,9 @@ if 'PRIMARY_HOST' in env:
 
 if 'MAILGUN_ACCESS_KEY' in env:
     EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-    MAILGUN_ACCESS_KEY = envp['MAILGUN_ACCESS_KEY']
+    MAILGUN_ACCESS_KEY = env['MAILGUN_ACCESS_KEY']
 if 'MAILGUN_SERVER_NAME' in env:
-    MAILGUN_SERVER_NAME = envp['MAILGUN_SERVER_NAME']
+    MAILGUN_SERVER_NAME = env['MAILGUN_SERVER_NAME']
 
 if 'CACHE_PURGE_URL' in env:
     INSTALLED_APPS += ('wagtail.contrib.wagtailfrontendcache', )  # noqa
@@ -162,13 +162,6 @@ if 'TWITTER_ACCESS_TOKEN' in env:
     TWITTER_ACCESS_TOKEN = env['TWITTER_ACCESS_TOKEN']
 if 'TWITTER_ACCESS_TOKEN_SECRET' in env:
     TWITTER_ACCESS_TOKEN_SECRET = env['TWITTER_ACCESS_TOKEN_SECRET']
-
-# Mailgun
-
-if 'MAILGUN_ACCESS_KEY' in env and 'MAILGUN_SERVER_NAME' in env:
-    EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-    MAILGUN_ACCESS_KEY = env['MAILGUN_ACCESS_KEY']
-    MAILGUN_SERVER_NAME = env['MAILGUN_SERVER_NAME']
 
 try:
     from .local import *  # noqa
