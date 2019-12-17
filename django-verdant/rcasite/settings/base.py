@@ -150,6 +150,7 @@ INSTALLED_APPS = [
     'twitter',  # the app used to proxy the Twitter REST API
     'widget_tweaks',
     'django.contrib.admin',
+    'mailer',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 
