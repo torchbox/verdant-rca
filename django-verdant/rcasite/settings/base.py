@@ -504,5 +504,5 @@ if 'WEBHOOKS_PAGE_UNPUBLISHED' in env:
     WEBHOOKS_PAGE_UNPUBLISHED = [env['WEBHOOKS_PAGE_UNPUBLISHED'],]
 
 CSRF_TRUSTED_ORIGINS = [
-    'beta.rca.ac.uk'
+    'www.rca.ac.uk'
 ]
