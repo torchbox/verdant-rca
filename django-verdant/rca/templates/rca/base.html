@@ -13,7 +13,7 @@
         <meta name="description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta http-equiv="cleartype" content="on" />
-        
+
         <link rel="apple-touch-icon" sizes="180x180" href="{% static "rca/images/apple-touch-icon.png" %}">
         <link rel="icon" type="image/png" sizes="32x32" href="{% static "rca/images/favicon-32x32.png" %}">
         <link rel="icon" type="image/png" sizes="16x16" href="{% static "rca/images/favicon-16x16.png" %}">
@@ -23,6 +23,18 @@
         <meta name="msapplication-TileColor" content="#000000">
         <meta name="msapplication-config" content="{% static "rca/images/browserconfig.xml" %}">
         <meta name="theme-color" content="#000000">
+
+        {% comment %}
+            Set "noindex" if the site is not being served by a configured
+            domain to prevent search engines crawling admin domains.
+            This ignores ports for simplicity.
+            It's also possible to make the website to be not indexable
+            by setting SEO_NOINDEX to True.
+        {% endcomment %}
+        {% if SEO_NOINDEX or request.META.HTTP_HOST != request.site.hostname %}
+            <meta name="robots" content="noindex">
+        {% endif %}
+
 
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -140,7 +152,7 @@
             {% block hero %}{% endblock %}
 
             <div class="page-wrapper">
-                
+
                 <div class="page-content">
                     {% block logo %}{% endblock %}
                     {% block layout %}

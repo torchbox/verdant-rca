@@ -1,5 +1,7 @@
 # Getting Started
 
+## Vagrant
+
 * Install [Vagrant](https://wiki.torchbox.com/view/Vagrant)
 * ```git clone git@github.com:torchbox/verdant-rca.git```
 * ```cd verdant-rca```
@@ -7,12 +9,29 @@
 * ```vagrant ssh```
 * ```djrun```
 * Edit your code locally, browse at [localhost:8000](http://localhost:8000/)
-*
 
+## Docker
+
+There is a `docker-compose` file included in `django-verdant/docker-compose`. Run with `docker-compose up`
+the site will be available on `0.0.0.0:8509`.
+
+Note: this was developed for testing the `Dockerfile` during the Heroku move. It isn't completely working yet for local development.
+
+# Deployments
+
+Deployments are handled by [CircleCI](https://circleci.com/gh/torchbox/workflows/verdant-rca).
+
+### Staging
+
+Merging to the `staging` branch will trigger an automatic deployment to the stage site.
+
+### Production
+
+Merging to the `master` branch will trigger a deployment to production, however Circle will await a manual approval before releasing the build to production.
 
 # Gotchas
 
-You may encounter a "Invalid input of type: 'CacheKey'" error when running a new box locally. This is due to a bug in django-redis (see https://github.com/niwinz/django-redis/issues/342) and can be worked around by adding:
+You may encounter a "Invalid input of type: 'CacheKey'" error when running a new box locally. This is due to a bug in `django-redis`` (see https://github.com/niwinz/django-redis/issues/342) and can be worked around by adding:
 
 `redis==2.10.6` to `django-verdant/requirements.txt` and then running `pip install -r requirements.txt`
 
@@ -46,7 +65,7 @@ Also you will need to add the following user groups (with same ID)
 
 It was orignally built to a design provided by an external agency, and some of the terminology e.g. 'modules' and the names of the text styles are based on their original terminology.
 
-There is no tooling, and the site uses django compressor.
+There is no tooling, and the site uses `django-compressor`.
 
 
 ### CSS

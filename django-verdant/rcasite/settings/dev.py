@@ -22,3 +22,5 @@ except ImportError:
     pass
 
 ALLOWED_HOSTS = ['*']
+
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']

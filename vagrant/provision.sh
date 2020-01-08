@@ -8,6 +8,15 @@ PIP=$VIRTUALENV_DIR/bin/pip
 
 NODE_VERSION=v4.2.3
 
+# PostgreSQL
+apt-get remove -y --purge postgresql*
+echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+cat /vagrant/vagrant/ACCC4CF8.asc | apt-key add -
+apt-get update -y
+apt-get install -y postgresql-9.6 postgresql-client-9.6 postgresql-contrib-9.6 libpq-dev
+
+su - postgres -c "createuser -s vagrant"
+
 # Dependencies for LDAP
 apt-get update -y
 apt-get install -y libldap2-dev libsasl2-dev
@@ -38,11 +47,28 @@ if ! command -v lessc; then
     npm install -g less
 fi
 
+# Install Heroku CLI
+curl -sSL https://cli-assets.heroku.com/install-ubuntu.sh | sh
+
+# Install Fabric 2
+apt-get remove -y fabric
+pip3 install --upgrade pip
+python3 -m pip install Fabric==2.1.3
+
+# Install AWS CLI
+apt-get update -y
+apt-get install -y unzip
+rm -rf /tmp/awscli-bundle || true
+rm -rf /tmp/awscli-bundle.zip || true
+curl -sSL "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "/tmp/awscli-bundle.zip"
+unzip -q /tmp/awscli-bundle.zip -d /tmp
+/tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+
 # use YAML for test fixtures
 apt-get install -y libyaml-dev
 
 # Create database
-su - vagrant -c "createdb verdant"
+su - vagrant -c "createdb rca"
 
 
 # Virtualenv setup for project
@@ -66,6 +92,8 @@ chmod a+x $PROJECT_DIR/manage.py
 cat << EOF >> /home/vagrant/.bashrc
 export PYTHONPATH=$PROJECT_DIR
 export DJANGO_SETTINGS_MODULE=rcasite.settings.dev
+export DATABASE_URL=postgres:///rca
+export PGDATABASE=rca
 
 alias dj="django-admin.py"
 alias djrun="dj runserver 0.0.0.0:8000"
