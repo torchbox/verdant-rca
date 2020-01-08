@@ -506,3 +506,5 @@ if 'WEBHOOKS_PAGE_UNPUBLISHED' in env:
 CSRF_TRUSTED_ORIGINS = [
     'www.rca.ac.uk'
 ]
+
+RCA_LOGIN_DISABLED = False
