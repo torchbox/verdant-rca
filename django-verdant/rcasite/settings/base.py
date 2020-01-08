@@ -151,6 +151,9 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 
+    # Must be above wagtail
+    'wagtailadmin_overridden_templates',
+
     'wagtail.wagtailcore',
     'wagtail.wagtailadmin',
     'wagtail.wagtaildocs',
@@ -312,3 +315,5 @@ CORS_ORIGIN_WHITELIST = [
 
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_METHODS = ['GET', 'OPTIONS']
+
+RCA_LOGIN_DISABLED = False

@@ -21,6 +21,7 @@ from rca import admin_urls as rca_admin_urls
 from twitter import urls as twitter_urls
 import student_profiles.urls, student_profiles.now_urls
 from taxonomy import views as taxonomy_views
+from . import admin_views
 
 admin.autodiscover()
 
@@ -42,6 +43,10 @@ api_router.register_endpoint('documents', DocumentsAPIEndpoint)
 
 urlpatterns = patterns('',
     url(r'^django-admin/', include(admin.site.urls)),
+
+    # TEMPORARY: Override login view to allow it to be disabled
+    url(r'^admin/login/$', admin_views.login),
+
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^images/', include(wagtailimages_urls)),
