@@ -103,14 +103,3 @@ The original carousel used was bxslider, and on some templates there is still fu
 
 When the homepage 2018 redesign happened, there was a need to use another carousel, slick, in order to use the centre mode functionality.
 
-### Navigation
-
-See `statics/js/nav.js`.
-
-The new navigation (as of the 2018 redesign) uses a combination of a prioity nav pattern with a mega menu. In order to achieve this, the markup for the priority navigation elements is repeated, including all of the submenus. This is quite a bit of extra code per page load, and should probably be subject to further performance testing, but budget did not allow.
-
-The mobile menu uses a library called dl-menu, which has been used since the beginning. This provides the javascript for the mobile mega menu with a back button as you drill down.
-
-The desktop menu uses the same markup, but completely different functionality. There is custom javascript to reveal elements as you hover over them in the mega menu. In order to achieve this, when the desktop menu is initialised it calculates the maximum possible height of all the submenus. This means that care needs to be taken when adjusting CSS for the menu - any changes that might affect the height of the menus before it is revealed (e.g. display, width etc) should be avoided.
-
-Harvey is used (as it is throughout the site) in order to switch between the desktop and mobile versions of the menu as the screen resizes.
