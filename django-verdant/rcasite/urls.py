@@ -22,6 +22,8 @@ from twitter import urls as twitter_urls
 import student_profiles.urls, student_profiles.now_urls
 from taxonomy import views as taxonomy_views
 
+from rcasite.cache import get_default_cache_control_decorator
+
 admin.autodiscover()
 
 
@@ -81,11 +83,5 @@ if settings.DEBUG:
     )
 
 
-# Cache-control
-cache_length = getattr(settings, 'CACHE_CONTROL_MAX_AGE', None)
-
-if cache_length:
-    urlpatterns = decorate_urlpatterns(
-        urlpatterns,
-        cache_control(max_age=cache_length)
-    )
+# Set public URLs to use the "default" cache settings.
+urlpatterns = decorate_urlpatterns(urlpatterns, get_default_cache_control_decorator())
