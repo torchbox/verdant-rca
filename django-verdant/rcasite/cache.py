@@ -18,8 +18,6 @@ def get_default_cache_control_kwargs():
         "public": True,
     }
 
-    print("CACHE CONTROL")
-    print(cache_control_kwargs)
     return {k: v for k, v in cache_control_kwargs.items() if v is not None}
 
 
