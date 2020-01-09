@@ -1,5 +1,7 @@
 # Getting Started
 
+## Vagrant
+
 * Install [Vagrant](https://wiki.torchbox.com/view/Vagrant)
 * ```git clone git@github.com:torchbox/verdant-rca.git```
 * ```cd verdant-rca```
@@ -7,12 +9,29 @@
 * ```vagrant ssh```
 * ```djrun```
 * Edit your code locally, browse at [localhost:8000](http://localhost:8000/)
-*
 
+## Docker
+
+There is a `docker-compose` file included in `django-verdant/docker-compose`. Run with `docker-compose up`
+the site will be available on `0.0.0.0:8509`.
+
+Note: this was developed for testing the `Dockerfile` during the Heroku move. It isn't completely working yet for local development.
+
+# Deployments
+
+Deployments are handled by [CircleCI](https://circleci.com/gh/torchbox/workflows/verdant-rca).
+
+### Staging
+
+Merging to the `staging` branch will trigger an automatic deployment to the stage site.
+
+### Production
+
+Merging to the `master` branch will trigger a deployment to production, however Circle will await a manual approval before releasing the build to production.
 
 # Gotchas
 
-You may encounter a "Invalid input of type: 'CacheKey'" error when running a new box locally. This is due to a bug in django-redis (see https://github.com/niwinz/django-redis/issues/342) and can be worked around by adding:
+You may encounter a "Invalid input of type: 'CacheKey'" error when running a new box locally. This is due to a bug in `django-redis`` (see https://github.com/niwinz/django-redis/issues/342) and can be worked around by adding:
 
 `redis==2.10.6` to `django-verdant/requirements.txt` and then running `pip install -r requirements.txt`
 
@@ -46,7 +65,7 @@ Also you will need to add the following user groups (with same ID)
 
 It was orignally built to a design provided by an external agency, and some of the terminology e.g. 'modules' and the names of the text styles are based on their original terminology.
 
-There is no tooling, and the site uses django compressor.
+There is no tooling, and the site uses `django-compressor`.
 
 
 ### CSS
@@ -84,14 +103,3 @@ The original carousel used was bxslider, and on some templates there is still fu
 
 When the homepage 2018 redesign happened, there was a need to use another carousel, slick, in order to use the centre mode functionality.
 
-### Navigation
-
-See `statics/js/nav.js`.
-
-The new navigation (as of the 2018 redesign) uses a combination of a prioity nav pattern with a mega menu. In order to achieve this, the markup for the priority navigation elements is repeated, including all of the submenus. This is quite a bit of extra code per page load, and should probably be subject to further performance testing, but budget did not allow.
-
-The mobile menu uses a library called dl-menu, which has been used since the beginning. This provides the javascript for the mobile mega menu with a back button as you drill down.
-
-The desktop menu uses the same markup, but completely different functionality. There is custom javascript to reveal elements as you hover over them in the mega menu. In order to achieve this, when the desktop menu is initialised it calculates the maximum possible height of all the submenus. This means that care needs to be taken when adjusting CSS for the menu - any changes that might affect the height of the menus before it is revealed (e.g. display, width etc) should be avoided.
-
-Harvey is used (as it is throughout the site) in order to switch between the desktop and mobile versions of the menu as the screen resizes.

@@ -1,140 +1,282 @@
-# vim:sw=4 ts=4 et:
-from __future__ import with_statement
-from fabric.api import *
-from fabric.colors import red
+from invoke import run as local
+from invoke.exceptions import Exit
+from invoke.tasks import task
 
-import uuid
+PRODUCTION_APP_INSTANCE = "rca-verdant-production"
+STAGING_APP_INSTANCE = "rca-verdant-staging"
 
-env.roledefs = {
-    'staging': ['rca@by-staging-1.torchbox.com'],
-
-    'nginx': ['root@rca1.torchbox.com'],
-
-    # All hosts will be listed here.
-    'production': ['rca@web-1-a.rca.bmyrk.torchbox.net', 'rca@web-1-b.rca.bmyrk.torchbox.net'],
-}
-MIGRATION_SERVER = 'web-1-a.rca.bmyrk.torchbox.net'
+LOCAL_MEDIA_FOLDER = "/vagrant/media"
+LOCAL_IMAGES_FOLDER = "/vagrant/media/original_images"
+LOCAL_DATABASE_NAME = "rca"
 
 
-@roles('staging')
-def deploy_staging(branch="staging", gitonly=False):
-    run("git fetch")
-    run("git checkout %s" % branch)
-    run("git pull")
-    run("pip install -r django-verdant/requirements.txt")
-    if not gitonly:
-        run("python django-verdant/manage.py migrate --settings=rcasite.settings.staging --noinput")
-    run("python django-verdant/manage.py collectstatic --settings=rcasite.settings.staging --noinput")
-    run("python django-verdant/manage.py compress --settings=rcasite.settings.staging")
-
-    run('restart')
+############
+# Production
+############
 
 
-@roles('production')
-def deploy(gitonly=False):
-    run("git pull")
-    run("pip install -r django-verdant/requirements.txt")
-
-    if env['host'] == MIGRATION_SERVER:
-        if not gitonly:
-            run("python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
-
-    run("python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
-    run("python django-verdant/manage.py compress --settings=rcasite.settings.production")
-
-    run("restart")
+@task
+def pull_production_media(c):
+    """Pull media from production AWS S3"""
+    pull_media_from_s3_heroku(c, PRODUCTION_APP_INSTANCE)
 
 
-@roles('nginx')
-def clear_cache():
-    puts(red('WARNING: clearing the nginx cache requires sudo, ask sysadmin if it fails'))
-    run('find /var/cache/nginx -type f -delete')
+@task
+def pull_production_data(c):
+    """Pull database from production Heroku Postgres"""
+    pull_database_from_heroku(c, PRODUCTION_APP_INSTANCE)
 
 
-@runs_once
-@roles('production')
-def fetch_live_data():
-    filename = "verdant_rca_%s.sql" % uuid.uuid4()
-    local_path = "/tmp/%s" % filename
-    remote_path = "/tmp/%s" % filename
-
-    run('pg_dump -cf %s verdant_rca' % remote_path)
-    run('gzip %s' % remote_path)
-    get("%s.gz" % remote_path, "%s.gz" % local_path)
-    run('rm %s.gz' % remote_path)
-    local('dropdb verdant')
-    local('createdb verdant')
-    local('gunzip %s.gz' % local_path)
-    local('psql verdant -f %s' % local_path)
-    local('rm %s' % local_path)
+@task
+def production_shell(c):
+    """Spin up a one-time Heroku production dyno and connect to shell"""
+    open_heroku_shell(c, PRODUCTION_APP_INSTANCE)
 
 
-@runs_once
-@roles('production')
-def fetch_live_media():
-    remote_path = '/verdant-shared/sroot/rca/media/'
-
-    local('rsync -avz %s:%s /vagrant/media/' % (env['host_string'], remote_path))
+@task
+def pull_production_images(c):
+    """Pull images from production AWS S3"""
+    pull_images_from_s3_heroku(c, PRODUCTION_APP_INSTANCE)
 
 
-@roles('staging')
-def fetch_staging_data():
-    filename = "verdant_rca_%s.sql" % uuid.uuid4()
-    local_path = "/tmp/%s" % filename
-    remote_path = "/tmp/%s" % filename
-
-    run('pg_dump -cf %s rca' % remote_path)
-    run('gzip %s' % remote_path)
-    get("%s.gz" % remote_path, "%s.gz" % local_path)
-    run('rm %s.gz' % remote_path)
-    local('dropdb verdant')
-    local('createdb verdant')
-    local('gunzip %s.gz' % local_path)
-    local('psql verdant -f %s' % local_path)
-    local('rm %s' % local_path)
+#########
+# Staging
+#########
 
 
-@runs_once
-@roles('production')
-def staging_fetch_live_data():
-    filename = "verdant_rca_%s.sql" % uuid.uuid4()
-    local_path = "/var/www/rca/tmp/%s" % filename
-    remote_path = "/tmp/%s" % filename
-
-    run('pg_dump -Fc -x -cf %s verdant_rca' % remote_path)
-    run('gzip %s' % remote_path)
-    get("%s.gz" % remote_path, "%s.gz" % local_path)
-    run('rm %s.gz' % remote_path)
-    local('gunzip %s.gz' % local_path)
-    local('psql -d rca -c"DROP SCHEMA public CASCADE;"')
-    local('psql -d rca -c"CREATE SCHEMA public;"')
-    local('pg_restore --no-owner --role=rca -d rca %s' % local_path)
-    local('rm %s' % local_path)
+@task
+def pull_staging_media(c):
+    """Pull media from staging AWS S3"""
+    pull_media_from_s3_heroku(c, STAGING_APP_INSTANCE)
 
 
-@roles('staging')
-def sync_staging_with_live():
-    env.forward_agent = True
-    run('cd django-verdant && fab staging_fetch_live_data')
-    run('django-admin.py migrate --settings=rcasite.settings.staging --noinput')
-    run('rsync -avz rca@web-1-b.rca.bmyrk.torchbox.net:/verdant-shared/sroot/rca/media/ /var/www/rca/media/')
+@task
+def pull_staging_data(c):
+    """Pull database from staging Heroku Postgres"""
+    pull_database_from_heroku(c, STAGING_APP_INSTANCE)
 
 
-@roles('production')
-def run_show_reports(year="2014"):
-    with cd('/usr/local/django/verdant-rca/'):
-        with settings(sudo_user='verdant-rca'):
-            if env['host'] == MIGRATION_SERVER:
-                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py students_report django-verdant/graduating_students.csv %s --settings=rcasite.settings.production' % year)
-                get('report.csv', 'students_report.csv')
-                get('report.html', 'students_report.html')
-                sudo('rm report.csv')
-                sudo('rm report.html')
+@task
+def staging_shell(c):
+    """Spin up a one-time Heroku staging dyno and connect to shell"""
+    open_heroku_shell(c, STAGING_APP_INSTANCE)
 
-                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py postcard_dump %s --settings=rcasite.settings.production' % year)
-                get('postcard_dump.zip', 'postcard_dump.zip')
-                sudo('rm postcard_dump.zip')
 
-                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py profile_image_dump django-verdant/graduating_students.csv %s --settings=rcasite.settings.production' % year)
-                get('profile_image_dump.zip', 'profile_image_dump.zip')
-                sudo('rm profile_image_dump.zip')
+@task
+def push_staging_media(c):
+    """Push local media content to staging isntance"""
+    push_media_to_s3_heroku(c, STAGING_APP_INSTANCE)
+
+
+@task
+def push_production_media(c):
+    """Push local media content to production isntance"""
+    push_media_to_s3_heroku(c, PRODUCTION_APP_INSTANCE)
+
+
+@task
+def pull_staging_images(c):
+    """Pull images from staging AWS S3"""
+    pull_images_from_s3_heroku(c, STAGING_APP_INSTANCE)
+
+
+#######
+# Local
+#######
+
+
+def delete_local_database(c, local_database_name=LOCAL_DATABASE_NAME):
+    local(
+        "dropdb --if-exists {database_name}".format(database_name=LOCAL_DATABASE_NAME)
+    )
+
+
+########
+# Heroku
+########
+
+
+def check_if_logged_in_to_heroku(c):
+    if not local("heroku auth:whoami", warn=True):
+        raise Exit(
+            'Log-in with the "heroku login -i" command before running this ' "command."
+        )
+
+
+def get_heroku_variable(c, app_instance, variable):
+    check_if_logged_in_to_heroku(c)
+    return local(
+        "heroku config:get {var} --app {app}".format(app=app_instance, var=variable)
+    ).stdout.strip()
+
+
+def pull_media_from_s3_heroku(c, app_instance):
+    check_if_logged_in_to_heroku(c)
+    aws_access_key_id = get_heroku_variable(c, app_instance, "AWS_ACCESS_KEY_ID")
+    aws_secret_access_key = get_heroku_variable(
+        c, app_instance, "AWS_SECRET_ACCESS_KEY"
+    )
+    aws_storage_bucket_name = get_heroku_variable(
+        c, app_instance, "AWS_STORAGE_BUCKET_NAME"
+    )
+    pull_media_from_s3(
+        c, aws_access_key_id, aws_secret_access_key, aws_storage_bucket_name
+    )
+
+
+def pull_database_from_heroku(c, app_instance):
+    check_if_logged_in_to_heroku(c)
+    delete_local_database(c)
+    local(
+        "heroku pg:pull --app {app} DATABASE_URL {local_database}".format(
+            app=app_instance, local_database=LOCAL_DATABASE_NAME
+        )
+    )
+    answer = (
+        input(
+            "Any superuser accounts you previously created locally will"
+            " have been wiped. Do you wish to create a new superuser? (Y/n): "
+        )
+        .strip()
+        .lower()
+    )
+    if not answer or answer == "y":
+        local("django-admin createsuperuser", pty=True)
+
+
+def open_heroku_shell(c, app_instance, shell_command="bash"):
+    check_if_logged_in_to_heroku(c)
+    local(
+        "heroku run --app {app} {command}".format(
+            app=app_instance, command=shell_command
+        )
+    )
+
+
+####
+# S3
+####
+
+
+def aws(c, command, aws_access_key_id, aws_secret_access_key, **kwargs):
+    return local(
+        "AWS_ACCESS_KEY_ID={access_key_id} AWS_SECRET_ACCESS_KEY={secret_key} "
+        "aws {command}".format(
+            access_key_id=aws_access_key_id,
+            secret_key=aws_secret_access_key,
+            command=command,
+        ),
+        **kwargs
+    )
+
+
+def pull_media_from_s3(
+    c,
+    aws_access_key_id,
+    aws_secret_access_key,
+    aws_storage_bucket_name,
+    local_media_folder=LOCAL_MEDIA_FOLDER,
+):
+    aws_cmd = "s3 sync --delete s3://{bucket_name} {local_media}".format(
+        bucket_name=aws_storage_bucket_name, local_media=local_media_folder
+    )
+    aws(c, aws_cmd, aws_access_key_id, aws_secret_access_key)
+
+
+def push_media_to_s3_heroku(c, app_instance):
+    check_if_logged_in_to_heroku(c)
+    prompt_msg = (
+        "You are about to push your media folder contents to the "
+        "S3 bucket. It's a destructive operation. \n"
+        'Please type the application name "{app_instance}" to '
+        "proceed:\n>>> ".format(app_instance=make_bold(app_instance))
+    )
+    if input(prompt_msg) != app_instance:
+        raise Exit("Aborted")
+    aws_access_key_id = get_heroku_variable(c, app_instance, "AWS_ACCESS_KEY_ID")
+    aws_secret_access_key = get_heroku_variable(
+        c, app_instance, "AWS_SECRET_ACCESS_KEY"
+    )
+    aws_storage_bucket_name = get_heroku_variable(
+        c, app_instance, "AWS_STORAGE_BUCKET_NAME"
+    )
+    push_media_to_s3(
+        c, aws_access_key_id, aws_secret_access_key, aws_storage_bucket_name
+    )
+    aws_access_key_id = get_heroku_variable(c, app_instance, "AWS_ACCESS_KEY_ID")
+    aws_secret_access_key = get_heroku_variable(
+        c, app_instance, "AWS_SECRET_ACCESS_KEY"
+    )
+    aws_storage_bucket_name = get_heroku_variable(
+        c, app_instance, "AWS_STORAGE_BUCKET_NAME"
+    )
+    pull_media_from_s3(
+        c, aws_access_key_id, aws_secret_access_key, aws_storage_bucket_name
+    )
+
+
+def push_media_to_s3(
+    c,
+    aws_access_key_id,
+    aws_secret_access_key,
+    aws_storage_bucket_name,
+    local_media_folder=LOCAL_MEDIA_FOLDER,
+):
+    aws_cmd = "s3 sync --delete {local_media} s3://{bucket_name}/".format(
+        bucket_name=aws_storage_bucket_name, local_media=local_media_folder
+    )
+    aws(c, aws_cmd, aws_access_key_id, aws_secret_access_key)
+
+
+def pull_images_from_s3_heroku(c, app_instance):
+    check_if_logged_in_to_heroku(c)
+    aws_access_key_id = get_heroku_variable(c, app_instance, "AWS_ACCESS_KEY_ID")
+    aws_secret_access_key = get_heroku_variable(
+        c, app_instance, "AWS_SECRET_ACCESS_KEY"
+    )
+    aws_storage_bucket_name = get_heroku_variable(
+        c, app_instance, "AWS_STORAGE_BUCKET_NAME"
+    )
+    pull_images_from_s3(
+        c, aws_access_key_id, aws_secret_access_key, aws_storage_bucket_name
+    )
+
+
+def pull_images_from_s3(
+    c,
+    aws_access_key_id,
+    aws_secret_access_key,
+    aws_storage_bucket_name,
+    local_images_folder=LOCAL_IMAGES_FOLDER,
+):
+    aws_cmd = "s3 sync --delete s3://{bucket_name}/original_images {local_media}".format(
+        bucket_name=aws_storage_bucket_name, local_media=local_images_folder
+    )
+    aws(c, aws_cmd, aws_access_key_id, aws_secret_access_key)
+    # The above command just syncs the original images, so we need to drop the wagtailimages_renditions
+    # table so that the renditions will be re-created when requested on the local build.
+    delete_local_renditions()
+
+
+def delete_local_renditions(local_database_name=LOCAL_DATABASE_NAME):
+    try:
+        local(
+            'sudo -u postgres psql  -d {database_name} -c "DELETE FROM images_rendition;"'.format(
+                database_name=local_database_name
+            )
+        )
+    except:
+        pass
+
+    try:
+        local(
+            'sudo -u postgres psql  -d {database_name} -c "DELETE FROM wagtailimages_rendition;"'.format(
+                database_name=local_database_name
+            )
+        )
+    except:
+        pass
+
+
+def make_bold(msg):
+    return "\033[1m{}\033[0m".format(msg)
