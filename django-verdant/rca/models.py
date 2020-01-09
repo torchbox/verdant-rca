@@ -268,6 +268,31 @@ INNOVATIONRCA_PROJECT_TYPES_CHOICES = (
 )
 
 SPECIALISM_CHOICES = (
+    ('2019/20', (
+        ('animation--experimental-animation-pathway', 'Animation: Experimental Animation Pathway'),
+        ('animation--documentary-animation-pathway', 'Animation: Documentary Animation Pathway'),
+        ('animation--narrative-animation-pathway', 'Animation: Narrative Animation Pathway'),
+        ('contemporary-art-practice--critical-practice-pathway', 'Contemporary Art Practice: Critical Practice Pathway'),
+        ('contemporary-art-practice--moving-image-pathway', 'Contemporary Art Practice: Moving Image Pathway'),
+        ('contemporary-art-practice--performance-pathway', 'Contemporary Art Practice: Performance Pathway'),
+        ('contemporary-art-practice--public-sphere-pathway', 'Contemporary Art Practice: Public Sphere Pathway'),
+        ('fashion--millinery', 'Fashion: Millinery'),
+        ('fashion--footwear', 'Fashion: Footwear'),
+        ('fashion--accessories', 'Fashion: Accessories'),
+        ('fashion--knitwear', 'Fashion: Knitwear'),
+        ('ied--experimental-design', 'IED: Experimental Design'),
+        ('ied--moving-image-design', 'IED: Moving Image Design'),
+        ('ied--sound-design', 'IED: Sound Design'),
+        ('interior-design--exhibition-design-pathway', 'Interior Design: Exhibition Design Pathway'),
+        ('textiles--knit', 'Textiles: Knit'),
+        ('textiles--mixed-media', 'Textiles: Mixed-media'),
+        ('textiles--print', 'Textiles: Print'),
+        ('textiles--smart-textiles', 'Textiles: Smart Textiles'),
+        ('textiles--weave', 'Textiles: Weave'),
+        ('visual-communication--graphic-design', 'Visual Communication: Graphic Design'),
+        ('visual-communication--illustration', 'Visual Communication: Illustration'),
+        ('visual-communication--experimental-communication', 'Visual Communication: Experimental Communication'),
+    )),
     ('2018/19', (
         ('animation--experimental-animation-pathway', 'Animation: Experimental Animation Pathway'),
         ('animation--documentary-animation-pathway', 'Animation: Documentary Animation Pathway'),
@@ -3964,7 +3989,7 @@ class NewStudentPage(Page, SocialFields):
     first_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'first_name'))
     last_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'last_name'))
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"))
-    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'), blank=True)
+    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'), blank=True, max_length=700)
     twitter_handle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'twitter_handle', default="Please enter Twitter handle without the @ symbol"))
     funding = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'funding', default="Please include major funding bodies, including research councils"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewStudentPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
@@ -3985,7 +4010,7 @@ class NewStudentPage(Page, SocialFields):
     show_work_title = models.CharField("Dissertation/project title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_title'))
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_type'))
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_location'))
-    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True)
+    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True, max_length=1200)
 
     # MPhil details
     mphil_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
