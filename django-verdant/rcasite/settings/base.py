@@ -508,3 +508,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 RCA_LOGIN_DISABLED = False
+
+if "PRIMARY_HOST" in env:
+    BASE_URL = "https://{}".format(env["PRIMARY_HOST"])
