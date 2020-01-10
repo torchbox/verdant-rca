@@ -727,3 +727,16 @@ table {
         font-size: @font-size-18;
     }
 }
+
+/* PRE REBUILD INTERIM OVERRIDES */
+
+form.student-profile {
+    // max_num is not available in this wagtail version
+    // refactor to charfield is out of scope
+    // so simply hiding 'add more button' for now.
+    #email a.add-row,
+    #phone a.add-row,
+    #website a.add-row {
+        display: none;
+    }
+}
