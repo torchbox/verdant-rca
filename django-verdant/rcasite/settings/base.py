@@ -492,6 +492,10 @@ if 'SERVER_EMAIL' in env:
 if 'EMAIL_SENDER' in env:
     DEFAULT_FROM_EMAIL = env['EMAIL_SENDER']
 
+# URL (including token) to to request a page is imported/synced to the intranet
+if 'INTRANET_PUSH_URL' in env:
+    INTRANET_PUSH_URL = env['INTRANET_PUSH_URL']
+
 if 'EMBEDLY_KEY' in env:
     EMBEDLY_KEY = env['EMBEDLY_KEY']
 if 'STRIPE_SECRET_KEY' in env:
