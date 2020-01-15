@@ -31,7 +31,7 @@
             It's also possible to make the website to be not indexable
             by setting SEO_NOINDEX to True.
         {% endcomment %}
-        {% if SEO_NOINDEX or request.META.HTTP_HOST != request.site.hostname %}
+        {% if SEO_NOINDEX %}
             <meta name="robots" content="noindex">
         {% endif %}
 
