@@ -19,7 +19,9 @@ warnings.simplefilter("ignore")
 
 
 class Command(BaseCommand):
-    event_redirects = {}
+
+    def __init__(self):
+        self.event_redirects = {}
 
     option_list = BaseCommand.option_list + (
         make_option(
@@ -103,14 +105,12 @@ class Command(BaseCommand):
             row.append(e.url)
             dates = e.dates_times.order_by('date_from').values_list('date_from', 'date_to')
             date_from = []
+            date_to = []
             for d in dates:
                 try:
                     date_from.append(d[0].strftime("%d/%m/%Y"))
                 except Exception:
                     date_from = ''
-
-            date_to = []
-            for d in dates:
                 try:
                     date_to.append(d[1].strftime("%d/%m/%Y"))
                 except Exception:
