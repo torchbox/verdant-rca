@@ -492,7 +492,9 @@ if 'SERVER_EMAIL' in env:
 if 'EMAIL_SENDER' in env:
     DEFAULT_FROM_EMAIL = env['EMAIL_SENDER']
 
-# URL (including token) to to request a page is imported/synced to the intranet
+# URL (including token) to post a request for page
+# to be imported/synced to the intranet. Example:
+# https://intranet.rca.ac.uk/sync/trigger_import/{id}/?token=tokenfromintranetconfig
 if 'INTRANET_PUSH_URL' in env:
     INTRANET_PUSH_URL = env['INTRANET_PUSH_URL']
 

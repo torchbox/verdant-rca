@@ -1832,9 +1832,9 @@ class PastEventItemManager(PageManager):
         )
 
 class EventItem(Page, SocialFields):
-    body = RichTextField(help_text=help_text('rca.EventItem', 'body'))
+    body = RichTextField(help_text=help_text('rca.EventItem', 'body'), null=True, blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES, help_text=help_text('rca.EventItem', 'audience'))
-    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'area'))
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES, help_text=help_text('rca.EventItem', 'location'))
     location_other = models.CharField("'Other' location", max_length=255, blank=True, help_text=help_text('rca.EventItem', 'location_other'))
     specific_directions = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'specific_directions', default="Brief, more specific location e.g Go to reception on 2nd floor"))
