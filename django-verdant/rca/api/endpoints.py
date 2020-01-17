@@ -4,7 +4,7 @@ from wagtail.api.v2.endpoints import PagesAPIEndpoint
 from wagtail.wagtailimages.api.v2.endpoints import ImagesAPIEndpoint
 
 from .serializers import RCAPageSerializer, RCAImageSerializer
-from .filters import RelatedProgrammesFilter, NextEventOrder
+from .filters import RelatedProgrammesFilter, NextEventOrder, NegatedTagFilter
 
 
 class RCAPagesAPIEndpoint(PagesAPIEndpoint):
@@ -27,10 +27,12 @@ class RCAPagesAPIEndpoint(PagesAPIEndpoint):
     filter_backends = [
         RelatedProgrammesFilter,
         NextEventOrder,
+        NegatedTagFilter,
     ] + PagesAPIEndpoint.filter_backends
     known_query_parameters = PagesAPIEndpoint.known_query_parameters.union([
         'rp',
         'event_date_from',
+        'tags_not',
     ])
 
 
