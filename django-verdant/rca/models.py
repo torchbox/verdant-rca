@@ -1893,7 +1893,7 @@ class EventItem(Page, SocialFields):
         'dates_times',
         'external_links',
         'show_on_homepage',
-        'social_image,'
+        'social_image',
     ]
 
     pushable_to_intranet = True
