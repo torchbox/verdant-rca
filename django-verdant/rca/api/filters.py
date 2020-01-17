@@ -25,6 +25,16 @@ class RelatedProgrammesFilter(filters.BaseFilterBackend):
         return queryset
 
 
+class NegatedTagFilter(filters.BaseFilterBackend):
+    # Filter for items that do no have specified tag
+    def filter_queryset(self, request, queryset, view):
+        if hasattr(queryset.model, 'tags'):
+            tags = request.GET.getlist('tags_not', [])
+            if tags:
+                queryset = queryset.exclude(tags__name__in=tags)
+
+        return queryset
+
 class NextEventOrder(filters.OrderingFilter):
     def filter_queryset(self, request, queryset, view):
         if hasattr(queryset.model, 'dates_times'):
