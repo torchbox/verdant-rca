@@ -11,12 +11,6 @@ from wagtail.wagtailimages.models import SourceImageIOError
 from wagtail.wagtailimages.api.v2.serializers import ImageSerializer
 
 
-def get_main_site_root_url():
-    for site_id, root_path, root_url in Site.get_site_root_paths():
-        if root_path == '/home/':
-            return root_url
-
-
 def get_model_listing_url(context, model):
     url_path = context['router'].get_model_listing_urlpath(model)
 
@@ -138,10 +132,9 @@ class ImageRenditionField(Field):
     def to_representation(self, image):
         try:
             thumbnail = image.get_rendition(self.filter_spec)
-            root_url = get_main_site_root_url()
 
             return OrderedDict([
-                ('url', root_url + thumbnail.url),
+                ('url', thumbnail.url),
                 ('width', thumbnail.width),
                 ('height', thumbnail.height),
             ])
