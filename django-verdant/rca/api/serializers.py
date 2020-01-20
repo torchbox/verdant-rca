@@ -147,5 +147,5 @@ class ImageRenditionField(Field):
 class RCAImageSerializer(ImageSerializer):
     original = ImageRenditionField('original', read_only=True)
     thumbnail = ImageRenditionField('max-165x165', read_only=True)
-    rca2019_feed_image = ImageRenditionField('fill-828x472', read_only=True)
+    rca2019_feed_image = ImageRenditionField('fill-878x472', read_only=True)
     rca2019_feed_image_small = ImageRenditionField('fill-80x46', read_only=True)
