@@ -170,6 +170,7 @@ INSTALLED_APPS = [
     'wagtail.contrib.settings',
     'wagtail.wagtailforms',
     'wagtail.contrib.modeladmin',
+    'wagtail.contrib.wagtailsitemaps',
 
     'wagtailcaptcha',
     'captcha',

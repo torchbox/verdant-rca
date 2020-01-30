@@ -12,6 +12,7 @@ from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtaildocs.api.v2.endpoints import DocumentsAPIEndpoint
 from wagtail.wagtailimages import urls as wagtailimages_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
+from wagtail.contrib.wagtailsitemaps.views import sitemap
 
 from wagtail.api.v2.router import WagtailAPIRouter
 from rca.api.endpoints import RCAPagesAPIEndpoint, RCAImagesAPIEndpoint
@@ -75,6 +76,7 @@ urlpatterns = patterns('',
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism
     url(r'', include(wagtail_urls)),
+    url('^sitemap\.xml$', sitemap),
 )
 
 
