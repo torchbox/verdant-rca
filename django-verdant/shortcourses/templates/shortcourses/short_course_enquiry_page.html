@@ -1,0 +1,68 @@
+{% extends "rca/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}type-standard{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+    {% include "rca/includes/modules/strapline.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+
+        <section class="body-text">
+            <div class="bc3 intro">{{ self.intro|richtext }}</div>
+            <h1>BOOKING FORM HERE</h1>
+            <script src="https://rca.accessplanit.com/accessplansandbox/NetLibrary/ClientScripts/webintegration.js"></script>
+            <script type="text/javascript">
+                console.log('script ran')
+                var courseOptions = {
+                    ListID: 'courses',
+                    CourseIDs: [],
+                    CompanyID: "",
+                    CategoryIDs: []
+                }
+                var opportunityOptions = {
+                    OwnerID: "",
+                    Title: "Online Enquiry",
+                    Forename: "",
+                    Surname: "",
+                    Email: "",
+                    Phone: "",
+                    Mobile: "",
+                    Address: "",
+                    Town: "",
+                    County: "",
+                    Country: "",
+                    Postcode: "",
+                    CompanyName: "",
+                    CompanyEmail: "",
+                    CompanyPhone: "",
+                    CompanyAddress: "",
+                    CompanyTown: "",
+                    CompanyCounty: "",
+                    CompanyCountry: "",
+                    CompanyPostcode: "",
+                    CompanyGroupID: "",
+                    CompanyGroupName: "",
+                    IndustryName: "",
+                    CourseTemplateID: "",
+                    AdditionalInformation: "",
+                    MarketingOptIn: ""
+                }
+                document.addEventListener("DOMContentLoaded", function (e) {
+                    console.log('doc loaded')
+                    CourseManager.coursesTable(courseOptions);
+                    EnquiryManager.getCourses(courseOptions);
+                });
+                console.log(typeof xdomain)
+
+            </script>
+            <button type="button" onclick="createEnquiry()" class="btn btn-success btn-sm">Submit</button>
+        </section>
+
+    </section>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" collapseToday=self.collapse_upcoming_events showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}

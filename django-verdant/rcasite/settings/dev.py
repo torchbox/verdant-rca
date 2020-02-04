@@ -24,3 +24,5 @@ except ImportError:
 ALLOWED_HOSTS = ['*']
 
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+
+ACCESS_PLANIT_COMPANY_ID = "ROYALC9RCH"

@@ -159,6 +159,8 @@ HELP_TEXT = {
     ('shortcourses.ShortCoursePage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('shortcourses.ShortCoursePage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('shortcourses.ShortCoursePage', 'tags'): 'Use the "student-story" or "alumni-story" tags to make this page appear in the homepage packery (if "Show on homepage" is ticked too).',
+    ('shortcourses.ShortCoursePage', 'ap_course_id'): 'Course ID from the Access Planit booking system. This allows the inclusion of booking and enquiry links.',
+    ('shortcourses.ShortCourseEnquiryPage', 'intro'): 'This text will precede the Access Planit enquiry form.',
 }
 
 
