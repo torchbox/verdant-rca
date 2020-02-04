@@ -38,7 +38,8 @@ def pull_navigation_data():
         CantPullFromRcaApi: Failed to pull from the RCA api
 
     Returns:
-        dict -- All navigation data in a json/dict blob
+        A dict of all the navigation data from the new rebuild site API passed
+        through a parser
     """
     try:
         response = requests.get(
@@ -56,6 +57,7 @@ def pull_navigation_data():
     else:
         data = response.json()
         nav_data = parse_navigation(data)
+
     return nav_data
 
 
