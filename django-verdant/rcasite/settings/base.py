@@ -519,3 +519,6 @@ RCA_LOGIN_DISABLED = False
 
 if "PRIMARY_HOST" in env:
     BASE_URL = "https://{}".format(env["PRIMARY_HOST"])
+
+NAVIGATION_API_CACHE_TIMEOUT = int(env.get("NAVIGATION_API_CACHE_TIMEOUT", 60 * 60 * 24))
+NAVIGATION_API_CONTENT_BASE_URL = "https://rca-staging.herokuapp.com/"

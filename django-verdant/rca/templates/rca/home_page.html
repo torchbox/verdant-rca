@@ -1,11 +1,21 @@
 {% extends "rca/base.html" %}
-{% load rca_tags wagtailcore_tags wagtailimages_tags %}
+{% load rca_tags rca_navigation_tags wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}type-homepage{% endblock %}
 
 {% block title_postfix %}{% endblock %}
 
 {% block content %}
+{% navigation_via_api as nav %}
+<hr>
+{{ nav.primary_navigation }}
+<hr>
+{{ nav.quick_links }}
+<hr>
+{{ nav.footer_links }}
+<hr>
+{{ nav.footer_navigation }}
+
     {% include "rca/includes/modules/background-image.html" %}
 
     {% include "rca/includes/modules/carousel.html" with overlayvisible=1 %}
