@@ -9,6 +9,7 @@ from .models import (
     SUSTAINRCA_CATEGORY_CHOICES
 )
 from .reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
+from rca.navigation import Navigation
 
 
 def global_vars(request):
@@ -40,4 +41,10 @@ def global_vars(request):
         'SILVERPOP_BRANDEDDOMAINS': settings.SILVERPOP_BRANDEDDOMAINS,
         'SEO_NOINDEX': settings.SEO_NOINDEX,
         'RCA_LOGIN_DISABLED': settings.RCA_LOGIN_DISABLED,
+    }
+
+
+def navigation_via_api(request):
+    return {
+        'navigation_via_api': Navigation(),
     }

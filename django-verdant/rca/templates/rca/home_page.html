@@ -1,20 +1,18 @@
 {% extends "rca/base.html" %}
-{% load rca_tags rca_navigation_tags wagtailcore_tags wagtailimages_tags %}
+{% load rca_tags wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}type-homepage{% endblock %}
 
 {% block title_postfix %}{% endblock %}
 
 {% block content %}
-{% navigation_via_api as nav %}
+{{navigation_via_api.get_primary_navigation}}
 <hr>
-{{ nav.primary_navigation }}
+{{navigation_via_api.get_quick_links}}
 <hr>
-{{ nav.quick_links }}
+{{navigation_via_api.get_footer_links}}
 <hr>
-{{ nav.footer_links }}
-<hr>
-{{ nav.footer_navigation }}
+{{navigation_via_api.get_footer_navigation}}
 
     {% include "rca/includes/modules/background-image.html" %}
 

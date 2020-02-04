@@ -74,7 +74,7 @@ def get_navigation_data():
         try:
             navigation_data = pull_navigation_data()
         except CantPullFromRcaApi:
-            return []
+            return {}
         else:
             cache.set(cache_key, navigation_data, settings.NAVIGATION_API_CACHE_TIMEOUT)
     return navigation_data
