@@ -11,7 +11,7 @@ class Sitemap(DjangoSitemap):
         self.site = site
 
     def location(self, obj):
-        return obj.specific.url
+        return obj.url
 
     def lastmod(self, obj):
         obj = obj.specific
