@@ -13,21 +13,18 @@
             <div class="bc3 intro">{{ self.intro|richtext }}</div>
 
             <form>
-                <label for="courses">Select Course <abbr title="required">*</abbr></label>
-                <br />
+                <label for="courses">Select Course <abbr title="required">*</abbr></label><br />
                 <select
-                id="courses"
-                class="form-control"
-                onchange="opportunityOptions.CourseTemplateID = this.options[this.selectedIndex].value"
-                selected="731014"
+                    id="courses"
+                    class="form-control"
+                    onchange="opportunityOptions.CourseTemplateID = this.options[this.selectedIndex].value"
+                    selected="731014"
                 >
+                {# options added by js below - EnquiryManager.getCourses() #}
                 </select>
 
                 <label for="email">Email address <abbr title="required">*</abbr></label><br />
                 <input id="email" class="form-control" type="email" />
-
-                {% comment %} <label for="title">Title <abbr title="required">*</abbr></label><br />
-                <input id="title" class="form-control" type="text" /> {% endcomment %}
 
                 <label for="forename">First name <abbr title="required">*</abbr></label><br />
                 <input id="forename" class="form-control" type="text" />
@@ -94,8 +91,6 @@
 
                 function createEnquiry() {
                     opportunityOptions.CourseTemplateID = $('#courses').val()
-                    // Title field is used as *Opportunity* title
-                    // opportunityOptions.Title = $('#title').val()
                     opportunityOptions.Email = $('#email').val()
                     opportunityOptions.Forename = $('#forename').val()
                     opportunityOptions.Surname = $('#surname').val()
@@ -103,9 +98,6 @@
                     opportunityOptions.IndustryName = $('#industry').val()
                     opportunityOptions.Phone = $('#phone').val()
                     opportunityOptions.AdditionalInformation = $('#additional').val()
-
-                    // TODO: remove debug statement after staging
-                    console.table(opportunityOptions)
 
                     if (emptyRequired(opportunityOptions.Forename) || emptyRequired(opportunityOptions.Surname) || emptyRequired(opportunityOptions.Email)) {
                         alert("Please enter all required values");
