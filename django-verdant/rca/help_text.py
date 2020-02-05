@@ -160,6 +160,9 @@ HELP_TEXT = {
     ('shortcourses.ShortCoursePage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('shortcourses.ShortCoursePage', 'tags'): 'Use the "student-story" or "alumni-story" tags to make this page appear in the homepage packery (if "Show on homepage" is ticked too).',
     ('shortcourses.ShortCoursePage', 'ap_course_id'): 'Course ID from the Access Planit booking system. This allows the inclusion of booking and enquiry links.',
+    ('shortcourses.ShortCoursePage', 'details'): 'Course details such as dates, duration, location and fee. Booking and enquiry links will be appended to this.',
+    ('shortcourses.ShortCoursePage', 'booking_enabled'): 'If checked, a link will be shown to book using Access Planit.',
+    ('shortcourses.ShortCoursePage', 'booking_disabled_text'): 'If booking is not enabled, this text will be shown instead.',
     ('shortcourses.ShortCourseEnquiryPage', 'intro'): 'This text will precede the Access Planit enquiry form.',
 }
 
