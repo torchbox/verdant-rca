@@ -8,12 +8,47 @@
     {% include "rca/includes/modules/strapline.html" %}
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
-        {% include "rca/includes/modules/body-text.html" with showIntro="true" showReusableText="true" body=self.body %}
+
+        <section class="body-text">
+            {% if self.intro %}
+                <div class="bc3 intro">{{ self.intro|richtext }}</div>
+            {% endif %}
+
+            {% if self.details %}
+                <div class="bc4 details">{{ self.details|richtext }}</div>
+            {% endif %}
+
+            {% if self.enquiry_link %}
+                <p><a href="{{ self.enquiry_link }}">Register your interest</a></p>
+            {% endif %}
+            {% if self.booking_enabled %}
+                <p><a href="{{ self.booking_link }}">Click here to book</a></p>
+            {% elif self.booking_disabled_text %}
+                <p>{{ self.booking_disabled_text }}</p>
+            {% endif %}
+
+            {% if self.details %}<hr>{% endif %}
+
+            {{ page.body|richtext }}
+
+        </section>
 
         <section class="four">
             {% if self.middle_column_body %}
                 <div class="body-text middle-column-body-text">
                     {{ self.middle_column_body|richtext }}
+
+                    {% if self.enquiry_link %}
+                        <hr>
+                        <p><b>BOOK</b></p>
+                        <p>Please <a href="{{ self.enquiry_link }}">register your interest</a>
+                        to download the full course description.</p>
+                    {% endif %}
+                    {% if self.booking_enabled %}
+                        <p><a href="{{ self.booking_link }}">Click here to book</a></p>
+                    {% elif self.booking_disabled_text %}
+                        <p>{{ self.booking_disabled_text }}</p>
+                    {% endif %}
                 </div>
             {% endif %}
             {% include "rca/includes/modules/downloads.html" %}
@@ -32,6 +67,7 @@
                 {% include "rca/includes/modules/share-button.html" %}
             </div>
         </section>
+
     </section>
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
