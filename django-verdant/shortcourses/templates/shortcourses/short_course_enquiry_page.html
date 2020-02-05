@@ -4,7 +4,7 @@
 {% block body_class %}type-standard{% endblock %}
 
 {% block content %}
-    <h1 class="h1">{{ self.title }}</h1>
+    <h1 class="h1" id="enquiry-form--title">{{ self.title }}</h1>
     {% include "rca/includes/modules/strapline.html" %}
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
@@ -12,7 +12,8 @@
         <section class="body-text">
             <div class="bc3 intro">{{ self.intro|richtext }}</div>
 
-            <form>
+            <div id="enquiry-form--message"></div>
+            <form id="enquiry-form">
                 <label for="courses">Select Course <abbr title="required">*</abbr></label><br />
                 <select
                     id="courses"
@@ -105,10 +106,13 @@
                     }
 
                     EnquiryManager.createOpportunity(opportunityOptions, function (data) {
-                        alert("Enquiry successfully sent.");
-                        console.log("Enquiry successfully sent.");
+                        window.scrollTo(0, 0);
+                        $("#enquiry-form--title").fadeOut(1000)
+                        $("#enquiry-form").fadeOut(1000, function () {
+                            $("#enquiry-form--message").html('<h1 class="success">Thank you for your enquiry.</h1><p><a href="/short-courses/">Return to short courses</a></p>')
+                        })
                     }, function (data) {
-                        alert(data.statusText);
+                        $("#enquiry-form--message").html('<span class="error">' + data.statusText + '</span>')
                     });
                 }
 
