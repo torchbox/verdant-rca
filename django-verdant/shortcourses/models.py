@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
 from taggit.models import TaggedItemBase
@@ -273,17 +274,19 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
     def related_links(self):
         return self.shortcourse_related_links
 
-    @property
+    @cached_property
     def enquiry_link(self):
         if not self.ap_course_id:
             return None
-        return '#'
+        enquiry_page = ShortCourseEnquiryPage.objects.first()
+        return enquiry_page.url + '?course_id=' + self.ap_course_id
 
-    @property
+    @cached_property
     def booking_link(self):
         if not self.ap_course_id:
             return None
-        return '#'
+        booking_page = ShortCourseBookingPage.objects.first()
+        return booking_page.url + '?course_id=' + self.ap_course_id
 
     @property
     def reusable_text_snippets(self):

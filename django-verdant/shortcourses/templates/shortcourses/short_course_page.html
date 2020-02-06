@@ -21,7 +21,7 @@
             {% if self.enquiry_link %}
                 <p><a href="{{ self.enquiry_link }}">Register your interest</a></p>
             {% endif %}
-            {% if self.booking_enabled %}
+            {% if self.booking_enabled and self.booking_link %}
                 <p><a href="{{ self.booking_link }}">Click here to book</a></p>
             {% elif self.booking_disabled_text %}
                 <p>{{ self.booking_disabled_text }}</p>
