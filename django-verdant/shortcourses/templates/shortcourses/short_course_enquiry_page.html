@@ -14,15 +14,17 @@
 
             <div id="enquiry-form--message"></div>
             <form id="enquiry-form">
-                <label for="courses">Select Course <abbr title="required">*</abbr></label><br />
-                <select
-                    id="courses"
-                    class="form-control"
-                    onchange="opportunityOptions.CourseTemplateID = this.options[this.selectedIndex].value"
-                    selected="731014"
-                >
-                {# options added by js below - EnquiryManager.getCourses() #}
+                <fieldset id="course-selection">
+                    <label for="courses">Select Course <abbr title="required">*</abbr></label>
+                    <select
+                        id="courses"
+                        class="form-control"
+                        onchange="opportunityOptions.CourseTemplateID = this.options[this.selectedIndex].value"
+                        selected="731014"
+                    >
+                    {# options added by js below - EnquiryManager.getCourses() #}
                 </select>
+                </fieldset>
 
                 <label for="email">Email address <abbr title="required">*</abbr></label>
                 <input id="email" class="form-control" type="email" />
@@ -51,12 +53,18 @@
             <script src="https://rca.accessplanit.com/accessplansandbox/NetLibrary/ClientScripts/webintegration.js"></script>
 
             <script type="text/javascript">
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const courseID = urlParams.get('course_id')
+                const courseIDOption = (courseID ? [courseID] : [])
+
                 var courseOptions = {
                     ListID: 'courses',
-                    CourseIDs: [731014],
+                    CourseIDs: courseIDOption,
                     CompanyID: "ROYALC9RCH",
                     CategoryIDs: []
                 }
+
                 var opportunityOptions = {
                     OwnerID: "ROYALC9RCH",
                     Title: "Online enquiry",
@@ -91,7 +99,12 @@
                 }
 
                 function createEnquiry() {
-                    opportunityOptions.CourseTemplateID = $('#courses').val()
+                    if (courseID == null) {
+                        opportunityOptions.CourseTemplateID = $('#courses').val()
+                    }
+                    else {
+                        opportunityOptions.CourseTemplateID = courseID
+                    }
                     opportunityOptions.Email = $('#email').val()
                     opportunityOptions.Forename = $('#forename').val()
                     opportunityOptions.Surname = $('#surname').val()
@@ -118,7 +131,9 @@
 
                 document.addEventListener("DOMContentLoaded", function (e) {
                     $("#createEnquiry").on('click', createEnquiry);
-                    setTimeout(function () { EnquiryManager.getCourses(courseOptions) }, 100);
+                    if (courseID) {
+                        $("#course-selection").hide()
+                    }
                 });
 
             </script>
