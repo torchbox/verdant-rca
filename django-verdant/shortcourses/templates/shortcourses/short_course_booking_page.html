@@ -1,0 +1,45 @@
+{% extends "rca/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}type-standard{% endblock %}
+
+{% block content %}
+    <h1 class="h1" id="enquiry-form--title">{{ self.title }}</h1>
+    {% include "rca/includes/modules/strapline.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+
+        <section class="body-text">
+            <div class="bc3 intro">{{ self.intro|richtext }}</div>
+
+            <div id="booking-form--message"></div>
+
+            <div id="course-booking-form">Loading course dates</div>
+
+            <script src="https://rca.accessplanit.com/accessplansandbox/NetLibrary/ClientScripts/webintegration.js"></script>
+
+            <script type="text/javascript">
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const courseID = encodeURIComponent(urlParams.get('course_id'))
+                const courseIDOption = (courseID ? [courseID] : [])
+
+                var options = {
+                    ContainerID: 'course-booking-form',
+                    CompanyID: "ROYALC9RCH",
+                    Columns: [CourseManager.columns.CourseName, CourseManager.columns.StartDate, CourseManager.columns.StartTime, CourseManager.columns.EndTime, CourseManager.columns.Venue, CourseManager.columns.Cost, CourseManager.columns.Book]
+                }
+
+                document.addEventListener("DOMContentLoaded", function (e) {
+                    CourseManager.coursesTable(options);
+                });
+
+            </script>
+        </section>
+
+    </section>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" collapseToday=self.collapse_upcoming_events showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}
