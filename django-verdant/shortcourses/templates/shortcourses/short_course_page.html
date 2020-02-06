@@ -23,7 +23,7 @@
             {% endif %}
             {% if self.booking_enabled and self.booking_link %}
                 <p><a href="{{ self.booking_link }}">Click here to book</a></p>
-            {% elif self.booking_disabled_text %}
+            {% elif not self.booking_enabled and self.booking_disabled_text %}
                 <p>{{ self.booking_disabled_text }}</p>
             {% endif %}
 
@@ -37,17 +37,16 @@
             {% if self.middle_column_body %}
                 <div class="body-text middle-column-body-text">
                     {{ self.middle_column_body|richtext }}
-
-                    {% if self.enquiry_link %}
+                    {% if self.enquiry_link or self.booking_enabled and self.booking_link %}
                         <hr>
                         <p><b>BOOK</b></p>
+                    {% endif %}
+                    {% if self.enquiry_link %}
                         <p>Please <a href="{{ self.enquiry_link }}">register your interest</a>
                         to download the full course description.</p>
                     {% endif %}
-                    {% if self.booking_enabled %}
+                    {% if self.booking_enabled and self.booking_link %}
                         <p><a href="{{ self.booking_link }}">Click here to book</a></p>
-                    {% elif self.booking_disabled_text %}
-                        <p>{{ self.booking_disabled_text }}</p>
                     {% endif %}
                 </div>
             {% endif %}
