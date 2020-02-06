@@ -1,0 +1,147 @@
+{% extends "rca/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}type-standard{% endblock %}
+
+{% block content %}
+    <h1 class="h1" id="enquiry-form--title">{{ self.title }}</h1>
+    {% include "rca/includes/modules/strapline.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+
+        <section class="body-text">
+            <div class="bc3 intro">{{ self.intro|richtext }}</div>
+
+            <div id="enquiry-form--message"></div>
+            <form id="enquiry-form">
+                <fieldset id="course-selection">
+                    <label for="courses">Select Course <abbr title="required">*</abbr></label>
+                    <select
+                        id="courses"
+                        class="form-control"
+                        onchange="opportunityOptions.CourseTemplateID = this.options[this.selectedIndex].value"
+                        selected="731014"
+                    >
+                    {# options added by js below - EnquiryManager.getCourses() #}
+                </select>
+                </fieldset>
+
+                <label for="email">Email address <abbr title="required">*</abbr></label>
+                <input id="email" class="form-control" type="email" />
+
+                <label for="forename">First name <abbr title="required">*</abbr></label>
+                <input id="forename" class="form-control" type="text" />
+
+                <label for="surname">Last name <abbr title="required">*</abbr></label>
+                <input id="surname" class="form-control" type="text" />
+
+                <label for="company">Company/Organisation</label>
+                <input id="company" class="form-control" type="text" />
+
+                <label for="industry">Business Sector</label>
+                <input id="industry" class="form-control" type="text" />
+
+                <label for="phone">Contact Telephone</label>
+                <input id="phone" class="form-control" type="text" />
+
+                <label for="additional">Tell us more about your enquiry</label>
+                <textarea id="additional" class="form-control" cols="50" rows="4"></textarea>
+
+                <button id="createEnquiry" class="btn btn-success btn-sm" type="button">Submit</button>
+            </form>
+
+            <script src="https://rca.accessplanit.com/accessplansandbox/NetLibrary/ClientScripts/webintegration.js"></script>
+
+            <script type="text/javascript">
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const courseID = encodeURIComponent(urlParams.get('course_id'))
+                const courseIDOption = (courseID ? [courseID] : [])
+
+                var courseOptions = {
+                    ListID: 'courses',
+                    CourseIDs: courseIDOption,
+                    CompanyID: "ROYALC9RCH",
+                    CategoryIDs: []
+                }
+
+                var opportunityOptions = {
+                    OwnerID: "ROYALC9RCH",
+                    Title: "Online enquiry",
+                    Forename: "",
+                    Surname: "",
+                    Email: "",
+                    Phone: "",
+                    Mobile: "",
+                    Address: "",
+                    Town: "",
+                    County: "",
+                    Country: "",
+                    Postcode: "",
+                    CompanyName: "",
+                    CompanyEmail: "",
+                    CompanyPhone: "",
+                    CompanyAddress: "",
+                    CompanyTown: "",
+                    CompanyCounty: "",
+                    CompanyCountry: "",
+                    CompanyPostcode: "",
+                    CompanyGroupID: "",
+                    CompanyGroupName: "",
+                    IndustryName: "",
+                    CourseTemplateID: "",
+                    AdditionalInformation: "",
+                    MarketingOptIn: ""
+                }
+
+                function emptyRequired(str){
+                    return str === null || str.match(/^ *$/) !== null;
+                }
+
+                function createEnquiry() {
+                    if (courseID == null) {
+                        opportunityOptions.CourseTemplateID = $('#courses').val()
+                    }
+                    else {
+                        opportunityOptions.CourseTemplateID = courseID
+                    }
+                    opportunityOptions.Email = $('#email').val()
+                    opportunityOptions.Forename = $('#forename').val()
+                    opportunityOptions.Surname = $('#surname').val()
+                    opportunityOptions.CompanyName = $('#company').val()
+                    opportunityOptions.IndustryName = $('#industry').val()
+                    opportunityOptions.Phone = $('#phone').val()
+                    opportunityOptions.AdditionalInformation = $('#additional').val()
+
+                    if (emptyRequired(opportunityOptions.Forename) || emptyRequired(opportunityOptions.Surname) || emptyRequired(opportunityOptions.Email)) {
+                        alert("Please enter all required values");
+                        return;
+                    }
+
+                    EnquiryManager.createOpportunity(opportunityOptions, function (data) {
+                        window.scrollTo(0, 0);
+                        $("#enquiry-form--title").fadeOut(1000)
+                        $("#enquiry-form").fadeOut(1000, function () {
+                            $("#enquiry-form--message").html('<h1 class="success">Thank you for your enquiry.</h1><p><a href="/short-courses/">Return to short courses</a></p>')
+                        })
+                    }, function (data) {
+                        $("#enquiry-form--message").html('<span class="error">' + data.statusText + '</span>')
+                    });
+                }
+
+                document.addEventListener("DOMContentLoaded", function (e) {
+                    $("#createEnquiry").on('click', createEnquiry);
+                    if (courseID) {
+                        $("#course-selection").hide()
+                    }
+                });
+
+            </script>
+        </section>
+
+    </section>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" collapseToday=self.collapse_upcoming_events showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}
