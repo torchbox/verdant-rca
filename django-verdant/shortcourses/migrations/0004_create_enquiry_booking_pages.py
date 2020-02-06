@@ -16,7 +16,8 @@ def create_booking_enquiry_pages(apps, schema_editor):
     EnquiryPage = apps.get_model('shortcourses', 'ShortCourseEnquiryPage')
     BookingPage = apps.get_model('shortcourses', 'ShortCourseBookingPage')
 
-    short_courses_index = StandardIndex.objects.filter(title="Short Courses")
+    short_courses_index = StandardIndex.objects.filter(
+        title="Short Courses").first()
 
     if short_courses_index:
         register_your_interest = EnquiryPage()
