@@ -55,7 +55,7 @@
             <script type="text/javascript">
 
                 const urlParams = new URLSearchParams(window.location.search);
-                const courseID = urlParams.get('course_id')
+                const courseID = encodeURIComponent(urlParams.get('course_id'))
                 const courseIDOption = (courseID ? [courseID] : [])
 
                 var courseOptions = {
