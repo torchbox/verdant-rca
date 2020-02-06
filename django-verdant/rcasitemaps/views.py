@@ -7,11 +7,13 @@ from .sitemap_generator import Sitemap
 
 def index(request, sitemaps, **kwargs):
     sitemaps = prepare_sitemaps(request, sitemaps)
-
-    # Workaround: Override the HTTP_HOST and set it as the wagtail.site.hostname value
-    # rather than the host django will set. This is to ensure the sitempat index view
-    # lists all the pages using the hostname set in the wagtail site object, otherwise
-    # the absolute urls on the index listing would begin https://www.mysite.herokuapp.com/...
+    
+    """
+    Workaround: Override the HTTP_HOST and set it as the wagtail.site.hostname value
+    rather than the host django will set. This is to ensure the sitempat index view
+    lists all the pages using the hostname set in the wagtail site object, otherwise
+    the absolute urls on the index listing would begin https://www.mysite.herokuapp.com/...
+    """
     request.META['HTTP_HOST'] = request.site.hostname
     return sitemap_views.index(request, sitemaps, **kwargs)
 
