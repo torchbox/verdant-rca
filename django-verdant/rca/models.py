@@ -1411,6 +1411,8 @@ class NewsItem(Page, SocialFields):
         'related_schools',
         'related_programmes',
         'areas',
+        'show_on_homepage',
+        'social_image',
     ]
 
     pushable_to_intranet = True
@@ -1890,6 +1892,8 @@ class EventItem(Page, SocialFields):
         'speakers',
         'dates_times',
         'external_links',
+        'show_on_homepage',
+        'social_image',
     ]
 
     pushable_to_intranet = True
@@ -2568,6 +2572,8 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
         'quotations',
         'documents',
         'images',
+        'show_on_homepage',
+        'social_image',
     ]
 
     # StandardPages with a STUDENT_STORY_TAG or ALUMNI_STORY_TAG can be listed on the homepage packery separately.
@@ -4833,6 +4839,8 @@ class RcaBlogPage(Page, SocialFields):
         'tags',
         'carousel_items',
         'areas',
+        'show_on_homepage',
+        'social_image',
     ]
 
     pushable_to_intranet = True
