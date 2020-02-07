@@ -10,7 +10,7 @@ def index(request, sitemaps, **kwargs):
     
     """
     Workaround: Override the HTTP_HOST and set it as the wagtail.site.hostname value
-    rather than the host django will set. This is to ensure the sitempat index view
+    rather than the host django will set. This is to ensure the sitemap index view
     lists all the pages using the hostname set in the wagtail site object, otherwise
     the absolute urls on the index listing would begin https://www.mysite.herokuapp.com/...
     """
