@@ -2,7 +2,7 @@ from django.db import models
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
-
+from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase
 
 from wagtail.wagtailadmin.edit_handlers import (
@@ -17,9 +17,8 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 
 from rca.help_text import help_text
 from rca.models import TWITTER_FEED_HELP_TEXT
-from rca.utils.models import (
-    RelatedLinkMixin, SocialFields, SidebarBehaviourFields, CarouselItemFields
-)
+from rca.utils.models import (CarouselItemFields, RelatedLinkMixin,
+                              SidebarBehaviourFields, SocialFields)
 
 
 class ShortCourseCarouselItem(Orderable, CarouselItemFields):
@@ -158,7 +157,10 @@ class ShortCoursePageKeyword(TaggedItemBase):
         'shortcourses.ShortCoursePage', on_delete=models.CASCADE)
 
 
-class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
+class ShortCoursePage(SocialFields, SidebarBehaviourFields, ClusterableModel, models.Model):
+    # Replacement reference to Page model whilst unlinked.
+    page_ptr = models.OneToOneField(Page, on_delete=models.CASCADE, primary_key=True, related_name='+')
+
     parent_page_types = ['rca.StandardIndex']
 
     intro = RichTextField(
