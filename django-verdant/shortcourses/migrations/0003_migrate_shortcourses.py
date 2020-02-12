@@ -14,6 +14,7 @@ def migrate_to_shortcourse(apps, schema_editor):
     ContentType = apps.get_model('contenttypes.ContentType')
     DegreeLevel = apps.get_model('taxonomy.DegreeLevel')
     School = apps.get_model('taxonomy.School')
+
     degree_level = DegreeLevel.objects.get(pk=TAXONOMY_DEGREE_LEVEL)
     school_id = School.objects.get(pk=TAXONOMY_SCHOOL_ID)
 
@@ -28,48 +29,54 @@ def migrate_to_shortcourse(apps, schema_editor):
     )
     for standard_page in standardpage_coursepages:
         page = standard_page.page_ptr
+        print(page.id)
         page.content_type = shortcourse_content_type
+        print(page.content_type)
         page.save(update_fields=['content_type'])
 
         ShortCoursePage.objects.create(
             page_ptr_id=standard_page.page_ptr_id,
+            content_type_id=shortcourse_content_type.id,
             ## Short course fields
-            details=' ',
-            booking_enabled=True,
-            booking_disabled_text='',
             programme_finder_exclude=False,
-            ap_course_id='',
             degree_level=degree_level,
             related_school=school_id,
+            ## Access Planit related fields
+            ## uncomment if 1051 has merged.
+            # details=' ',
+            # ap_course_id='',
+            # booking_enabled=True,
+            # booking_disabled_text='',
             ## Shared fields
-            # body=p.body,
-            # collapse_upcoming_events=p.collapse_upcoming_events,
-            # expire_at=p.expire_at,
-            # expired=p.expired,
-            # feed_image=p.feed_image,
-            # first_published_at=p.first_published_at,
-            # go_live_at=p.go_live_at,
-            # intro=p.intro,
-            # latest_revision_created_at=p.latest_revision_created_at,
-            # live=p.live,
-            # locked=p.locked,
-            # middle_column_body=p.middle_column_body,
-            # numchild=p.numchild,
-            # owner=p.owner,
-            # related_area=p.related_area,
-            # related_programme=p.related_programme,
-            # search_description=p.search_description,
-            # seo_title=p.seo_title,
-            # show_in_menus=p.show_in_menus,
-            # show_on_homepage=p.show_on_homepage,
-            # show_on_school_page=p.show_on_school_page,
-            # slug=slug,
-            # social_image=p.social_image,
-            # social_text=p.social_text,
-            # strapline=p.strapline,
-            # tags=p.tags,
-            # title=p.title,
-            # twitter_feed=p.twitter_feed,
+            body=standard_page.body,
+            collapse_upcoming_events=standard_page.collapse_upcoming_events,
+            feed_image=standard_page.feed_image,
+            intro=standard_page.intro,
+            middle_column_body=standard_page.middle_column_body,
+            related_area=standard_page.related_area,
+            related_programme=standard_page.related_programme,
+            show_on_homepage=standard_page.show_on_homepage,
+            show_on_school_page=standard_page.show_on_school_page,
+            social_image=standard_page.social_image,
+            social_text=standard_page.social_text,
+            strapline=standard_page.strapline,
+            # TODO: check if tags are present after relinked
+            # tags=standard_page.tags,
+            twitter_feed=standard_page.twitter_feed,
+            # title=standard_page.title,
+            # slug=standard_page.slug,
+            # search_description=standard_page.search_description,
+            # seo_title=standard_page.seo_title,
+            # show_in_menus=standard_page.show_in_menus,
+            # numchild=standard_page.numchild,
+            # owner=standard_page.owner,
+            # latest_revision_created_at=standard_page.latest_revision_created_at,
+            # live=standard_page.live,
+            # locked=standard_page.locked,
+            # expire_at=standard_page.expire_at,
+            # expired=standard_page.expired,
+            # first_published_at=standard_page.first_published_at,
+            # go_live_at=standard_page.go_live_at,
         )
 
         standard_page.delete()
