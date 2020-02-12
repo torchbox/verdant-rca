@@ -81,6 +81,10 @@ class Migration(migrations.Migration):
         ('shortcourses', '0002_unlink_shortcourse_pages'),
     ]
 
+    run_before = [
+        ('rca', '0109_relink_shortcourse_pages'),
+    ]
+
     operations = [
         migrations.RunPython(migrate_to_shortcourse, migrations.RunPython.noop),
     ]

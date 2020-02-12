@@ -2,7 +2,6 @@ from django.db import models
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
-from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase
 
 from wagtail.wagtailadmin.edit_handlers import (
@@ -157,10 +156,7 @@ class ShortCoursePageKeyword(TaggedItemBase):
         'shortcourses.ShortCoursePage', on_delete=models.CASCADE)
 
 
-class ShortCoursePage(SocialFields, SidebarBehaviourFields, ClusterableModel, models.Model):
-    # Replacement reference to Page model whilst unlinked.
-    page_ptr = models.OneToOneField(Page, on_delete=models.CASCADE, primary_key=True, related_name='+')
-
+class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
     parent_page_types = ['rca.StandardIndex']
 
     intro = RichTextField(

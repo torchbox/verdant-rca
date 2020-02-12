@@ -2537,9 +2537,7 @@ class StandardPageReusableTextSnippet(Orderable):
 class StandardPageTag(TaggedItemBase):
     content_object = ParentalKey('rca.StandardPage', related_name='tagged_items')
 
-class StandardPage(SocialFields, SidebarBehaviourFields, ClusterableModel, models.Model):
-    # Replacement reference to Page model whilst unlinked.
-    page_ptr = models.OneToOneField(Page, on_delete=models.CASCADE, primary_key=True, related_name='+')
+class StandardPage(Page, SocialFields, SidebarBehaviourFields):
 
     intro = RichTextField(help_text=help_text('rca.StandardPage', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.StandardPage', 'body'))
