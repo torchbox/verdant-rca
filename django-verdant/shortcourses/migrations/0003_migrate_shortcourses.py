@@ -36,7 +36,7 @@ def migrate_to_shortcourse(apps, schema_editor):
 
         ShortCoursePage.objects.create(
             page_ptr_id=standard_page.page_ptr_id,
-            content_type_id=shortcourse_content_type.id,
+            # content_type_id=shortcourse_content_type.id,
             ## Short course fields
             programme_finder_exclude=False,
             degree_level=degree_level,
