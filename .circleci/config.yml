@@ -15,6 +15,7 @@ jobs:
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: circle_test
+          POSTGRES_HOST_AUTH_METHOD: 'trust'
     working_directory: ~/repo
     steps:
       - checkout
