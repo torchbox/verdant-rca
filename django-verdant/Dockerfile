@@ -83,4 +83,4 @@ USER verdant-rca
 
 # Run the WSGI server. It reads GUNICORN_CMD_ARGS, PORT and WEB_CONCURRENCY
 # environment variable hence we don't specify a lot options below.
-CMD /app/bin/tcpproxy gunicorn rcasite.wsgi:application
+CMD /app/bin/qgtunnel gunicorn rcasite.wsgi:application

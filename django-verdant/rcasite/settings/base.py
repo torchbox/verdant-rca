@@ -137,6 +137,8 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = [
+    'scout_apm.django', # should be listed first
+
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

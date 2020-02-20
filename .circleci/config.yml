@@ -7,13 +7,14 @@ jobs:
           SECRET_KEY: testingsecretkey
           SECURE_SSL_REDIRECT: false
           ALLOWED_HOSTS: localhost
-          DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
+          DATABASE_URL: postgresql://root:root@localhost/circle_test?sslmode=disable
           DJANGO_SETTINGS_MODULE: rcasite.settings.production
           CFG_SECRET_KEY: iamnotsosecret
           CFG_ALLOWED_HOSTS: localhost
       - image: circleci/postgres:9.6
         environment:
           POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
           POSTGRES_DB: circle_test
           POSTGRES_HOST_AUTH_METHOD: 'trust'
     working_directory: ~/repo
