@@ -12,6 +12,7 @@ from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtaildocs.api.v2.endpoints import DocumentsAPIEndpoint
 from wagtail.wagtailimages import urls as wagtailimages_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
+from rcasitemaps.views import index, sitemap
 
 from wagtail.api.v2.router import WagtailAPIRouter
 from rca.api.endpoints import RCAPagesAPIEndpoint, RCAImagesAPIEndpoint
@@ -21,12 +22,14 @@ from rca import admin_urls as rca_admin_urls
 from twitter import urls as twitter_urls
 import student_profiles.urls, student_profiles.now_urls
 from taxonomy import views as taxonomy_views
+from rcasitemaps.sitemap_generator import Sitemap
 from . import admin_views
 
 from rcasite.cache import get_default_cache_control_decorator
 
 admin.autodiscover()
 
+sitemaps = {'wagtail': Sitemap}
 
 # Signal handlers
 from wagtail.wagtailsearch.signal_handlers import register_signal_handlers as wagtailsearch_register_signal_handlers
@@ -75,6 +78,10 @@ urlpatterns = patterns('',
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism
     url(r'', include(wagtail_urls)),
+
+    url(r'^sitemap\.xml$', index, {'sitemaps': sitemaps}),
+    url(r'^sitemap-(?P<section>.+)\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+
 )
 
 

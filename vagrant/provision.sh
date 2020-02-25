@@ -77,6 +77,7 @@ su - vagrant -c "echo $PROJECT_DIR > $VIRTUALENV_DIR/.project"
 
 
 # Install PIP requirements
+su - vagrant -c "$PIP install --upgrade pip"
 su - vagrant -c "$PIP install -r $PROJECT_DIR/requirements.txt"
 
 
