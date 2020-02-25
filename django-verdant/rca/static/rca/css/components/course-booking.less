@@ -1,6 +1,6 @@
 #course-booking-form {
     overflow-x: auto;
-    margin-bottom: 20px;
+    margin-bottom: @gutter;
     position: relative;
 
     table {
@@ -36,7 +36,8 @@
                 color: @color-white;
                 padding: 10px;
 
-                &:hover {
+                &:hover,
+                &:focus {
                     background-color: @color-pink;
                     text-decoration: none;
                 }
