@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils.functional import cached_property
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -398,6 +399,15 @@ class ShortCourseEnquiryPage(Page, SocialFields):
         InlinePanel('shortcourses', label="Available courses"),
     ]
 
+    def get_context(self, request, *args, **kwargs):
+        context = super(ShortCourseEnquiryPage,
+                        self).get_context(request, *args, **kwargs)
+        context.update({
+            'access_planit_company_id': getattr(settings, "ACCESS_PLANIT_COMPANY_ID", ""),
+            'access_planit_url': getattr(settings, "ACCESS_PLANIT_URL", ""),
+        })
+        return context
+
 
 class ShortCourseBookingPage(Page, SocialFields):
     is_creatable = False
@@ -420,6 +430,7 @@ class ShortCourseBookingPage(Page, SocialFields):
         context = super(ShortCourseBookingPage,
                         self).get_context(request, *args, **kwargs)
         context.update({
-            'course_id': request.GET.get('course_id', None),
+            'access_planit_company_id': getattr(settings, "ACCESS_PLANIT_COMPANY_ID", ""),
+            'access_planit_url': getattr(settings, "ACCESS_PLANIT_URL", ""),
         })
         return context
