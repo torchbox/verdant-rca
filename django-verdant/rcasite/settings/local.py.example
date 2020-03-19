@@ -12,3 +12,7 @@ EMBEDLY_KEY = 'get-one-from-http://embed.ly/'
 
 STRIPE_SECRET_KEY = ""
 STRIPE_PUBLISHABLE_KEY = ""
+
+# Configure Access Planit integration for short course booking.
+ACCESS_PLANIT_COMPANY_ID = "ROYALC9RCH"
+ACCESS_PLANIT_URL = "https://rca.accessplanit.com/accessplansandbox/NetLibrary/ClientScripts/webintegration.js"

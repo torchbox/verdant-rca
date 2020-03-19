@@ -50,7 +50,7 @@
                 <button id="createEnquiry" class="btn btn-success btn-sm" type="button">Submit</button>
             </form>
 
-            <script src="https://rca.accessplanit.com/accessplansandbox/NetLibrary/ClientScripts/webintegration.js"></script>
+            <script src="{{ access_planit_url }}"></script>
 
             <script type="text/javascript">
 
@@ -61,12 +61,12 @@
                 var courseOptions = {
                     ListID: 'courses',
                     CourseIDs: courseIDOption,
-                    CompanyID: "ROYALC9RCH",
+                    CompanyID: "{{ access_planit_company_id }}",
                     CategoryIDs: []
                 }
 
                 var opportunityOptions = {
-                    OwnerID: "ROYALC9RCH",
+                    OwnerID: "{{ access_planit_company_id }}",
                     Title: "Online enquiry",
                     Forename: "",
                     Surname: "",
