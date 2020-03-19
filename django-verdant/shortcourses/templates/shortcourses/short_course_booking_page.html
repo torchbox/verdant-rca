@@ -24,15 +24,41 @@
                 const courseID = encodeURIComponent(urlParams.get('course_id'))
                 const courseIDOption = (courseID ? [courseID] : [])
 
-                var options = {
-                    ContainerID: 'course-booking-form',
-                    CompanyID: "ROYALC9RCH",
-                    CourseIDs: courseIDOption,
-                    Columns: [CourseManager.columns.CourseName, CourseManager.columns.StartDate, CourseManager.columns.StartTime, CourseManager.columns.EndTime, CourseManager.columns.Cost, CourseManager.columns.Book]
+                // See django-verdant/rca/static/rca/js/site.js for breakpoints
+                const mediaQueryList = window.matchMedia("screen and (max-width:767px)");
+
+                function handleViewportChange(mql) {
+                    if (mediaQueryList.matches) {
+                        /* Mobile */
+                        bookingColumns = [
+                            CourseManager.columns.Book,
+                            CourseManager.columns.CourseName,
+                            CourseManager.columns.StartDate,
+                            CourseManager.columns.EndDate,
+                        ]
+                    } else {
+                        /* Desktop */
+                        bookingColumns = [
+                            CourseManager.columns.CourseName,
+                            CourseManager.columns.StartDate,
+                            CourseManager.columns.EndDate,
+                            CourseManager.columns.Book,
+                        ]
+                    }
+
+                    var options = {
+                        ContainerID: 'course-booking-form',
+                        CompanyID: "{{ access_planit_company_id }}",
+                        CourseIDs: courseIDOption,
+                        Columns: bookingColumns
+                    }
+                    CourseManager.coursesTable(options);
                 }
 
                 document.addEventListener("DOMContentLoaded", function (e) {
-                    CourseManager.coursesTable(options);
+                    CourseManager.columns.CourseName = "Title";
+                    handleViewportChange(mediaQueryList);
+                    mediaQueryList.addListener(handleViewportChange);
                 });
 
             </script>
