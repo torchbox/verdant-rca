@@ -279,15 +279,17 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
     def enquiry_link(self):
         if not self.ap_course_id:
             return None
-        enquiry_page = ShortCourseEnquiryPage.objects.first()
-        return enquiry_page.url + '?course_id=' + self.ap_course_id
+        enquiry_page = ShortCourseEnquiryPage.objects.live().first()
+        if enquiry_page:
+            return enquiry_page.url + '?course_id=' + self.ap_course_id
 
     @cached_property
     def booking_link(self):
         if not self.ap_course_id:
             return None
-        booking_page = ShortCourseBookingPage.objects.first()
-        return booking_page.url + '?course_id=' + self.ap_course_id
+        booking_page = ShortCourseBookingPage.objects.live().first()
+        if booking_page:
+            return booking_page.url + '?course_id=' + self.ap_course_id
 
     @property
     def reusable_text_snippets(self):
