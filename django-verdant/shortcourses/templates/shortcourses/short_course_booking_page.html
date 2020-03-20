@@ -21,7 +21,7 @@
             <script type="text/javascript">
 
                 const urlParams = new URLSearchParams(window.location.search);
-                const courseID = encodeURIComponent(urlParams.get('course_id'))
+                const courseID = urlParams.get('course_id')? encodeURIComponent(urlParams.get('course_id')) : null
                 const courseIDOption = (courseID ? [courseID] : [])
 
                 // See django-verdant/rca/static/rca/js/site.js for breakpoints

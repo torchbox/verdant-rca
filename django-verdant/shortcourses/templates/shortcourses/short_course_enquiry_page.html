@@ -19,8 +19,6 @@
                     <select
                         id="courses"
                         class="form-control"
-                        onchange="opportunityOptions.CourseTemplateID = this.options[this.selectedIndex].value"
-                        selected="731014"
                     >
                     {# options added by js below - EnquiryManager.getCourses() #}
                 </select>
@@ -55,7 +53,7 @@
             <script type="text/javascript">
 
                 const urlParams = new URLSearchParams(window.location.search);
-                const courseID = encodeURIComponent(urlParams.get('course_id'))
+                const courseID = urlParams.get('course_id')? encodeURIComponent(urlParams.get('course_id')) : null
                 const courseIDOption = (courseID ? [courseID] : [])
 
                 var courseOptions = {
@@ -130,6 +128,7 @@
                 }
 
                 document.addEventListener("DOMContentLoaded", function (e) {
+                    EnquiryManager.getCourses(courseOptions);
                     $("#createEnquiry").on('click', createEnquiry);
                     if (courseID) {
                         $("#course-selection").hide()
