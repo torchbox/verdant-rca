@@ -27,8 +27,8 @@ class Navigation(object):
         self.logger = logging.getLogger("verdant-rca")
 
 
-    def pull_navigation_data(self):
-        """Pull the navigation data from the api.
+    def fetch_navigation_data(self):
+        """Fetch the navigation data from the api.
 
         Raises:
             CantPullFromRcaApi: Failed to pull from the RCA api
