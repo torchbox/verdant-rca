@@ -1,21 +1,16 @@
-import datetime
-import json
-import logging
-import warnings
-import mock
+"""
+This file demonstrates writing tests using the unittest module. These will pass
+when you run "manage.py test".
 
-import requests
-from django.conf import settings
+Replace this with more appropriate tests for your application.
+"""
+
 from django.test import TestCase
-from requests.exceptions import Timeout
-from rca.navigation import Navigation
 
 
-class TestNavigationFetch(TestCase):
-
-    @mock.patch("rca.navigation.requests.get")
-    def test_data_if_timeout(self, mock_get):
-        """ If a timeout is caught the nav data should be an empty list"""
-        mock_get.side_effect = Timeout
-        nav = Navigation().fetch_navigation_data()
-        self.assertEqual(nav, [])
+class SimpleTest(TestCase):
+    def test_basic_addition(self):
+        """
+        Tests that 1 + 1 always equals 2.
+        """
+        self.assertEqual(1 + 1, 2)

@@ -12,10 +12,10 @@ it's stored in cache['navigation_from_api'].
 import logging
 import requests
 from requests.auth import HTTPBasicAuth
+from requests.exceptions import Timeout
 
 from django.conf import settings
 from django.core.cache import cache
-
 
 
 class CantPullFromRcaApi(Exception):
@@ -44,7 +44,7 @@ class Navigation(object):
                 url="{}api/v3/navigation/1/".format(
                     settings.NAVIGATION_API_CONTENT_BASE_URL, timeout=10
                 ),
-                auth=HTTPBasicAuth(settings.BASIC_AUTH_LOGIN, settings.BASIC_AUTH_PASSWORD),
+                auth=HTTPBasicAuth(settings.RCA_REBUILD_BASIC_AUTH_LOGIN, settings.RCA_REBUILD_BASIC_AUTH_PASSWORD),
             )
             response.raise_for_status()
             self.logger.info("Pulling Navigation data from API")
@@ -67,6 +67,8 @@ class Navigation(object):
         if self.navigation_data == []:
             try:
                 self.navigation_data = self.fetch_navigation_data()
+            except Timeout:
+                return []
             except CantPullFromRcaApi:
                 return []
             else:
