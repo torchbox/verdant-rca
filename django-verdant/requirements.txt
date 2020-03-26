@@ -42,3 +42,4 @@ unicodecsv==0.14.1
 
 # Pinned as django-redis has incompatibility with later versions
 redis==2.10.6
+mock==3.0.5

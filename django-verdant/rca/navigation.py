@@ -40,7 +40,7 @@ class Navigation(object):
         try:
             response = requests.get(
                 url="{}api/v3/navigation/1/".format(
-                    settings.NAVIGATION_API_CONTENT_BASE_URL
+                    settings.NAVIGATION_API_CONTENT_BASE_URL, timeout=10
                 ),
                 auth=HTTPBasicAuth(settings.BASIC_AUTH_LOGIN, settings.BASIC_AUTH_PASSWORD),
             )
@@ -60,7 +60,7 @@ class Navigation(object):
         a cache key.
 
         Returns:
-            A dict containing all the navigation data through a cache check
+            A list containing all the navigation data through a cache check
         """
         cache_key = "navigation_from_api"
         navigation_data = cache.get(cache_key)
@@ -68,7 +68,7 @@ class Navigation(object):
             try:
                 navigation_data = self.pull_navigation_data()
             except CantPullFromRcaApi:
-                return {}
+                return []
             else:
                 cache.set(cache_key, navigation_data, settings.NAVIGATION_API_CACHE_TIMEOUT)
         return navigation_data
@@ -78,10 +78,10 @@ class Navigation(object):
         """Retrive just the primary navigation data.
 
         Returns:
-            dict
+            list
         """
         nav_data = self.get_navigation_data()
-        return nav_data['primary_navigation']
+        return nav_data['primary_navigation'] if 'primary_navigation' in nav_data else []
 
     def get_quick_links(self):
         """Retrive just the quick links from navigation data.
@@ -90,7 +90,7 @@ class Navigation(object):
             dict
         """
         nav_data = self.get_navigation_data()
-        return nav_data['quick_links']
+        return nav_data['quick_links'] if 'quick_links' in nav_data else []
 
     def get_footer_links(self):
         """Retrive just the footer links from navigation data.
@@ -99,7 +99,7 @@ class Navigation(object):
             dict
         """
         nav_data = self.get_navigation_data()
-        return nav_data['footer_links']
+        return nav_data['footer_links'] if 'footer_links' in nav_data else []
 
     def get_footer_navigation(self):
         """Retrive just the footer navigation from navigation data.
@@ -108,4 +108,4 @@ class Navigation(object):
             dict
         """
         nav_data = self.get_navigation_data()
-        return nav_data['footer_navigation']
+        return nav_data['footer_navigation'] if 'footer_navigation' in nav_data else []
