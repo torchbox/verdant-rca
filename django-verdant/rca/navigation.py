@@ -25,6 +25,8 @@ class CantPullFromRcaApi(Exception):
 class Navigation(object):
     def __init__(self, *args):
         self.logger = logging.getLogger("verdant-rca")
+        self.cache_key = "navigation_from_api"
+        self.navigation_data = []
 
 
     def fetch_navigation_data(self):
@@ -62,16 +64,14 @@ class Navigation(object):
         Returns:
             A list containing all the navigation data through a cache check
         """
-        cache_key = "navigation_from_api"
-        navigation_data = cache.get(cache_key)
-        if navigation_data is None:
+        if self.navigation_data == []:
             try:
-                navigation_data = self.fetch_navigation_data()
+                self.navigation_data = self.fetch_navigation_data()
             except CantPullFromRcaApi:
                 return []
             else:
-                cache.set(cache_key, navigation_data, settings.NAVIGATION_API_CACHE_TIMEOUT)
-        return navigation_data
+                cache.set(self.cache_key, self.navigation_data, settings.NAVIGATION_API_CACHE_TIMEOUT)
+        return self.navigation_data
 
 
     def get_primary_navigation(self):
