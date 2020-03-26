@@ -45,7 +45,7 @@ def global_vars(request):
 
 
 def navigation_via_api(request):
-    if not request.path.startswith('/admin'):
+    if not request.path.startswith(settings.WAGTAIL_ADMIN_URL):
         navigation_api = Navigation()
         return {
             'navigation_via_api_primary': navigation_api.get_primary_navigation(),
