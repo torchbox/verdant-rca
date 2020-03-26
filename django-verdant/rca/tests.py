@@ -15,7 +15,7 @@ class TestNavigationFetch(TestCase):
 
     @mock.patch("rca.navigation.requests.get")
     def test_data_if_timeout(self, mock_get):
-        """ If a timeout is caught the should be an empty list"""
+        """ If a timeout is caught the nav data should be an empty list"""
         mock_get.side_effect = Timeout
         nav = Navigation().fetch_navigation_data()
         self.assertEqual(nav, [])
