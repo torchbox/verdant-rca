@@ -66,7 +66,7 @@ class Navigation(object):
         navigation_data = cache.get(cache_key)
         if navigation_data is None:
             try:
-                navigation_data = self.pull_navigation_data()
+                navigation_data = self.fetch_navigation_data()
             except CantPullFromRcaApi:
                 return []
             else:

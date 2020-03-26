@@ -45,6 +45,10 @@ def global_vars(request):
 
 
 def navigation_via_api(request):
+    navigation_api = Navigation()
     return {
-        'navigation_via_api': Navigation(),
+        'navigation_via_api_primary': navigation_api.get_primary_navigation(),
+        'navigation_via_api_footer_links': navigation_api.get_footer_links(),
+        'navigation_via_api_quick_links': navigation_api.get_quick_links(),
+        'navigation_via_api_footer_navigation': navigation_api.get_footer_navigation(),
     }

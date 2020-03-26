@@ -271,10 +271,9 @@
                 {% enquiry_form %}
             {% endif %}
         {% endblock %}
-
-        {{ navigation_via_api.get_primary_navigation|json_script:"navigation_primary" }}
-        {{ navigation_via_api.get_quick_links|json_script:"navigation_quick_links" }}
-        {{ navigation_via_api.get_footer_links|json_script:"navigation_footer_links" }}
-        {{ navigation_via_api.get_footer_navigation|json_script:"navigation_footer" }}
+        {{ navigation_via_api_primary|json_script:"navigation_via_api_primary" }}
+        {{ navigation_via_api_footer_links|json_script:"navigation_via_api_footer_links" }}
+        {{ navigation_via_api_quick_links|json_script:"navigation_via_api_quick_links" }}
+        {{ navigation_via_api_footer_navigation|json_script:"navigation_via_api_footer_navigation" }}
     </body>
 </html>
