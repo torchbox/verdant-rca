@@ -44,7 +44,7 @@ class Navigation(object):
                 url="{}api/v3/navigation/1/".format(
                     settings.NAVIGATION_API_CONTENT_BASE_URL, timeout=10
                 ),
-                auth=HTTPBasicAuth(settings.RCA_REBUILD_BASIC_AUTH_LOGIN, settings.RCA_REBUILD_BASIC_AUTH_PASSWORD),
+                auth=HTTPBasicAuth('rca', 'showmerca'),
             )
             response.raise_for_status()
             self.logger.info("Pulling Navigation data from API")
