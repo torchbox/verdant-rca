@@ -12,9 +12,14 @@ def get_default_cache_control_kwargs():
     stale_while_revalidate = getattr(
         settings, "CACHE_CONTROL_STALE_WHILE_REVALIDATE", None
     )
+    # Set stale-if-error so Cloudflare can serve stale cache if server errors are encountered.
+    # Note: this will be ignored if using Cloudflare's 'Always on-line' functionality.
+    stale_if_error = getattr(settings, "CACHE_CONTROL_STALE_IF_ERROR", None)
+
     cache_control_kwargs = {
         "s_maxage": s_maxage,
         "stale_while_revalidate": stale_while_revalidate,
+        "stale_if_error": stale_if_error,
         "public": True,
     }
 
