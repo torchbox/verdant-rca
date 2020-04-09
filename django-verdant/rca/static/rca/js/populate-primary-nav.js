@@ -47,7 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                 `}
                             </a>
                         </li>
-                        ${secondaryItem.tertiary_links.length && populateLevelThree(secondaryItem, primaryItemIndex, secondaryItemIndex)}
+                        ${(() => {
+                          if (secondaryItem.tertiary_links.length) {
+                            populateLevelThree(secondaryItem, primaryItemIndex, secondaryItemIndex)
+                          }
+                        })()}
                     `
                     ).join('')}
                 </li>
