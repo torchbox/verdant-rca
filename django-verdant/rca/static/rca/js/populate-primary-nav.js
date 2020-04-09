@@ -40,11 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         <li class="nav__item">
                             <a href="${secondaryItem.url}" class="nav__link" data-menu-child data-nav-level="2" data-parent-id="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" data-menu="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" ${secondaryItem.tertiary_links.length && `data-menu-parent`}>
                                 <span>${secondaryItem.title}</span>
-                                ${secondaryItem.tertiary_links.length && `
+                                ${secondaryItem.tertiary_links.length ? `
                                     <svg class="nav__icon" width="6" height="10">
                                         <use xlink:href="#chevron"></use>
                                     </svg>
-                                `}
+                                `: ''}
                             </a>
                         </li>
                         ${secondaryItem.tertiary_links.length ? populateLevelThree(secondaryItem, primaryItemIndex, secondaryItemIndex) : ''}
