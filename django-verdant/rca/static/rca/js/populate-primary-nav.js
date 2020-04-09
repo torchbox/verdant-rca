@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 `: ''}
                             </a>
                         </li>
-                        ${secondaryItem.tertiary_links.length ? populateLevelThree(secondaryItem, primaryItemIndex, secondaryItemIndex) : ''}
                     `
                     ).join('')}
                 </li>
@@ -72,6 +71,13 @@ document.addEventListener('DOMContentLoaded', function () {
         // create function to make <ul> for each secondary nav item and call populate level 2 from it
         if (primaryItem.value.secondary_links.length) {
             populateLevelTwo(primaryItem, primaryItemIndex);
+
+            // create markup for level 3 if the links exist
+            primaryItem.value.secondary_links.map((secondaryItem, secondaryItemIndex) => {
+                if (secondaryItem.tertiary_links.length) {
+                    populateLevelThree(secondaryItem, primaryItemIndex, secondaryItemIndex)
+                }
+            })
         }
     });
 
