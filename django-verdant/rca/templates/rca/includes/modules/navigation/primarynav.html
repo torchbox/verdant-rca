@@ -9,7 +9,7 @@
 
         <form action="/search" method="get" role="search" class="search2">
             <input class="search2__input input" type="text" placeholder="Search…" name="q"{% if search_query %} value="{{ search_query }}"{% endif %}>
-            <button class="search2__button button" type="submit">
+            <button class="search2__button button" type="submit" aria-label="Search">
                 <svg width="12px" height="8px" class="search2__icon"><use xlink:href="#arrow"></use></svg>
             </button>
         </form>
