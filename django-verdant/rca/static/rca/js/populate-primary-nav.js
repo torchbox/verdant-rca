@@ -42,16 +42,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <span>${secondaryItem.title}</span>
                                 ${secondaryItem.tertiary_links.length && `
                                     <svg class="nav__icon" width="6" height="10">
-                                        <use xlinkHref="#chevron"></use>
+                                        <use xlink:href="#chevron"></use>
                                     </svg>
                                 `}
                             </a>
                         </li>
-                        ${(() => {
-                          if (secondaryItem.tertiary_links.length) {
-                            populateLevelThree(secondaryItem, primaryItemIndex, secondaryItemIndex)
-                          }
-                        })()}
+                        ${secondaryItem.tertiary_links.length ? populateLevelThree(secondaryItem, primaryItemIndex, secondaryItemIndex) : ''}
                     `
                     ).join('')}
                 </li>
