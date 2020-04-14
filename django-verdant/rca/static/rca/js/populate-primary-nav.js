@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     `}
                 </a>
             </li>
-        `
+        `;
         // create function to make <ul> for each secondary nav item and call populate level 2 from it
         if (primaryItem.value.secondary_links.length) {
             populateLevelTwo(primaryItem, primaryItemIndex);
