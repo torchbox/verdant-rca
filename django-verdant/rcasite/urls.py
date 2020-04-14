@@ -47,6 +47,11 @@ api_router.register_endpoint('documents', DocumentsAPIEndpoint)
 
 
 urlpatterns = patterns('',
+    # Mitigation for CVE-2020-11001
+    # https://github.com/wagtail/wagtail/security/advisories/GHSA-v2wc-pfq2-5cm6
+    # This should be properly patched by upgrading to a supported Wagtail version
+    url(r'^admin/pages/(\d+)/revisions/compare/', RedirectView.as_view(url='/admin/')),
+
     url(r'^django-admin/', include(admin.site.urls)),
 
     # TEMPORARY: Override login view to allow it to be disabled
