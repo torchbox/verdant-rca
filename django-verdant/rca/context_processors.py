@@ -9,6 +9,7 @@ from .models import (
     SUSTAINRCA_CATEGORY_CHOICES
 )
 from .reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
+from rca.navigation import Navigation
 
 
 def global_vars(request):
@@ -41,3 +42,16 @@ def global_vars(request):
         'SEO_NOINDEX': settings.SEO_NOINDEX,
         'RCA_LOGIN_DISABLED': settings.RCA_LOGIN_DISABLED,
     }
+
+
+def navigation_via_api(request):
+    if not request.path.startswith(settings.WAGTAIL_ADMIN_URL):
+        navigation_api = Navigation()
+        return {
+            'navigation_via_api_primary': navigation_api.get_primary_navigation(),
+            'navigation_via_api_footer_links': navigation_api.get_footer_links(),
+            'navigation_via_api_quick_links': navigation_api.get_quick_links(),
+            'navigation_via_api_footer_navigation': navigation_api.get_footer_navigation(),
+        }
+    else:
+        return {}
