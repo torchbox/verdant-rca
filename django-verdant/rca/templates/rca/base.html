@@ -256,7 +256,8 @@
                 {% endif %}
             {% endcompress %}
 
-            <script src="{% if DEBUG %}https://www.rca.ac.uk{% endif %}/static2/js/main.js"></script>
+            <script src="{% if settings.BASE_URL == 
+                'http://rca-verdant-staging.herokuapp.com' or DEBUG %}//www.rca.ac.uk{% endif %}/static2/js/main.js"></script>
 
             <script type="text/javascript">
                 {% if not request.is_ajax %}
