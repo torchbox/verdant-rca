@@ -82,7 +82,7 @@ class Navigation(object):
             list
         """
         nav_data = self.get_navigation_data()
-        return nav_data['primary_navigation'] if 'primary_navigation' in nav_data else []
+        return nav_data.get('primary_navigation', [])
 
     def get_quick_links(self):
         """Retrive just the quick links from navigation data.
