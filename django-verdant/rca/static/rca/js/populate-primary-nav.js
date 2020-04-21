@@ -58,13 +58,13 @@ document.addEventListener('DOMContentLoaded', function () {
     primaryNav.map((primaryItem, primaryItemIndex) => {
         primaryNavHtml += `
             <li class="nav__item nav__item--primary" role="presentation">
-                <a href="${primaryItem.value.primary_link.url}" class="nav__link" data-nav-level="1" data-menu="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}" ${primaryItem.value.secondary_links.length && `data-menu-parent`}>
+                <a href="${primaryItem.value.primary_link.url}" class="nav__link" data-nav-level="1" data-menu="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}" ${primaryItem.value.secondary_links.length ? `data-menu-parent`: ''}>
                     <span>${primaryItem.value.primary_link.title}</span>
-                    ${primaryItem.value.secondary_links.length && `
+                    ${primaryItem.value.secondary_links.length ? `
                         <svg class="nav__icon" width="6" height="10">
                             <use xlink:href="#chevron"></use>
                         </svg >
-                    `}
+                    `: ''}
                 </a>
             </li>
         `;
