@@ -522,7 +522,8 @@ if "PRIMARY_HOST" in env:
     BASE_URL = "https://{}".format(env["PRIMARY_HOST"])
 
 NAVIGATION_API_CACHE_TIMEOUT = int(env.get("NAVIGATION_API_CACHE_TIMEOUT", 60 * 60 * 24))
-NAVIGATION_API_CONTENT_BASE_URL = env.get("NAVIGATION_API_CONTENT_BASE_URL", "https://rca-staging.herokuapp.com/")
+NAVIGATION_API_CONTENT_BASE_URL = env.get("NAVIGATION_API_CONTENT_BASE_URL", None)
+
 # The rebuild site's api will be behind basic auth. The values for these should match the
 # basic auth details on the rebuild site
 RCA_REBUILD_BASIC_AUTH_LOGIN = env.get('RCA_REBUILD_BASIC_AUTH_LOGIN', 'rca')

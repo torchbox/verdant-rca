@@ -18,4 +18,4 @@ class Command(BaseCommand):
             )
             Navigation().get_navigation_data()
         except ValidationError:
-            logger.exception("Somthing went wrong fetching navigation data")
+            logger.exception("Failed to fetch navigation data")
