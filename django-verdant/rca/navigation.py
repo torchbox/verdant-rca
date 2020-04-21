@@ -53,8 +53,7 @@ class Navigation(object):
             self.logger.error(error_text)
             raise CantPullFromRcaApi(error_text)
         else:
-            data = response.json()
-        return data
+            return response.json()
 
 
     def get_navigation_data(self):
@@ -64,7 +63,7 @@ class Navigation(object):
         Returns:
             A list containing all the navigation data through a cache check
         """
-        if self.navigation_data == []:
+        if not self.navigation_data and settings.NAVIGATION_API_CONTENT_BASE_URL:
             try:
                 self.navigation_data = self.fetch_navigation_data()
             except Timeout:
@@ -83,7 +82,7 @@ class Navigation(object):
             list
         """
         nav_data = self.get_navigation_data()
-        return nav_data['primary_navigation'] if 'primary_navigation' in nav_data else []
+        return nav_data.get('primary_navigation', [])
 
     def get_quick_links(self):
         """Retrive just the quick links from navigation data.
@@ -92,7 +91,7 @@ class Navigation(object):
             dict
         """
         nav_data = self.get_navigation_data()
-        return nav_data['quick_links'] if 'quick_links' in nav_data else []
+        return nav_data.get('quick_links', [])
 
     def get_footer_links(self):
         """Retrive just the footer links from navigation data.
@@ -101,7 +100,7 @@ class Navigation(object):
             dict
         """
         nav_data = self.get_navigation_data()
-        return nav_data['footer_links'] if 'footer_links' in nav_data else []
+        return nav_data.get('footer_links', [])
 
     def get_footer_navigation(self):
         """Retrive just the footer navigation from navigation data.
@@ -110,4 +109,4 @@ class Navigation(object):
             dict
         """
         nav_data = self.get_navigation_data()
-        return nav_data['footer_navigation'] if 'footer_navigation' in nav_data else []
+        return nav_data.get('footer_navigation', [])
