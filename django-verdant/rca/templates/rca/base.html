@@ -1,4 +1,4 @@
-{% load compress static wagtailimages_tags wagtailuserbar rca_tags wagtailsettings_tags %}
+{% load compress static wagtailimages_tags wagtailuserbar rca_tags wagtailsettings_tags wagtailcore_tags %}
 {% get_settings %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -180,10 +180,10 @@
         {% block bottom %}{% endblock %}
 
         {% block js %}
+            {% get_debug as DEBUG %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
             <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
             <script src="https://js.stripe.com/v2/"></script>
-            <script src="/static2/js/main.js"></script>
 
             {% if SILVERPOP_ID %}
                 <script src="https://www.sc.pages05.net/lp/static/js/iMAWebCookie.js?{{ SILVERPOP_ID }}&h=www.pages05.net" type="text/javascript"></script>
@@ -217,7 +217,10 @@
                 <script src="{% static "rca/js/tweets.js" %}"></script>
                 <script src="{% static "rca/js/site.js" %}"></script>
                 <script src="{% static "rca/js/nav.js" %}"></script>
-
+                <script src="{% static "rca/js/populate-primary-nav.js" %}"></script>
+                <script src="{% static "rca/js/populate-audience-nav.js" %}"></script>
+                <script src="{% static "rca/js/populate-footer-nav.js" %}"></script>
+                <script src="{% static "rca/js/populate-footer-links.js" %}"></script>
 
                 {# ADROLL https://projects.torchbox.com/projects/rca-django-cms-project/tickets/846 #}
                 <script type="text/javascript">
@@ -242,8 +245,6 @@
                     }());
                 </script>
 
-                {% get_debug as DEBUG %}
-
                 {% if DEBUG %}
                     <script type="text/javascript">
                         //set global var for media_url so that it can be used by the script being called
@@ -254,6 +255,8 @@
                     <script src="{% static "rca/js/local_images.js" %}"></script>
                 {% endif %}
             {% endcompress %}
+
+            <script src="//www.rca.ac.uk/static2/js/main.js"></script>
 
             <script type="text/javascript">
                 {% if not request.is_ajax %}
@@ -271,5 +274,9 @@
                 {% enquiry_form %}
             {% endif %}
         {% endblock %}
+        {{ navigation_via_api_primary|json_script:"navigation_via_api_primary" }}
+        {{ navigation_via_api_footer_links|json_script:"navigation_via_api_footer_links" }}
+        {{ navigation_via_api_quick_links|json_script:"navigation_via_api_quick_links" }}
+        {{ navigation_via_api_footer_navigation|json_script:"navigation_via_api_footer_navigation" }}
     </body>
 </html>

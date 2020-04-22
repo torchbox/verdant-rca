@@ -55,13 +55,13 @@ urlpatterns = patterns('',
     url(r'^django-admin/', include(admin.site.urls)),
 
     # TEMPORARY: Override login view to allow it to be disabled
-    url(r'^admin/login/$', admin_views.login),
+    url(r'^' + settings.WAGTAIL_ADMIN_URL + 'login/$', admin_views.login),
 
-    url(r'^admin/', include(wagtailadmin_urls)),
+    url(r'^' + settings.WAGTAIL_ADMIN_URL, include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^images/', include(wagtailimages_urls)),
-    url(r'^admin/donations/', include(donations_urls)),
-    url(r'^admin/', include(rca_admin_urls)),
+    url(r'^' + settings.WAGTAIL_ADMIN_URL + 'donations/', include(donations_urls)),
+    url(r'^' + settings.WAGTAIL_ADMIN_URL, include(rca_admin_urls)),
     url(r'^twitter/', include(twitter_urls)),
     url(r'^taxonomy/api/v1/$', never_cache(taxonomy_views.api), name='taxonomy_api_v0'),
     url(r'^api/v2/', include(decorate_urlpatterns(api_router.get_urlpatterns(), never_cache), namespace=api_router.url_namespace)),

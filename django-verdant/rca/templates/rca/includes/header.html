@@ -2,7 +2,8 @@
 {% load rca_tags wagtailcore_tags %}
 <div class="header"> {# modifier needs to be set by BE. `bg--dark &, .theme-light` #}
 
-    <div class="header__container grid">
+    <!-- /data audience nav populated with js -->
+    <div class="header__container grid" data-audience-nav>
 
         <div class="header__logo">
             {% include "rca/includes/modules/logo.html" %}
@@ -11,39 +12,6 @@
         <div class="header__navigation-toggle bg--light">
             {% include 'rca/includes/modules/navigation/menu-toggle.html' %}
             {% include 'rca/includes/modules/navigation/search-toggle.html' %}
-        </div>
-
-        <div class="audience-nav-item bg--light">
-            <a class="audience-nav-item__link" href="//rca.ac.uk/schools/">
-                <div class="audience-nav-item__label">
-                    Study at RCA
-                </div>
-                <svg class="audience-nav-item__icon" width="12" height="8">
-                    <use xlink:href="#arrow-site-rebuild"></use>
-                </svg>
-            </a>
-        </div>
-
-        <div class="audience-nav-item bg--light">
-            <a class="audience-nav-item__link" href="//rca.ac.uk/research-innovation/">
-                <div class="audience-nav-item__label">
-                    Research and Innovation
-                </div>
-                <svg class="audience-nav-item__icon" width="12" height="8">
-                    <use xlink:href="#arrow-site-rebuild"></use>
-                </svg>
-            </a>
-        </div>
-
-        <div class="audience-nav-item bg--light">
-            <a class="audience-nav-item__link" href="//rca.ac.uk/more/about-rca/">
-                <div class="audience-nav-item__label">
-                    Explore the RCA
-                </div>
-                <svg class="audience-nav-item__icon" width="12" height="8">
-                    <use xlink:href="#arrow-site-rebuild"></use>
-                </svg>
-            </a>
         </div>
 
     </div>
