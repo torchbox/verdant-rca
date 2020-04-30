@@ -47,7 +47,6 @@ class Navigation(object):
                 auth=HTTPBasicAuth(settings.RCA_REBUILD_BASIC_AUTH_LOGIN, settings.RCA_REBUILD_BASIC_AUTH_PASSWORD),
             )
             response.raise_for_status()
-            self.logger.info("Pulling Navigation data from API")
         except (requests.exceptions.HTTPError, AttributeError) as e:
             error_text = "Error occured when fetching navigation data {}".format(e)
             self.logger.error(error_text)
