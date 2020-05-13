@@ -161,7 +161,7 @@ var desktopNav = {
 		$('nav').each(function(){
 			$(this).unbind().removeClass('ready').removeClass('changing').attr('style', '');
 			$('li, ul', $(this)).unbind().attr('style', '');
-			//$('.breadcrumb', $(this)).remove()
+			$('.breadcrumb', $(this)).remove()
 			$('.menu', $(this)).attr('style', '');
 			$('.submenu', $(this)).attr('style', '');
 		})
