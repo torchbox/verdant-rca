@@ -155,7 +155,7 @@
             <div class="page-wrapper">
                 <nav aria-label="breadcrumb" class="breadcrumb-nav">
                     <ul class="breadcrumb">
-                        {% for ancestor_page in page.get_ancestors %}
+                        {% for ancestor_page in self.get_ancestors %}
                             {% if not ancestor_page.is_root %}
                                 {% if ancestor_page.depth > 2 %}
                                     <li>
@@ -164,7 +164,7 @@
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
-                        <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
+                        <li><a href="{% pageurl self %}">{{ self.title }}</a></li>
                     </ul>
                 </nav>
                 <div class="page-content">
