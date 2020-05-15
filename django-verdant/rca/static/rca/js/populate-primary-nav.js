@@ -36,20 +36,34 @@ document.addEventListener('DOMContentLoaded', function () {
             <ul data-ul="2" class="nav nav--subnav" role="menu" data-menu-${primaryItemIndex + 1}>
                 <li class="nav__item nav__item--group-heading">
                     <a href="${primaryItem.value.primary_link.url}" class="nav__link nav__link--group-heading">${primaryItem.value.primary_link.title}</a>
-                    ${primaryItem.value.secondary_links.map((secondaryItem, secondaryItemIndex) => `
-                        <li class="nav__item">
-                            <a href="${secondaryItem.url}" class="nav__link" data-menu-child data-nav-level="2" data-parent-id="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" data-menu="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" ${secondaryItem.tertiary_links.length && `data-menu-parent`}>
-                                <span>${secondaryItem.title}</span>
-                                ${secondaryItem.tertiary_links.length ? `
-                                    <svg class="nav__icon" width="6" height="10">
-                                        <use xlink:href="#chevron"></use>
-                                    </svg>
-                                `: ''}
-                            </a>
-                        </li>
-                    `
-                    ).join('')}
                 </li>
+                ${primaryItem.value.secondary_links.map((secondaryItem, secondaryItemIndex) => `
+                    <li class="nav__item nav__item--secondary">
+                        <a href="${secondaryItem.url}" class="nav__link" data-menu-child data-nav-level="2" data-parent-id="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" data-menu="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" ${secondaryItem.tertiary_links.length && `data-menu-parent`}>
+                            <span>${secondaryItem.title}</span>
+                            ${secondaryItem.tertiary_links.length ? `
+                                <svg class="nav__icon" width="6" height="10">
+                                    <use xlink:href="#chevron"></use>
+                                </svg>
+                            `: ''}
+                        </a>
+                        ${secondaryItem.tertiary_links.length ? `
+                            <a
+                                href="#"
+                                class="nav__icon-container"
+                                data-menu-child
+                                data-nav-level="2"
+                                data-parent-id="${primaryItemIndex + 1}"
+                                data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}"
+                                data-menu="${primaryItemIndex + 1}-${secondaryItemIndex + 1}"
+                                ${secondaryItem.tertiary_links.length && 'data-menu-parent'}
+                            >
+                                <svg class="nav__icon nav__icon--desktop" width="15" height="15"><use xlink:href="#chevron-site-rebuild"></use></svg>
+                            </a>
+                        `: ''}
+                    </li>
+                `
+                ).join('')}
             </ul>
         `
     };
@@ -62,12 +76,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     <span>${primaryItem.value.primary_link.title}</span>
                     ${primaryItem.value.secondary_links.length ? `
                         <svg class="nav__icon" width="6" height="10">
-                            <use xlink:href="#chevron"></use>
+                            <use xlink:href="#chevron-site-rebuild"></use>
                         </svg >
+                    `: ''}
+                    ${primaryItem.value.secondary_links.length ? `
+                        <a
+                            href="#"
+                            class="nav__icon-container"
+                            data-nav-level="1"
+                            data-menu="${primaryItemIndex + 1}"
+                            data-menu-id=${primaryItemIndex + 1}
+                            ${primaryItem.value.secondary_links.length ? 'data-menu-parent': ''}
+                        >
+                            <svg class="nav__icon nav__icon--desktop" width="15" height="15"><use xlink:href="#chevron-site-rebuild"></use></svg>
+                        </a>
                     `: ''}
                 </a>
             </li>
         `;
+
         // create function to make <ul> for each secondary nav item and call populate level 2 from it
         if (primaryItem.value.secondary_links.length) {
             populateLevelTwo(primaryItem, primaryItemIndex);
