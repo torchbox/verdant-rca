@@ -1,4 +1,5 @@
 .nav {
+    @root: ~".nav";
     @sub-nav-height--small: 500px;
     @sub-nav-height--large: 900px;
     @gradient-height: 200px;
@@ -47,7 +48,7 @@
                 padding-top: (@gutter * 8);
             }
         }
-        
+
         &::after {
             content: '';
             display: block;
@@ -66,7 +67,7 @@
             @media @media-large {
                 top: calc(@sub-nav-height--large - @gradient-height);
             }
-            
+
         }
     }
 
@@ -107,6 +108,19 @@
     }
 
     &__item {
+        &.is-active {
+            @media @media-large {
+                @{root}__link {
+                    span {
+                        &::after {
+                            width: 100%;
+                            left: 0;
+                        }
+                    }
+                }
+            }
+        }
+
         &--group-heading {
             display: block;
 
@@ -138,6 +152,19 @@
             &:last-child {
                 margin-left: 10px;
                 border-bottom: 1px solid;
+            }
+        }
+
+        &--primary,
+        &--secondary {
+            @media @media-large {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                @{root}__link {
+                    flex: 1;
+                }
             }
         }
     }
@@ -179,7 +206,6 @@
             }
 
             &:hover,
-            &:focus,
             &.is-active {
                 span {
                     &::after {
@@ -239,6 +265,35 @@
 
         @media @media-large {
             display: none;
+        }
+
+        &--desktop {
+            display: none;
+            padding: 12px;
+            width: 40px;
+            height: 40px;
+            transition: fill @transition, opacity @transition;
+
+            @media @media-large {
+                display: block;
+            }
+
+            .is-active & {
+                opacity: 1;
+            }
+
+            .fade-icon & {
+                opacity: 0.3;
+            }
+        }
+    }
+
+    &__icon-container {
+        &:hover {
+            @{root}__icon--desktop {
+                opacity: 1;
+                fill: @color--tertiary;
+            }
         }
     }
 }
