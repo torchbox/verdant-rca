@@ -2,7 +2,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/python:2.7-jessie
+      - image: circleci/python:2.7-stretch
         environment:
           SECRET_KEY: testingsecretkey
           SECURE_SSL_REDIRECT: false
@@ -20,12 +20,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run:
-          name: update /etc/apt/sources.list for apt-get update
-          command: |
-              echo "deb http://deb.debian.org/debian jessie main" > /etc/apt/sources.list
-              echo "deb http://deb.debian.org/debian stable-updates main" >> /etc/apt/sources.list
-              apt-get update
       - run:
           name: Install ldap
           command: |
