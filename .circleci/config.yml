@@ -2,7 +2,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/python:2.7-buster
+      - image: circleci/python:2.7-jessie
         environment:
           SECRET_KEY: testingsecretkey
           SECURE_SSL_REDIRECT: false
@@ -20,6 +20,13 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+       - run: |
+          sudo rm /etc/apt/sources.list
+          echo "deb http://archive.debian.org/debian/ jessie-backports main" | sudo tee -a /etc/apt/sources.list
+          echo "deb-src http://archive.debian.org/debian/ jessie-backports main" | sudo tee -a /etc/apt/sources.list
+          echo "Acquire::Check-Valid-Until false;" | sudo tee -a /etc/apt/apt.conf.d/10-nocheckvalid
+          echo 'Package: *\nPin: origin "archive.debian.org"\nPin-Priority: 500' | sudo tee -a /etc/apt/preferences.d/10-archive-pin
+          sudo apt-get update
       - run:
           name: Install ldap
           command: |
