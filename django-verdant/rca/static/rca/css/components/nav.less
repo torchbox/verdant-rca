@@ -89,6 +89,11 @@
 
     &--standout {
         margin-top: (@gutter * 5);
+        padding-bottom: (@gutter * 10);
+
+        @media @media-large {
+            padding-bottom: 0;
+        }
     }
 
     &--standout-desktop {
@@ -121,14 +126,6 @@
             }
         }
 
-        &--group-heading {
-            display: block;
-
-            @media @media-large {
-                display: none;
-            }
-        }
-
         &--breadcrumb {
             width: auto;
             padding: 0;
@@ -157,14 +154,12 @@
 
         &--primary,
         &--secondary {
-            @media @media-large {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-                @{root}__link {
-                    flex: 1;
-                }
+            @{root}__link {
+                flex: 1;
             }
         }
     }
@@ -229,14 +224,6 @@
             }
         }
 
-        &--group-heading {
-            font-size: 18px;
-
-            @media @media-medium {
-                font-size: 20px;
-            }
-        }
-
         &--base {
             font-size: 14px;
             padding: 0;
@@ -260,37 +247,25 @@
     }
 
     &__icon {
-        fill: @color--white;
         pointer-events: none;
+        fill: @color--white;
+        padding: 12px;
+        width: 40px;
+        height: 40px;
+        transition: fill @transition, opacity @transition;
 
-        @media @media-large {
-            display: none;
+        .is-active & {
+            opacity: 1;
         }
 
-        &--desktop {
-            display: none;
-            padding: 12px;
-            width: 40px;
-            height: 40px;
-            transition: fill @transition, opacity @transition;
-
-            @media @media-large {
-                display: block;
-            }
-
-            .is-active & {
-                opacity: 1;
-            }
-
-            .fade-icon & {
-                opacity: 0.3;
-            }
+        .fade-icon & {
+            opacity: 0.3;
         }
     }
 
     &__icon-container {
         &:hover {
-            @{root}__icon--desktop {
+            @{root}__icon {
                 opacity: 1;
                 fill: @color--tertiary;
             }
