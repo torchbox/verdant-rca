@@ -16,9 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const populateLevelThree = (secondaryItem, primaryItemIndex, secondaryItemIndex) => {
         tertiaryNavHtml += `
             <ul data-ul="3" class="nav nav--subnav" data-menu-${primaryItemIndex + 1}-${secondaryItemIndex + 1}>
-                <li class="nav__item nav__item--group-heading">
-                    <a href="${secondaryItem.url}" class="nav__link nav__link--group-heading">${secondaryItem.title}</a>
-                </li>
                 ${secondaryItem.tertiary_links.map((tertirayItem, tertiaryItemIndex) => `
                     <li>
                         <a href="${tertirayItem.url}" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="${tertiaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}-${tertiaryItemIndex + 1}" data-parent-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}">
@@ -34,24 +31,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const populateLevelTwo = (primaryItem, primaryItemIndex) => {
         secondaryNavHtml += `
             <ul data-ul="2" class="nav nav--subnav" role="menu" data-menu-${primaryItemIndex + 1}>
-                <li class="nav__item nav__item--group-heading">
-                    <a href="${primaryItem.value.primary_link.url}" class="nav__link nav__link--group-heading">${primaryItem.value.primary_link.title}</a>
-                </li>
                 ${primaryItem.value.secondary_links.map((secondaryItem, secondaryItemIndex) => `
                     <li class="nav__item nav__item--secondary">
                         <a href="${secondaryItem.url}" class="nav__link" data-menu-child data-nav-level="2" data-parent-id="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" data-menu="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" ${secondaryItem.tertiary_links.length && `data-menu-parent`}>
                             <span>${secondaryItem.title}</span>
-                            ${secondaryItem.tertiary_links.length ? `
-                                <svg class="nav__icon" width="6" height="10">
-                                    <use xlink:href="#chevron"></use>
-                                </svg>
-                            `: ''}
                         </a>
                         ${secondaryItem.tertiary_links.length ? `
                             <a
                                 href="#"
                                 class="nav__icon-container"
                                 data-menu-child
+                                data-drill-down
                                 data-nav-level="2"
                                 data-parent-id="${primaryItemIndex + 1}"
                                 data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}"
@@ -75,20 +65,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 <a href="${primaryItem.value.primary_link.url}" class="nav__link" data-nav-level="1" data-menu="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}" ${primaryItem.value.secondary_links.length ? `data-menu-parent`: ''}>
                     <span>${primaryItem.value.primary_link.title}</span>
                     ${primaryItem.value.secondary_links.length ? `
-                        <svg class="nav__icon" width="6" height="10">
-                            <use xlink:href="#chevron-site-rebuild"></use>
-                        </svg >
-                    `: ''}
-                    ${primaryItem.value.secondary_links.length ? `
                         <a
                             href="#"
                             class="nav__icon-container"
+                            data-drill-down
                             data-nav-level="1"
                             data-menu="${primaryItemIndex + 1}"
                             data-menu-id=${primaryItemIndex + 1}
                             ${primaryItem.value.secondary_links.length ? 'data-menu-parent': ''}
                         >
-                            <svg class="nav__icon nav__icon--desktop" width="15" height="15"><use xlink:href="#chevron-site-rebuild"></use></svg>
+                            <svg class="nav__icon" width="15" height="15"><use xlink:href="#chevron-site-rebuild"></use></svg>
                         </a>
                     `: ''}
                 </a>
