@@ -32,6 +32,7 @@ class RCAPagesAPIEndpoint(PagesAPIEndpoint):
     known_query_parameters = PagesAPIEndpoint.known_query_parameters.union([
         'rp',
         'event_date_from',
+        'tags',
         'tags_not',
     ])
 
