@@ -149,10 +149,24 @@
                 <div class="pjax-content"></div>
             </div>
 
+
             {% block hero %}{% endblock %}
 
             <div class="page-wrapper">
-
+                <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                    <ul class="breadcrumb">
+                        {% for ancestor_page in self.get_ancestors %}
+                            {% if not ancestor_page.is_root %}
+                                {% if ancestor_page.depth > 2 %}
+                                    <li>
+                                        <a href="{% pageurl ancestor_page %}" title="{{ ancestor_page.title }}">{{ ancestor_page.title }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        <li><a href="{% pageurl self %}">{{ self.title }}</a></li>
+                    </ul>
+                </nav>
                 <div class="page-content">
                     {% block logo %}{% endblock %}
                     {% block layout %}
@@ -216,7 +230,6 @@
                 <script src="{% static "rca/js/carousel-news.js" %}"></script>
                 <script src="{% static "rca/js/tweets.js" %}"></script>
                 <script src="{% static "rca/js/site.js" %}"></script>
-                <script src="{% static "rca/js/nav.js" %}"></script>
                 <script src="{% static "rca/js/populate-primary-nav.js" %}"></script>
                 <script src="{% static "rca/js/populate-audience-nav.js" %}"></script>
                 <script src="{% static "rca/js/populate-footer-nav.js" %}"></script>
