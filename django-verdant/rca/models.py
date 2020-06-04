@@ -1417,6 +1417,7 @@ class NewsItem(Page, SocialFields):
         'areas',
         'show_on_homepage',
         'social_image',
+        'tags',
     ]
 
     pushable_to_intranet = True
@@ -1904,6 +1905,7 @@ class EventItem(Page, SocialFields):
         'external_links',
         'show_on_homepage',
         'social_image',
+        'tags',
     ]
 
     pushable_to_intranet = True
