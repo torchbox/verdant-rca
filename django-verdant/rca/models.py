@@ -1333,6 +1333,9 @@ NewsIndex.promote_panels = [
 
 # == News Item ==
 
+class NewsItemTag(TaggedItemBase):
+    content_object = ParentalKey('rca.NewsItem', related_name='tagged_items')
+
 class NewsItemCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.NewsItem', related_name='carousel_items')
 
@@ -1393,6 +1396,7 @@ class NewsItem(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.NewsItem', 'listing_intro', default="Used only on pages listing news items"))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewsItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    tags = ClusterTaggableManager(through=NewsItemTag)
 
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
@@ -1512,6 +1516,7 @@ NewsItem.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('show_on_news_index'),
+    FieldPanel('tags'),
     InlinePanel('areas', label="Areas"),
     InlinePanel('related_schools', label="Related schools"),
     InlinePanel('related_programmes', label="Related programmes"),
@@ -1680,6 +1685,10 @@ PressRelease.promote_panels = [
 
 
 # == Event Item ==
+
+class EventItemTag(TaggedItemBase):
+    content_object = ParentalKey('rca.EventItem', related_name='tagged_items')
+
 
 class EventItemSpeaker(Orderable):
     page = ParentalKey('rca.EventItem', related_name='speakers')
@@ -1853,6 +1862,7 @@ class EventItem(Page, SocialFields):
     contact_link = models.URLField(blank=True, help_text=help_text('rca.EventItem', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'contact_link_text'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    tags = ClusterTaggableManager(through=EventItemTag)
 
     objects = PageManager()
     future_objects = FutureEventItemManager()
@@ -2033,6 +2043,8 @@ EventItem.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+
+    FieldPanel('tags'),
 
     MultiFieldPanel([
         FieldPanel('special_event'),
@@ -4588,7 +4600,6 @@ class RcaNowPage(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-
     tags = ClusterTaggableManager(through=RcaNowPageTag)
 
     search_fields = Page.search_fields + [
@@ -4813,7 +4824,6 @@ class RcaBlogPage(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-
     tags = ClusterTaggableManager(through=RcaBlogPageTag)
 
     search_fields = Page.search_fields + [
