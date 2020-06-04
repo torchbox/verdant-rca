@@ -45,4 +45,5 @@ class RCAImagesAPIEndpoint(ImagesAPIEndpoint):
         'original',
         'rca2019_feed_image',
         'rca2019_feed_image_small',
+        'rca2019_supervised_student_image',
     ]
