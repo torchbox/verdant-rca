@@ -14,7 +14,7 @@ from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.core.serializers.json import DjangoJSONEncoder
-
+from django.db.models import Q
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
@@ -3358,6 +3358,30 @@ class StaffPage(Page, SocialFields):
         index.SearchField('biography'),
     ]
 
+    def supervised_students(self):
+        """Method to return all students which a staff member
+        is supervising.
+
+        Returns:
+            list: A flat list of all students that are being supervised by this staff member
+        """
+        students = NewStudentPage.objects.filter(
+            Q(phd_supervisors__supervisor_id=self.id) |
+            Q(mphil_supervisors__supervisor_id=self.id)
+            ).distinct().iterator()
+
+        for s in students:
+            status = 'Current'
+            if s.phd_graduation_year or s.mphil_graduation_year:
+                status = 'Completed'
+            item = {}
+            item['name'] = s.title
+            item['link'] = s.url
+            item['image'] = s.profile_image_id
+            item['status'] = status
+
+            yield item
+
     api_fields = [
         'area',
         'profile_image',
@@ -3383,6 +3407,7 @@ class StaffPage(Page, SocialFields):
         'collaborations',
         'publications_exhibitions',
         'ad_username',
+        'supervised_students'
     ]
 
     pushable_to_intranet = True
