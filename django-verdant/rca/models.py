@@ -3368,9 +3368,8 @@ class StaffPage(Page, SocialFields):
         students = NewStudentPage.objects.filter(
             Q(phd_supervisors__supervisor_id=self.id) |
             Q(mphil_supervisors__supervisor_id=self.id)
-            ).distinct()
+            ).distinct().iterator()
 
-        results = []
         for s in students:
             status = 'Current'
             if s.phd_graduation_year or s.mphil_graduation_year:
@@ -3378,11 +3377,10 @@ class StaffPage(Page, SocialFields):
             item = {}
             item['name'] = s.title
             item['link'] = s.url
-            item['image'] = s.profile_image.id
+            item['image'] = s.profile_image_id
             item['status'] = status
-            results.append(item)
 
-        return results
+            yield item
 
     api_fields = [
         'area',

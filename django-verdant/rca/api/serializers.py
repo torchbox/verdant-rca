@@ -149,4 +149,3 @@ class RCAImageSerializer(ImageSerializer):
     thumbnail = ImageRenditionField('max-165x165', read_only=True)
     rca2019_feed_image = ImageRenditionField('fill-878x472', read_only=True)
     rca2019_feed_image_small = ImageRenditionField('fill-80x46', read_only=True)
-    rca2019_supervised_student_image = ImageRenditionField('fill-60x60', read_only=True)
