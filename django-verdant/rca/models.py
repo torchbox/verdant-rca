@@ -3368,7 +3368,7 @@ class StaffPage(Page, SocialFields):
         students = NewStudentPage.objects.filter(
             Q(phd_supervisors__supervisor_id=self.id) |
             Q(mphil_supervisors__supervisor_id=self.id)
-            ).distinct().iterator()
+            ).live().distinct().iterator()
 
         for s in students:
             status = 'Current'
