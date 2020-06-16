@@ -1,4 +1,8 @@
 import json
+import requests
+
+from requests.auth import HTTPBasicAuth
+
 from django import template
 from django.apps import apps
 from django.core.cache import cache
@@ -589,7 +593,7 @@ def sitewide_alert():
     cache_key = 'sitewide_alert'
     sitewide_alert = cache.get(cache_key)
 
-    if not sitewide_alert:
+    if not sitewide_alert and settings.NAVIGATION_API_CONTENT_BASE_URL:
         try:
             response = requests.get(
                 url="{}api/v3/sitewide-alert/1/".format(
@@ -602,9 +606,10 @@ def sitewide_alert():
             error_text = "Error occured when fetching site-wide alert data {}".format(e)
             self.logger.error(error_text)
             raise CantPullFromRcaApi(error_text)
-
         sitewide_alert = response.json()
         cache.set(self.cache_key, sitewide_alert, settings.NAVIGATION_API_CACHE_TIMEOUT)
+    else:
+        sitewide_alert = {}
 
     return {
         "show_alert": sitewide_alert.get("show_alert", "False").lower() == "true",
