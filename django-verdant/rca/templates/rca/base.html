@@ -116,6 +116,12 @@
 
         {% wagtailuserbar %}
 
+        {% sitewide_alert as alert %}
+        {% if alert.show_alert %}
+            {# Show the sitewide alert message #}
+            {{ alert.message|richtext }}
+        {% endif %}
+
         {# ADD CAMPAIGNS TRACKERS https://projects.torchbox.com/projects/rca-django-cms-project/tickets/898 #}
         {% include "rca/includes/campaigns_trackers.html" %}
 
