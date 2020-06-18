@@ -1,0 +1,19 @@
+{% load wagtailcore_tags %}
+
+<div class="sitewide-alert" data-sitewide-alert data-sitewide-alert-close>
+    <button data-sitewide-alert-close class="sitewide-alert__close">
+        <svg class="sitewide-alert__close-icon" width="20" height="20"><use xlink:href="#close"></use></svg>
+    </button>
+    <div class="sitewide-alert__modal">
+        <div class="sitewide-alert__copy body body--two">
+            {{ settings.utils.SitewideAlertSetting.message|richtext }}
+
+            <div class="sitewide-alert__action body body--two">
+                <a data-sitewide-alert-close aria-label="Close" class="link link--secondary link--close cookie__btn">
+                    <span class="link__label">Close</span>
+                    <svg width="10" height="10" class="link__icon"><use xlink:href="#close"></use></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
