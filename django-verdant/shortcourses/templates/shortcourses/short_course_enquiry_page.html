@@ -33,7 +33,7 @@
                 <label for="surname">Last name <abbr title="required">*</abbr></label>
                 <input id="surname" class="form-control" type="text" />
 
-                <label for="company">Company/Organisation</label>
+                <label for="company">Company/Organisation <abbr title="required">*</abbr></label>
                 <input id="company" class="form-control" type="text" />
 
                 <label for="industry">Business Sector</label>
@@ -111,7 +111,7 @@
                     opportunityOptions.Phone = $('#phone').val()
                     opportunityOptions.AdditionalInformation = $('#additional').val()
 
-                    if (emptyRequired(opportunityOptions.Forename) || emptyRequired(opportunityOptions.Surname) || emptyRequired(opportunityOptions.Email)) {
+                    if (emptyRequired(opportunityOptions.Forename) || emptyRequired(opportunityOptions.Surname) || emptyRequired(opportunityOptions.Email) || emptyRequired(opportunityOptions.CompanyName)) {
                         alert("Please enter all required values");
                         return;
                     }
