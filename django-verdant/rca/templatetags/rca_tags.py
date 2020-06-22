@@ -1,4 +1,9 @@
 import json
+import requests
+import logging
+
+from requests.auth import HTTPBasicAuth
+
 from django import template
 from django.apps import apps
 from django.core.cache import cache
@@ -15,9 +20,11 @@ import random
 import re
 
 from rca.models import *
+from rca.navigation import CantPullFromRcaApi
 from wagtail.wagtaildocs.models import Document
 
 register = template.Library()
+logger = logging.getLogger("verdant-rca")
 
 @register.filter(name='fieldtype')
 def fieldtype(bound_field):
@@ -570,6 +577,49 @@ def tabdeck(parser, token):
     nodelist = parser.parse(('endtabdeck',))
     parser.delete_first_token()  # discard the 'endtabdeck' tag
     return TabDeckNode(nodelist, kwargs)
+
+
+
+@register.simple_tag
+def sitewide_alert():
+    """Fetch the Site-wide alert data from the api.
+
+    Raises:
+        CantPullFromRcaApi: Failed to pull from the RCA api
+
+    Returns:
+        A dict of all site-wide alert data from the new rebuild site API passed
+        through a parser
+    """
+
+    cache_key = 'sitewide_alert'
+    sitewide_alert = cache.get(cache_key)
+
+    if not sitewide_alert and settings.NAVIGATION_API_CONTENT_BASE_URL:
+        try:
+            response = requests.get(
+                url="{}api/v3/sitewide-alert/1/".format(
+                    settings.NAVIGATION_API_CONTENT_BASE_URL, timeout=10
+                ),
+                auth=HTTPBasicAuth(settings.RCA_REBUILD_BASIC_AUTH_LOGIN, settings.RCA_REBUILD_BASIC_AUTH_PASSWORD),
+            )
+            response.raise_for_status()
+        except (requests.exceptions.HTTPError, AttributeError) as e:
+            error_text = "Error occured when fetching site-wide alert data {}".format(e)
+            logger.error(error_text)
+            raise CantPullFromRcaApi(error_text)
+        sitewide_alert = response.json()
+        # Cache for 1 hour
+        cache.set(cache_key, sitewide_alert, 60 * 60)
+
+    if not sitewide_alert:
+        sitewide_alert = {}
+
+    return {
+        "show_alert": sitewide_alert.get("show_alert", False),
+        "message": sitewide_alert.get("message"),
+    }
+
 
 class TabDeckNode(template.Node):
     def __init__(self, nodelist, kwargs):
