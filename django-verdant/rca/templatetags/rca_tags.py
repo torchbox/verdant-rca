@@ -1,5 +1,6 @@
 import json
 import requests
+import logging
 
 from requests.auth import HTTPBasicAuth
 
@@ -23,6 +24,7 @@ from rca.navigation import CantPullFromRcaApi
 from wagtail.wagtaildocs.models import Document
 
 register = template.Library()
+logger = logging.getLogger("verdant-rca")
 
 @register.filter(name='fieldtype')
 def fieldtype(bound_field):
@@ -604,15 +606,17 @@ def sitewide_alert():
             response.raise_for_status()
         except (requests.exceptions.HTTPError, AttributeError) as e:
             error_text = "Error occured when fetching site-wide alert data {}".format(e)
-            self.logger.error(error_text)
+            logger.error(error_text)
             raise CantPullFromRcaApi(error_text)
         sitewide_alert = response.json()
-        cache.set(self.cache_key, sitewide_alert, settings.NAVIGATION_API_CACHE_TIMEOUT)
-    else:
+        # Cache for 1 hour
+        cache.set(cache_key, sitewide_alert, 60 * 60)
+
+    if not sitewide_alert:
         sitewide_alert = {}
 
     return {
-        "show_alert": sitewide_alert.get("show_alert", "False").lower() == "true",
+        "show_alert": sitewide_alert.get("show_alert", False),
         "message": sitewide_alert.get("message"),
     }
 
