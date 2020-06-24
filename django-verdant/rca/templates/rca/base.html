@@ -118,8 +118,7 @@
 
         {% sitewide_alert as alert %}
         {% if alert.show_alert %}
-            {# Show the sitewide alert message #}
-            {{ alert.message|richtext }}
+            {% include "rca/includes/modules/sitewide-alert.html" %}
         {% endif %}
 
         {# ADD CAMPAIGNS TRACKERS https://projects.torchbox.com/projects/rca-django-cms-project/tickets/898 #}
@@ -275,7 +274,8 @@
                 {% endif %}
             {% endcompress %}
 
-            <script src="//www.rca.ac.uk/static2/js/main.js"></script>
+            {# revert this back to live JS file path before deploying to live #}
+            <script src="//rca-staging.herokuapp.com/static2/js/main.js"></script>
 
             <script type="text/javascript">
                 {% if not request.is_ajax %}
