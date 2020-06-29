@@ -17,7 +17,7 @@
                 <section class="row">
                     <div class="three-nine-cols">
                         <div class="col col-9 last body-text">
-                            <h3>{{ self.phd_dissertation_title }}</h3>
+                            {% if self.phd_dissertation_title %}<h3>{{ self.phd_dissertation_title }}</h3>{% endif %}
 
                             {{ self.phd_statement|richtext }}
                         </div>
@@ -75,7 +75,7 @@
                 <section class="row">
                     <div class="three-nine-cols">
                         <div class="col col-9 last body-text">
-                            <h3>{{ self.mphil_dissertation_title }}</h3>
+                            {% if self.mphil_dissertation_title %}<h3>{{ self.mphil_dissertation_title }}</h3>{% endif %}
 
                             {{ self.mphil_statement|richtext }}
                         </div>
@@ -133,9 +133,9 @@
                 <section class="row">
                     <div class="three-nine-cols">
                         <div class="col col-9 last body-text">
-                            <h3>{{ self.show_work_title }}</h3>
+                            {% if self.show_work_title %}<h3>{{ self.show_work_title }}</h3>{% endif %}
 
-                            {{ self.show_work_description|richtext }}
+                            {% if self.show_work_description %}{{ self.show_work_description|richtext }}{% endif %}
                         </div>
                         <div class="col col-3 first">
                             <div class="meta-data">
@@ -269,38 +269,6 @@
                         {{ self.statement|richtext }}
                     </li>
                 </ul>
-
-     <!--
-                            <h2 class="h6">Contact</h2>
-                            <ul>
-                                {% with self.emails.all as emails %}
-                                    {% if emails %}
-                                        {% for email in emails %}
-                                            <li><a href="mailto:{{ email.email }}">{{ email.email }}</a></li>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                                {% with self.phones.all as phone_nos %}
-                                    {% if phone_nos %}
-                                        {% for phone_no in phone_nos %}
-                                            <li>{{ phone_no.phone }}</li>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                                {% with self.websites.all as websites %}
-                                    {% if websites %}
-                                        {% for website in websites %}
-                                            <li><a href="{{ website.website }}">{{ website.website }}</a></li>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                                {% if self.twitter_handle %}
-                                    <a href="http://www.twitter.com/{{ self.twitter_handle }}">&#64;{{ self.twitter_handle }}</a>
-                                {% endif %}
-                            </ul>
-                         -->
-
-
 
                 <!--degrees-->
                 {% with self.previous_degrees.all as degrees %}
