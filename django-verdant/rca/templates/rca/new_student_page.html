@@ -17,7 +17,7 @@
                 <section class="row">
                     <div class="three-nine-cols">
                         <div class="col col-9 last body-text">
-                            {% if self.phd_dissertation_title %}<h3>{{ self.phd_dissertation_title }}</h3>{% endif %}
+                            {% if self.phd_dissertation_title %}<h2 class="h3">{{ self.phd_dissertation_title }}</h2>{% endif %}
 
                             {{ self.phd_statement|richtext }}
                         </div>
@@ -75,7 +75,7 @@
                 <section class="row">
                     <div class="three-nine-cols">
                         <div class="col col-9 last body-text">
-                            {% if self.mphil_dissertation_title %}<h3>{{ self.mphil_dissertation_title }}</h3>{% endif %}
+                            {% if self.mphil_dissertation_title %}<h2 class="h3">{{ self.mphil_dissertation_title }}</h2>{% endif %}
 
                             {{ self.mphil_statement|richtext }}
                         </div>
@@ -127,13 +127,13 @@
 
         {% if self.is_ma_student and self.ma_in_show %}
             {% tab "MA work" %}
-                {% get_student_carousel_items self 'ma' as ma_carousel_items %}
-                {% include "rca_show/includes/modules/carousel.html" with carousel_items=ma_carousel_items %}
+                {% comment %} {% get_student_carousel_items self 'ma' as ma_carousel_items %}
+                {% include "rca_show/includes/modules/carousel.html" with carousel_items=ma_carousel_items %} {% endcomment %}
 
                 <section class="row">
                     <div class="three-nine-cols">
                         <div class="col col-9 last body-text">
-                            {% if self.show_work_title %}<h3>{{ self.show_work_title }}</h3>{% endif %}
+                            {% if self.show_work_title %}<h2 class="h3">{{ self.show_work_title }}</h2>{% endif %}
 
                             {% if self.show_work_description %}{{ self.show_work_description|richtext }}{% endif %}
                         </div>
