@@ -4034,7 +4034,7 @@ class NewStudentPage(Page, SocialFields):
     first_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'first_name'))
     last_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'last_name'))
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"))
-    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'), blank=True, max_length=700)
+    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'), blank=True)
     twitter_handle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'twitter_handle', default="Please enter Twitter handle without the @ symbol"))
     funding = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'funding', default="Please include major funding bodies, including research councils"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewStudentPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
@@ -4055,7 +4055,7 @@ class NewStudentPage(Page, SocialFields):
     show_work_title = models.CharField("Dissertation/project title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_title'))
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_type'))
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_location'))
-    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True, max_length=1200)
+    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True)
 
     # MPhil details
     mphil_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
