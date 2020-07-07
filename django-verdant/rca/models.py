@@ -1,78 +1,77 @@
-from datetime import date
 import datetime
+import hashlib
+import json
 import logging
 import random
-
+from datetime import date
 from itertools import chain
 
+import stripe
 from captcha.fields import ReCaptchaField
-from django.core.exceptions import ValidationError
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.signals import user_logged_in
-from django.db import models
-from django.db.models.signals import pre_delete
+from django.core.exceptions import ValidationError
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db import models
 from django.db.models import Q
+from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
-from django.utils import timezone
 from django.views.decorators.vary import vary_on_headers
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
+from taggit.models import Tag, TaggedItemBase
 from wagtail.contrib.settings.models import BaseSetting
 from wagtail.contrib.settings.registry import register_setting
-
-from wagtail.wagtailcore.models import Page, Orderable, PageManager
+from wagtail.wagtailadmin.edit_handlers import (FieldPanel, InlinePanel,
+                                                MultiFieldPanel, ObjectList,
+                                                PageChooserPanel,
+                                                PublishingPanel,
+                                                StreamFieldPanel,
+                                                TabbedInterface)
+from wagtail.wagtailadmin.utils import send_mail
 from wagtail.wagtailcore.fields import RichTextField, StreamField
+from wagtail.wagtailcore.models import Orderable, Page, PageManager
+from wagtail.wagtailcore.query import PageQuerySet
 from wagtail.wagtailcore.url_routing import RouteResult
-from modelcluster.fields import ParentalKey
-
-from wagtail.wagtailadmin.edit_handlers import (
-    FieldPanel, MultiFieldPanel, InlinePanel, ObjectList, PageChooserPanel,
-    PublishingPanel, TabbedInterface, StreamFieldPanel
-)
+from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailembeds import embeds
 from wagtail.wagtailembeds.exceptions import EmbedNotFoundException
-from wagtail.wagtailembeds.finders.embedly import AccessDeniedEmbedlyException, EmbedlyException
+from wagtail.wagtailembeds.finders.embedly import (
+    AccessDeniedEmbedlyException, EmbedlyException)
+from wagtail.wagtailforms.models import AbstractFormField, FormSubmission
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailimages.models import Image, AbstractImage, AbstractRendition
-from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
+from wagtail.wagtailimages.models import (AbstractImage, AbstractRendition,
+                                          Image)
+from wagtail.wagtailsearch import index
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
-from wagtail.wagtailsearch import index
-from wagtail.wagtailcore.query import PageQuerySet
-from wagtail.wagtailforms.models import AbstractFormField, FormSubmission
-from wagtail.wagtailadmin.utils import send_mail
-
-from modelcluster.contrib.taggit import ClusterTaggableManager
-from modelcluster.models import ClusterableModel
-from taggit.models import TaggedItemBase, Tag
+from wagtailcaptcha.models import (WagtailCaptchaEmailForm,
+                                   WagtailCaptchaFormBuilder)
 
 from donations.forms import DonationForm
-from donations.mail_admins import mail_exception, full_exc_info
-import stripe
-
-import hashlib
-
+from donations.mail_admins import full_exc_info, mail_exception
+from rca.filters import (combine_filters, get_filters_q, run_filters,
+                         run_filters_q)
 from rca.standard_stream_page.models import StandardStreamPage
-from rca.utils.models import (
-    RelatedLinkMixin, SocialFields, SidebarBehaviourFields,
-    OptionalBlockFields, CarouselItemFields,
-)
+from rca.utils.models import (CarouselItemFields, OptionalBlockFields,
+                              RelatedLinkMixin, SidebarBehaviourFields,
+                              SocialFields)
 from rca_ee.models import FormPage
-from taxonomy.models import Area, School, Programme, DegreeLevel
-
-from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
-import json
-
-from wagtailcaptcha.models import WagtailCaptchaEmailForm, WagtailCaptchaFormBuilder
-
 from rca_signage.constants import SCREEN_CHOICES
-from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
+from reachout_choices import (REACHOUT_PARTICIPANTS_CHOICES,
+                              REACHOUT_PARTNERSHIPS_CHOICES,
+                              REACHOUT_PROJECT_CHOICES,
+                              REACHOUT_THEMES_CHOICES)
+from taxonomy.models import Area, DegreeLevel, Programme, School
 
 from .help_text import help_text
 
@@ -4034,7 +4033,7 @@ class NewStudentPage(Page, SocialFields):
     first_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'first_name'))
     last_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'last_name'))
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"))
-    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'), blank=True, max_length=700)
+    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'), blank=True)
     twitter_handle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'twitter_handle', default="Please enter Twitter handle without the @ symbol"))
     funding = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'funding', default="Please include major funding bodies, including research councils"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewStudentPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
@@ -4055,7 +4054,7 @@ class NewStudentPage(Page, SocialFields):
     show_work_title = models.CharField("Dissertation/project title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_title'))
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_type'))
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_location'))
-    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True, max_length=1200)
+    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True)
     programme_value_override = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'programme_value_override'))
 
     # MPhil details
