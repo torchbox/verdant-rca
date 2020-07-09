@@ -31,12 +31,29 @@
     }
 
     &__copy {
-        margin: 0;
+        margin: 0 0 15px;
+
+        .rich-text p {
+            font-family: 'Benton Sans Old', Helvetica Neue, Arial, Helvetica, Sans-Serif;
+            font-size: 14px;
+            margin: 0 0 20px;
+        }
+
+        a {
+            font-family: @font-family-benton;
+            color: #0001EE;
+
+            &:hover {
+                color: #0001EE;
+                text-decoration: underline;
+            }
+        }
     }
 
     &__close {
         background: none;
         border: 0;
+        font-family: @font-family-benton;
         position: absolute;
         top: @gutter;
         right: @gutter;
