@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Create Level 3 markup
     const populateLevelThree = (secondaryItem, primaryItemIndex, secondaryItemIndex) => {
         tertiaryNavHtml += `
-            <ul data-ul="3" class="nav nav--subnav" data-menu-${primaryItemIndex + 1}-${secondaryItemIndex + 1}>
+            <ul data-ul="3" class="nav nav--subnav" role="menuitem" data-menu-${primaryItemIndex + 1}-${secondaryItemIndex + 1}>
                 ${secondaryItem.tertiary_links.map((tertirayItem, tertiaryItemIndex) => `
                     <li>
                         <a href="${tertirayItem.url}" class="nav__link" data-menu-child="" data-nav-level="3" data-menu="${tertiaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}-${tertiaryItemIndex + 1}" data-parent-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}">
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <ul data-ul="2" class="nav nav--subnav" role="menu" data-menu-${primaryItemIndex + 1}>
                 ${primaryItem.value.secondary_links.map((secondaryItem, secondaryItemIndex) => `
                     <li class="nav__item nav__item--secondary">
-                        <a href="${secondaryItem.url}" class="nav__link" data-menu-child data-nav-level="2" data-parent-id="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" data-menu="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" ${secondaryItem.tertiary_links.length && `data-menu-parent`}>
+                        <a href="${secondaryItem.url}" class="nav__link" data-menu-child data-nav-level="2" role="menuitem" data-parent-id="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" data-menu="${primaryItemIndex + 1}-${secondaryItemIndex + 1}" ${secondaryItem.tertiary_links.length && `data-menu-parent`}>
                             <span>${secondaryItem.title}</span>
                         </a>
                         ${secondaryItem.tertiary_links.length ? `
@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 data-menu-child
                                 data-drill-down
                                 data-nav-level="2"
+                                aria-label="${secondaryItem.title} submenu"
                                 data-parent-id="${primaryItemIndex + 1}"
                                 data-menu-id="${primaryItemIndex + 1}-${secondaryItemIndex + 1}"
                                 data-menu="${primaryItemIndex + 1}-${secondaryItemIndex + 1}"
@@ -62,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
     primaryNav.map((primaryItem, primaryItemIndex) => {
         primaryNavHtml += `
             <li class="nav__item nav__item--primary" role="presentation">
-                <a href="${primaryItem.value.primary_link.url}" class="nav__link" data-nav-level="1" data-menu="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}" ${primaryItem.value.secondary_links.length ? `data-menu-parent`: ''}>
+                <a href="${primaryItem.value.primary_link.url}" class="nav__link" data-nav-level="1" role="menuitem" data-menu="${primaryItemIndex + 1}" data-menu-id="${primaryItemIndex + 1}" ${primaryItem.value.secondary_links.length ? `data-menu-parent`: ''}>
                     <span>${primaryItem.value.primary_link.title}</span>
                     ${primaryItem.value.secondary_links.length ? `
                         <a
@@ -70,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             class="nav__icon-container"
                             data-drill-down
                             data-nav-level="1"
+                            aria-label="${primaryItem.value.primary_link.title} submenu"
                             data-menu="${primaryItemIndex + 1}"
                             data-menu-id=${primaryItemIndex + 1}
                             ${primaryItem.value.secondary_links.length ? 'data-menu-parent': ''}
