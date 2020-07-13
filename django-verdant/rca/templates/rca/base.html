@@ -159,7 +159,7 @@
                             {% if not ancestor_page.is_root %}
                                 {% if ancestor_page.depth > 2 %}
                                     <li>
-                                        <a href="{% pageurl ancestor_page %}" title="{{ ancestor_page.title }}">{{ ancestor_page.title }}</a>
+                                        <a href="{% pageurl ancestor_page %}">{{ ancestor_page.title }}</a>
                                     </li>
                                 {% endif %}
                             {% endif %}
