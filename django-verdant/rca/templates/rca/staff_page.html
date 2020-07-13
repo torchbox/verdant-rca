@@ -39,7 +39,7 @@
                                     <p class="h7{% if forloop.counter != 1 %} space space-large{% endif %}">{{ role.title }}</p>
                                     <ul>
                                         <li>{{ role.programme.display_name }}</li>
-                                        <li><a href="mailto:{{ role.email }}">{{ role.email }}</a></li>
+                                        {% if role.email %}<li><a href="mailto:{{ role.email }}">{{ role.email }}</a></li>{% endif %}
                                     </ul>
                                 </li> {% comment %} close col {% endcomment %}
                                 {% endfor %}
