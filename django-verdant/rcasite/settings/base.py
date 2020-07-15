@@ -504,7 +504,7 @@ if 'EMAIL_SENDER' in env:
 if 'INTRANET_PUSH_URL' in env:
     INTRANET_PUSH_URL = env['INTRANET_PUSH_URL']
 
-# Configure Access Planit integration for short course booking.
+# Configure Access Planit integration for short course enquiries.
 if 'ACCESS_PLANIT_COMPANY_ID' in env:
     ACCESS_PLANIT_COMPANY_ID = env['ACCESS_PLANIT_COMPANY_ID']
 if 'ACCESS_PLANIT_URL' in env:
