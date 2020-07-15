@@ -29,7 +29,7 @@ ENV PYTHONUNBUFFERED=1 \
     DJANGO_SETTINGS_MODULE=rcasite.settings.production \
     PORT=8000 \
     WEB_CONCURRENCY=3 \
-    GUNICORN_CMD_ARGS="-c gunicorn-conf.py --max-requests 1200 --access-logfile -"
+    GUNICORN_CMD_ARGS="-c gunicorn-conf.py --max-requests 600 --access-logfile - --timeout 25"
 
 # Port exposed by this container. Should default to the port used by your WSGI
 # server (Gunicorn). This is read by Dokku only. Heroku will ignore this.
@@ -83,4 +83,4 @@ USER verdant-rca
 
 # Run the WSGI server. It reads GUNICORN_CMD_ARGS, PORT and WEB_CONCURRENCY
 # environment variable hence we don't specify a lot options below.
-CMD /app/bin/qgtunnel gunicorn rcasite.wsgi:application
+CMD /app/bin/tcpproxy gunicorn rcasite.wsgi:application

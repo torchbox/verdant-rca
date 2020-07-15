@@ -1,10 +1,13 @@
+import json
 from django import template
 from django.apps import apps
 from django.core.cache import cache
-from django.utils.html import conditional_escape
+from django.utils.html import conditional_escape, format_html
 from django.db.models import Min, Max, Q
 from django.template.library import parse_bits
 from wagtail.wagtailcore.utils import camelcase_to_underscore
+from django.utils.safestring import  mark_safe
+from django.core.serializers.json import DjangoJSONEncoder
 
 from datetime import date
 from itertools import chain
@@ -746,3 +749,17 @@ def double_click_ads(context):
         'cat': cat,
         'page': page
     }
+
+
+@register.filter(name='json_script')
+def json_script(value, element_id):
+    """
+    Escape all the HTML/XML special characters with their unicode escapes, so
+    value is safe to be output anywhere except for inside a tag attribute. Wrap
+    the escaped JSON in a script tag.
+    """
+    json_str = json.dumps(value, cls=DjangoJSONEncoder)
+    return format_html(
+        '<script id="{}" type="application/json">{}</script>',
+        element_id, mark_safe(json_str)
+    )

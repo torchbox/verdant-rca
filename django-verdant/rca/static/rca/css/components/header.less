@@ -129,18 +129,19 @@
 
     &__menus {
         .grid-layout();
-
-        @media @media-large {
-            &::before {
+        
+        &::before {
+            @media @media-large {
                 content: '';
                 background: @color--primary;
                 height: 100%;
                 width: 100%;
                 position: absolute;
                 display: block;
-                transform: translate3d(-100%, 0%, 0);
+                transform: translate3d(-90%, 0%, 0);
             }
         }
+
     }
 
     &__inner {

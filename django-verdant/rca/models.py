@@ -14,7 +14,7 @@ from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.core.serializers.json import DjangoJSONEncoder
-
+from django.db.models import Q
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
@@ -1333,6 +1333,9 @@ NewsIndex.promote_panels = [
 
 # == News Item ==
 
+class NewsItemTag(TaggedItemBase):
+    content_object = ParentalKey('rca.NewsItem', related_name='tagged_items')
+
 class NewsItemCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.NewsItem', related_name='carousel_items')
 
@@ -1393,6 +1396,7 @@ class NewsItem(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.NewsItem', 'listing_intro', default="Used only on pages listing news items"))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewsItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    tags = ClusterTaggableManager(through=NewsItemTag)
 
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
@@ -1413,6 +1417,7 @@ class NewsItem(Page, SocialFields):
         'areas',
         'show_on_homepage',
         'social_image',
+        'tags',
     ]
 
     pushable_to_intranet = True
@@ -1512,6 +1517,7 @@ NewsItem.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('show_on_news_index'),
+    FieldPanel('tags'),
     InlinePanel('areas', label="Areas"),
     InlinePanel('related_schools', label="Related schools"),
     InlinePanel('related_programmes', label="Related programmes"),
@@ -1680,6 +1686,10 @@ PressRelease.promote_panels = [
 
 
 # == Event Item ==
+
+class EventItemTag(TaggedItemBase):
+    content_object = ParentalKey('rca.EventItem', related_name='tagged_items')
+
 
 class EventItemSpeaker(Orderable):
     page = ParentalKey('rca.EventItem', related_name='speakers')
@@ -1853,6 +1863,7 @@ class EventItem(Page, SocialFields):
     contact_link = models.URLField(blank=True, help_text=help_text('rca.EventItem', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'contact_link_text'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    tags = ClusterTaggableManager(through=EventItemTag)
 
     objects = PageManager()
     future_objects = FutureEventItemManager()
@@ -1894,6 +1905,7 @@ class EventItem(Page, SocialFields):
         'external_links',
         'show_on_homepage',
         'social_image',
+        'tags',
     ]
 
     pushable_to_intranet = True
@@ -2033,6 +2045,8 @@ EventItem.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+
+    FieldPanel('tags'),
 
     MultiFieldPanel([
         FieldPanel('special_event'),
@@ -3344,6 +3358,30 @@ class StaffPage(Page, SocialFields):
         index.SearchField('biography'),
     ]
 
+    def supervised_students(self):
+        """Method to return all students which a staff member
+        is supervising.
+
+        Returns:
+            list: A flat list of all students that are being supervised by this staff member
+        """
+        students = NewStudentPage.objects.filter(
+            Q(phd_supervisors__supervisor_id=self.id) |
+            Q(mphil_supervisors__supervisor_id=self.id)
+            ).live().distinct().iterator()
+
+        for s in students:
+            status = 'Current'
+            if s.phd_graduation_year or s.mphil_graduation_year:
+                status = 'Completed'
+            item = {}
+            item['name'] = s.title
+            item['link'] = s.url
+            item['image'] = s.profile_image_id
+            item['status'] = status
+
+            yield item
+
     api_fields = [
         'area',
         'profile_image',
@@ -3369,6 +3407,7 @@ class StaffPage(Page, SocialFields):
         'collaborations',
         'publications_exhibitions',
         'ad_username',
+        'supervised_students'
     ]
 
     pushable_to_intranet = True
@@ -3995,7 +4034,7 @@ class NewStudentPage(Page, SocialFields):
     first_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'first_name'))
     last_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'last_name'))
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"))
-    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'), blank=True, max_length=700)
+    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'), blank=True)
     twitter_handle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'twitter_handle', default="Please enter Twitter handle without the @ symbol"))
     funding = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'funding', default="Please include major funding bodies, including research councils"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewStudentPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
@@ -4016,7 +4055,7 @@ class NewStudentPage(Page, SocialFields):
     show_work_title = models.CharField("Dissertation/project title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_title'))
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_type'))
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_location'))
-    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True, max_length=1200)
+    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True)
 
     # MPhil details
     mphil_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
@@ -4584,7 +4623,6 @@ class RcaNowPage(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-
     tags = ClusterTaggableManager(through=RcaNowPageTag)
 
     search_fields = Page.search_fields + [
@@ -4809,7 +4847,6 @@ class RcaBlogPage(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-
     tags = ClusterTaggableManager(through=RcaBlogPageTag)
 
     search_fields = Page.search_fields + [

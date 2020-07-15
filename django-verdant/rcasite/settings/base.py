@@ -124,6 +124,7 @@ MIDDLEWARE_CLASSES = [
 TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + [
     'django.core.context_processors.request',
     'rca.context_processors.global_vars',
+    'rca.context_processors.navigation_via_api',
 ]
 
 ROOT_URLCONF = 'rcasite.urls'
@@ -138,6 +139,8 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = [
+    'scout_apm.django', # should be listed first
+
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -526,3 +529,16 @@ RCA_LOGIN_DISABLED = False
 
 if "PRIMARY_HOST" in env:
     BASE_URL = "https://{}".format(env["PRIMARY_HOST"])
+
+NAVIGATION_API_CACHE_TIMEOUT = int(env.get("NAVIGATION_API_CACHE_TIMEOUT", 60 * 60 * 24))
+NAVIGATION_API_CONTENT_BASE_URL = env.get("NAVIGATION_API_CONTENT_BASE_URL", None)
+
+# The rebuild site's api will be behind basic auth. The values for these should match the
+# basic auth details on the rebuild site
+RCA_REBUILD_BASIC_AUTH_LOGIN = env.get('RCA_REBUILD_BASIC_AUTH_LOGIN', 'rca')
+RCA_REBUILD_BASIC_AUTH_PASSWORD = env.get('RCA_REBUILD_BASIC_AUTH_PASSWORD', 'showmerca')
+
+WAGTAIL_ADMIN_URL = 'admin/'
+
+if "CACHE_CONTROL_STALE_IF_ERROR" in env:
+    CACHE_CONTROL_STALE_IF_ERROR = env["CACHE_CONTROL_STALE_IF_ERROR"]
