@@ -4,6 +4,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand
 from modelcluster.models import model_from_serializable_data
 from wagtail.wagtailcore.models import get_page_models
+from wagtail.wagtailsnippets.models import get_snippet_models
 
 
 class Command(BaseCommand):
@@ -30,11 +31,11 @@ class Command(BaseCommand):
         ]
 
     def handle(self, fix=False, **options):
-        for page_class in get_page_models():
+        for content_class in get_page_models() + get_snippet_models():
 
             if options["list_fields"]:
-                richtext_fields = self.get_class_richtext_fields(page_class)
+                richtext_fields = self.get_class_richtext_fields(content_class)
                 if richtext_fields:
-                    print(page_class.__name__)
+                    print(content_class.__name__)
                     for f in richtext_fields:
                         print("    " + f)
