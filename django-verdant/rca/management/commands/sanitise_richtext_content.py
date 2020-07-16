@@ -112,7 +112,7 @@ class Command(BaseCommand):
         self.tags_removed = {}
         self.tags_unwrapped = {}
 
-    def record_alterations(self, page_id, field, tags_removed, tags_unwrapped):
+    def log_alterations(self, page_id, field, tags_removed, tags_unwrapped):
         if tags_removed:
             if self.tags_removed.get(page_id, None):
                 self.tags_removed[page_id][field] = tags_removed
@@ -149,7 +149,7 @@ class Command(BaseCommand):
                         tags_removed.append(str(tag))
                         tag.decompose()
 
-        self.record_alterations(page.id, field, tags_removed, tags_unwrapped)
+        self.log_alterations(page.id, field, tags_removed, tags_unwrapped)
 
         remove_html_wrappers(soup)
         return str(soup)
@@ -188,46 +188,26 @@ class Command(BaseCommand):
                     print("page {}".format(page.id))
 
                 for field in richtext_fields:
-
-                    # print("Original RichText")
-                    # print(html)
-                    # print("Sanitised RichText")
-                    # print(self.remove_empty_tags(html))
                     self.remove_empty_tags(page, field)
 
         if verbose:
-            print(" DEBUG ")
-            print("=====================")
-            print()
-            print("Tags removed:")
-            # for t in self.tags_removed:
-            #     print(t)
-
-            # print("=====================")
-            # print()
-            # print("Pages that had tags removed on multiple fields")
-
-            # pages_with_tags_removed = self.tags_removed
-            # print(pages_with_tags_removed)
-            # # Check if any of the pages have alterations recorded for multiple fields
-            # multi_field_removals = [
-            #     p for p in pages_with_tags_removed.itervalues() if len(p) > 1
-            # ]
-            # print multi_field_removals
-
-            # print("=====================")
-            # print()
-            # print("Pages that had tags unwrapped on multiple fields")
-
-            # pages_with_tags_unwrapped = self.tags_unwrapped
-            # print(pages_with_tags_unwrapped)
-            # # Check if any of the pages have alterations recorded for multiple fields
-            # multi_field_unwraps = [
-            #     p for p in pages_with_tags_unwrapped.itervalues() if len(p) > 1
-            # ]
-            # print multi_field_unwraps
-
             print("=====================")
             print("Tags were removed from richtext on {} pages".format(
                 len(self.tags_removed))
             )
+
+        elif csv:
+            import csv
+
+            # TODO: This may need to be output to standard out or to S3
+            # Unless the migration is done locally and then switched.
+            with open("test_output.csv", "wb") as f:
+                w = csv.writer(f)
+                w.writerow(['Page ID', 'Rich Text Field', 'Tags Removed'])
+                page_tags = self.tags_removed
+                fields = page_tags.values()[0].keys()
+                for key in page_tags.keys():
+                    try:
+                        w.writerow([key] + [field] + [page_tags[key][field] for field in fields])
+                    except KeyError:
+                        pass
