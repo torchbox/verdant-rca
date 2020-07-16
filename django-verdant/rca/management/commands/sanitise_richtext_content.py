@@ -1,12 +1,27 @@
-import json
 from optparse import make_option
 
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
-from modelcluster.models import model_from_serializable_data
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import Page, get_page_models
-from wagtail.wagtailsnippets.models import get_snippet_models
+
+HEADING_TAGS = [
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+]
+
+TAGS_REMOVE_EMPTY = ["a"] + HEADING_TAGS
+
+VOID_ELEMENTS = [
+    "br",
+    "embed",
+    "hr",
+    "img",
+]
 
 TEST_HTML = '''
 <h1 class="empty-heading"></h1>
@@ -28,24 +43,6 @@ TEST_HTML = '''
 <h3 class="heading-with-void"><br/><h3>
 <h4 class="heading-with-void"><hr/><h4>
 '''
-
-HEADING_TAGS = [
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-]
-
-TAGS_REMOVE_EMPTY = ["a"] + HEADING_TAGS
-
-VOID_ELEMENTS = [
-    "br",
-    "embed",
-    "hr",
-    "img",
-]
 
 
 def tag_has_no_text(tag):
@@ -103,32 +100,56 @@ class Command(BaseCommand):
             default=None,
             help="Limit number of pages sanitised."
         ),
+        make_option('--csv',
+            action='store_true',
+            dest='csv',
+            default=False,
+            help="Output the resulting alterations in CSV format."
+        ),
     )
 
     def __init__(self):
-        self.tags_removed = []
-        self.tags_unwrapped = []
+        self.tags_removed = {}
+        self.tags_unwrapped = {}
 
-    def remove_empty_tags(self, html):
+    def record_alterations(self, page_id, field, tags_removed, tags_unwrapped):
+        if tags_removed:
+            if self.tags_removed.get(page_id, None):
+                self.tags_removed[page_id][field] = tags_removed
+            else:
+                self.tags_removed[page_id] = {field: tags_removed}
+        if tags_unwrapped:
+            if self.tags_unwrapped.get(page_id, None):
+                self.tags_unwrapped[page_id][field] = tags_unwrapped
+            else:
+                self.tags_unwrapped[page_id] = {field: tags_unwrapped}
+
+    def remove_empty_tags(self, page, field):
+        html = getattr(page, field)
         soup = BeautifulSoup(html, "html5lib")
         potentially_empty_tags = soup.find_all(TAGS_REMOVE_EMPTY)
+
+        tags_removed = []
+        tags_unwrapped = []
 
         for tag in potentially_empty_tags:
             if tag_has_no_text(tag):
                 if not tag.descendants:
                     # Its genuinely empty so can remove
-                    self.tags_removed.append(str(tag))
+                    tags_removed.append(str(tag))
                     tag.decompose()
                 elif tag.name in HEADING_TAGS:
                     if tag_has_void_elements(tag):
                         # This is a heading that contains a void element ie img/embed
                         # so just remove wrapping heading element
-                        self.tags_unwrapped.append(str(tag))
+                        tags_unwrapped.append(str(tag))
                         tag.unwrap()
                     else:
                         # Heading has valid descendants but no text to display
-                        self.tags_removed.append(str(tag))
+                        tags_removed.append(str(tag))
                         tag.decompose()
+
+        self.record_alterations(page.id, field, tags_removed, tags_unwrapped)
 
         remove_html_wrappers(soup)
         return str(soup)
@@ -136,25 +157,77 @@ class Command(BaseCommand):
     def handle(self, fix=False, **options):
         list_fields = options["list_fields"]
         verbose = options["verbose"]
-        for content_class in get_page_models() + get_snippet_models():
+        limit = options["limit"]
+        csv = options["csv"]
+        if csv:
+            verbose = False
 
-            if list_fields:
+        if list_fields:
+            for content_class in get_page_models():
                 richtext_fields = get_class_richtext_fields(content_class)
                 if richtext_fields:
                     print(content_class.__name__)
                     for f in richtext_fields:
                         print("    " + f)
+            return
 
+        for content_class in get_page_models():
+            richtext_fields = get_class_richtext_fields(content_class)
+            pages = content_class.objects.public().live().specific()
 
-        # page = get_single_example_page()
-        # print(page.body)
-        # print(" DEBUG ")
-        # print(self.remove_empty_tags(page.body))
+            if limit:
+                pages = pages[:limit]
+            if verbose:
+                print("{}: {}".format(
+                    content_class.__name__,
+                    str(richtext_fields))
+                )
 
-        print(self.remove_empty_tags(TEST_HTML))
+            for page in pages:
+                if verbose:
+                    print("page {}".format(page.id))
+
+                for field in richtext_fields:
+
+                    # print("Original RichText")
+                    # print(html)
+                    # print("Sanitised RichText")
+                    # print(self.remove_empty_tags(html))
+                    self.remove_empty_tags(page, field)
 
         if verbose:
             print(" DEBUG ")
+            print("=====================")
+            print()
             print("Tags removed:")
-            for t in self.tags_removed:
-                print(t)
+            # for t in self.tags_removed:
+            #     print(t)
+
+            # print("=====================")
+            # print()
+            # print("Pages that had tags removed on multiple fields")
+
+            # pages_with_tags_removed = self.tags_removed
+            # print(pages_with_tags_removed)
+            # # Check if any of the pages have alterations recorded for multiple fields
+            # multi_field_removals = [
+            #     p for p in pages_with_tags_removed.itervalues() if len(p) > 1
+            # ]
+            # print multi_field_removals
+
+            # print("=====================")
+            # print()
+            # print("Pages that had tags unwrapped on multiple fields")
+
+            # pages_with_tags_unwrapped = self.tags_unwrapped
+            # print(pages_with_tags_unwrapped)
+            # # Check if any of the pages have alterations recorded for multiple fields
+            # multi_field_unwraps = [
+            #     p for p in pages_with_tags_unwrapped.itervalues() if len(p) > 1
+            # ]
+            # print multi_field_unwraps
+
+            print("=====================")
+            print("Tags were removed from richtext on {} pages".format(
+                len(self.tags_removed))
+            )
