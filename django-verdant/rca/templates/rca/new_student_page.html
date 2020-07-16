@@ -24,39 +24,39 @@
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
-                                    <dd>School</dd>
-                                    <dt>{{ self.get_phd_school_display }}</dt>
+                                    <dt>School</dt>
+                                    <dd>{{ self.get_phd_school_display }}</dd>
                                     {% if self.phd_programme %}
-                                        <dd>Programme</dd>
-                                        <dt>
+                                        <dt>Programme</dt>
+                                        <dd>
                                             {{ self.get_phd_programme_display }}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.phd_collaborators.all %}
-                                        <dd>Collaborators</dd>
-                                        <dt>
+                                        <dt>Collaborators</dt>
+                                        <dd>
                                             {% for collaborator in self.phd_collaborators.all %}
                                                 {{ collaborator.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
 
                                     {% if self.phd_supervisors.all %}
-                                        <dd>Supervisors</dd>
-                                        <dt>
+                                        <dt>Supervisors</dt>
+                                        <dd>
                                             {% for supervisor in self.phd_supervisors.all %}
                                                 {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}{{ supervisor.name }}{% if supervisor.link %}</a>{% endif %}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
 
                                     {% if self.phd_sponsors.all %}
-                                        <dd>Sponsors</dd>
-                                        <dt>
+                                        <dt>Sponsors</dt>
+                                        <dd>
                                             {% for sponsor in self.phd_sponsors.all %}
                                                 {{ sponsor.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                 </dl>
                             </div>
@@ -82,39 +82,39 @@
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
-                                    <dd>School</dd>
-                                    <dt>
+                                    <dt>School</dt>
+                                    <dd>
                                         {{ self.get_mphil_school_display }}
-                                    </dt>
+                                    </dd>
                                     {% if self.mphil_programme %}
-                                        <dd>Programme</dd>
-                                        <dt>
+                                        <dt>Programme</dt>
+                                        <dd>
                                             {{ self.get_mphil_programme_display }}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.mphil_collaborators.all %}
-                                        <dd>Collaborators</dd>
-                                        <dt>
+                                        <dt>Collaborators</dt>
+                                        <dd>
                                             {% for collaborator in self.mphil_collaborators.all %}
                                                 {{ collaborator.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.mphil_supervisors.all %}
-                                        <dd>Supervisors</dd>
-                                        <dt>
+                                        <dt>Supervisors</dt>
+                                        <dd>
                                             {% for supervisor in self.mphil_supervisors.all %}
                                                 {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}{{ supervisor.name }}{% if supervisor.link %}</a>{% endif %}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.mphil_sponsors.all %}
-                                        <dd>Sponsors</dd>
-                                        <dt>
+                                        <dt>Sponsors</dt>
+                                        <dd>
                                             {% for sponsor in self.mphil_sponsors.all %}
                                                 {{ sponsor.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                 </dl>
                             </div>
@@ -140,25 +140,25 @@
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
-                                    <dd>Programme</dd>
-                                    <dt>
+                                    <dt>Programme</dt>
+                                    <dd>
                                         {{ self.get_ma_programme_display }}
-                                    </dt>
+                                    </dd>
                                     {% if self.show_collaborators.all %}
-                                        <dd>Collaborators</dd>
-                                        <dt>
+                                        <dt>Collaborators</dt>
+                                        <dd>
                                             {% for collaborator in self.show_collaborators.all %}
                                                 {{ collaborator.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.show_sponsors.all %}
-                                        <dd>Sponsors</dd>
-                                        <dt>
+                                        <dt>Sponsors</dt>
+                                        <dd>
                                             {% for sponsor in self.show_sponsors.all %}
                                                 {{ sponsor.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                 </dl>
                             </div>

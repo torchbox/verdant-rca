@@ -14,31 +14,31 @@
                 <dl>
                     {% with self.author_profile_page as author_profile_page %}
                         {% if author_profile_page %}
-                            <dd>By</dd>
-                            <dt><a href="{% pageurl author_profile_page %}">{{ author_profile_page.title }}</a></dt>
+                            <dt>By</dt>
+                            <dd><a href="{% pageurl author_profile_page %}">{{ author_profile_page.title }}</a></dd>
                         {% elif self.author %}
-                            <dd>By</dd>
-                            <dt>{{ self.author }}</dt>
+                            <dt>By</dt>
+                            <dd>{{ self.author }}</dd>
                         {% endif %}
                     {% endwith %}
 
-                    <dd>Date</dd>
-                    <dt>{{ self.date|date:"j F Y" }}</dt>
+                    <dt>Date</dt>
+                    <dd>{{ self.date|date:"j F Y" }}</dd>
 
                     {% if self.programme %}
-                        <dd>Programme</dd>
-                        <dt>{% programme_historical_display_name self.programme self.date.year %}</dt>
+                        <dt>Programme</dt>
+                        <dd>{% programme_historical_display_name self.programme self.date.year %}</dd>
                     {% endif %}
 
                     {% if self.tags.all.count > 0 %}
-                        <dd>Tags</dd>
-                        <dt>
+                        <dt>Tags</dt>
+                        <dd>
                             {% with self.tags.all as tags %}
                                 {% for tag in tags %}
                                     {{ tag }}{% if not forloop.last %},{% endif %}
                                 {% endfor %}
                             {% endwith %}
-                        </dt>
+                        </dd>
                     {% endif %}
                 </dl>
             </div>
