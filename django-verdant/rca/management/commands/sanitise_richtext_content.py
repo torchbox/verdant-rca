@@ -3,6 +3,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from modelcluster.models import model_from_serializable_data
+from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import get_page_models
 from wagtail.wagtailsnippets.models import get_snippet_models
 
@@ -27,7 +28,7 @@ class Command(BaseCommand):
     def get_class_richtext_fields(page_class):
         return [
             f.name for f in page_class._meta.fields
-            if f.__class__.__name__ == "RichTextField"
+            if issubclass(f.__class__, RichTextField)
         ]
 
     def handle(self, fix=False, **options):
