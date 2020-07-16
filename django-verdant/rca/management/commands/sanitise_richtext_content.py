@@ -85,27 +85,76 @@ class Command(BaseCommand):
             default=False,
             help="Fix any issues found by this script"
         ),
+        make_option('--verbose',
+            action='store_true',
+            dest='verbose',
+            default=False,
+            help="Fix any issues found by this script"
+        ),
         make_option('--list-fields',
             action='store_true',
             dest='list_fields',
             default=False,
             help="Fix any issues found by this script"
         ),
+        make_option(
+            '--limit',
+            dest='limit',
+            default=None,
+            help="Limit number of pages sanitised."
+        ),
     )
 
-    @staticmethod
-    def get_class_richtext_fields(page_class):
-        return [
-            f.name for f in page_class._meta.fields
-            if issubclass(f.__class__, RichTextField)
-        ]
+    def __init__(self):
+        self.tags_removed = []
+        self.tags_unwrapped = []
+
+    def remove_empty_tags(self, html):
+        soup = BeautifulSoup(html, "html5lib")
+        potentially_empty_tags = soup.find_all(TAGS_REMOVE_EMPTY)
+
+        for tag in potentially_empty_tags:
+            if tag_has_no_text(tag):
+                if not tag.descendants:
+                    # Its genuinely empty so can remove
+                    self.tags_removed.append(str(tag))
+                    tag.decompose()
+                elif tag.name in HEADING_TAGS:
+                    if tag_has_void_elements(tag):
+                        # This is a heading that contains a void element ie img/embed
+                        # so just remove wrapping heading element
+                        self.tags_unwrapped.append(str(tag))
+                        tag.unwrap()
+                    else:
+                        # Heading has valid descendants but no text to display
+                        self.tags_removed.append(str(tag))
+                        tag.decompose()
+
+        remove_html_wrappers(soup)
+        return str(soup)
 
     def handle(self, fix=False, **options):
+        list_fields = options["list_fields"]
+        verbose = options["verbose"]
         for content_class in get_page_models() + get_snippet_models():
 
-            if options["list_fields"]:
-                richtext_fields = self.get_class_richtext_fields(content_class)
+            if list_fields:
+                richtext_fields = get_class_richtext_fields(content_class)
                 if richtext_fields:
                     print(content_class.__name__)
                     for f in richtext_fields:
                         print("    " + f)
+
+
+        # page = get_single_example_page()
+        # print(page.body)
+        # print(" DEBUG ")
+        # print(self.remove_empty_tags(page.body))
+
+        print(self.remove_empty_tags(TEST_HTML))
+
+        if verbose:
+            print(" DEBUG ")
+            print("Tags removed:")
+            for t in self.tags_removed:
+                print(t)
