@@ -4,32 +4,32 @@
     <div class="meta-data">
         <dl>
             {% if self.author %}
-                <dd>Writer</dd>
-                <dt>{{ self.author }}</dt>
+                <dt>Writer</dt>
+                <dd>{{ self.author }}</dd>
             {% endif %}
 
             {% if self.date %}
-                <dd>Date</dd>
-                <dt>{{ self.date|date:"j F Y" }}</dt>
+                <dt>Date</dt>
+                <dd>{{ self.date|date:"j F Y" }}</dd>
             {% endif %}
 
             {% with self.areas.all as areas %}
                 {% if areas %}
-                    <dd>Area</dd>
-                    <dt>
+                    <dt>Area</dt>
+                    <dd>
                         <ul>
                             {% for area in areas %}
                                 <li>{{ area.area.display_name }}</li>
                             {% endfor %}
                         </ul>
-                    </dt>
+                    </dd>
                 {% endif %}
             {% endwith %}
 
             {% with self.related_schools.all as related_schools %}
                 {% if related_schools %}
-                    <dd>School</dd>
-                    <dt>
+                    <dt>School</dt>
+                    <dd>
                         <ul>
                             {% for school in related_schools %}
                                 {% if self.date %}
@@ -39,14 +39,14 @@
                                 {% endif %}
                             {% endfor %}
                         </ul>
-                    </dt>
+                    </dd>
                 {% endif %}
             {% endwith %}
 
             {% with self.related_programmes.all as related_programmes %}
                 {% if related_programmes %}
-                    <dd>Programme</dd>
-                    <dt>
+                    <dt>Programme</dt>
+                    <dd>
                         <ul>
                             {% for programme in related_programmes %}
                                 {% if self.date %}
@@ -56,20 +56,20 @@
                                 {% endif %}
                             {% endfor %}
                         </ul>
-                    </dt>
+                    </dd>
                 {% endif %}
             {% endwith %}
 
             {% with self.related_links.all as related_links %}
                 {% if related_links %}
-                    <dd>Links</dd>
-                    <dt>
+                    <dt>Links</dt>
+                    <dd>
                         <ul>
                             {% for link in related_links %}
                             <li><a href="{{ link.get_link }}">{{ link.get_link_text }}</a></li>
                             {% endfor %}
                         </ul>
-                    </dt>
+                    </dd>
                 {% endif %}
             {% endwith %}
         </dl>

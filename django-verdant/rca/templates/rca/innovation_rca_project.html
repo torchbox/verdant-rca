@@ -16,8 +16,8 @@
                 <dl>
                     {% with self.creator.all as creators %}
                         {% if creators %}
-                            <dd>creator{% if creators|length > 1 %}s{% endif %}</dd>
-                            <dt>
+                            <dt>creator{% if creators|length > 1 %}s{% endif %}</dt>
+                            <dd>
                                 <ul>
                                     {% for creator in creators %}
                                         <li>
@@ -31,26 +31,26 @@
                                         </li>
                                     {% endfor %}
                                 </ul>
-                            </dt>
+                            </dd>
                         {% endif %}
                     {% endwith %}
 
-                    <dd>Year</dd>
-                    <dt>{{ self.year }}</dt>
+                    <dt>Year</dt>
+                    <dd>{{ self.year }}</dd>
 
-                    <dd>Type</dd>
-                    <dt>{{ self.get_project_type_display }}</dt>
+                    <dt>Type</dt>
+                    <dd>{{ self.get_project_type_display }}</dd>
 
                     {% with self.links.all as links %}
                         {% if links %}
-                            <dd>Links</dd>
-                            <dt>
+                            <dt>Links</dt>
+                            <dd>
                                 <ul>
                                     {% for link in links %}
                                     <li><a href="{{ link.link }}">{{ link.link_text }}</a></li>
                                     {% endfor %}
                                 </ul>
-                            </dt>
+                            </dd>
                         {% endif %}
                     {% endwith %}
                 </dl>
