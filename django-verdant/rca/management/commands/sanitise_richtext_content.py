@@ -173,9 +173,8 @@ class Command(BaseCommand):
                         tag.decompose()
 
         self.log_alterations(page, field, tags_removed, tags_unwrapped)
-
         remove_html_wrappers(soup)
-        return str(soup)
+        return page
 
     def output_to_csv(self, filename, affected_content):
         headings = ['Page ID', 'Rich Text Field', 'Tags Affected', 'Page URL']
@@ -199,11 +198,12 @@ class Command(BaseCommand):
         self.pages_processed += 1
         if self.verbose:
             print("Page {}".format(page.id))
-
         for field in richtext_fields:
-            self.remove_empty_tags(page, field)
+            page = self.remove_empty_tags(page, field)
+        return page
 
     def handle(self, **options):
+        fix = options["fix"]
         list_fields = options["list_fields"]
         limit = options["limit"]
         csv = options["csv"]
@@ -218,20 +218,22 @@ class Command(BaseCommand):
                 page_ids = [int(pid) for pid in options["page_ids"].split(',')]
         self.verbose = options["verbose"]
 
-        # List the rich text fields on each page type
-        # instead of processing (debugging)
+        # Only list the rich text fields on each page type
         if list_fields:
             list_all_richtext_fields()
             return
 
+        # Process specified pages
         if page_ids:
-            # Process specified pages
             pages = Page.objects.filter(pk__in=page_ids).specific()
             for page in pages:
                 richtext_fields = get_class_richtext_fields(page.__class__)
-                self.process_page(page, richtext_fields)
+                page = self.process_page(page, richtext_fields)
+                if fix:
+                    page.save()
+
+        # Iterate through all page types and process their richtext fields
         else:
-            # Iterate through all page types and process their richtext fields
             for content_class in get_page_models():
                 richtext_fields = get_class_richtext_fields(content_class)
                 pages = content_class.objects.public().live().specific()
@@ -246,10 +248,11 @@ class Command(BaseCommand):
                     )
 
                 for page in pages:
-                    self.process_page(page, richtext_fields)
+                    page = self.process_page(page, richtext_fields)
+                    if fix:
+                        page.save()
 
-        # Report effects
-
+        # Report affected pages
         if self.verbose:
             print("=====================")
 
@@ -260,7 +263,6 @@ class Command(BaseCommand):
         print("Tags were unwrapped within richtext on {} pages".format(
             len(self.tags_unwrapped))
         )
-
         if csv:
             if self.tags_removed:
                 self.output_to_csv(
