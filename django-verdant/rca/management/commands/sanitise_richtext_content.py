@@ -1,3 +1,4 @@
+from collections import defaultdict
 from optparse import make_option
 
 from bs4 import BeautifulSoup
@@ -68,10 +69,19 @@ def get_class_richtext_fields(page_class):
         ]
 
 
+def list_all_page_type_richtext_fields():
+    for content_class in get_page_models():
+        richtext_fields = get_class_richtext_fields(content_class)
+        if richtext_fields:
+            print(content_class.__name__)
+            for f in richtext_fields:
+                print("    " + f)
+
+
 # WARNING: for development use only
 def get_single_example_page():
-        # return Page.objects.get(pk=18797).specific
-        return Page.objects.get(pk=17272).specific
+    # return Page.objects.get(pk=18797).specific
+    return Page.objects.get(pk=17272).specific
 
 
 class Command(BaseCommand):
@@ -109,15 +119,16 @@ class Command(BaseCommand):
     )
 
     def __init__(self):
-        self.tags_removed = {}
-        self.tags_unwrapped = {}
+        self.tags_removed = defaultdict(dict)
+        self.tags_unwrapped = defaultdict(dict)
+        self.pages_processed = 0
 
     def log_alterations(self, page_id, field, tags_removed, tags_unwrapped):
         if tags_removed:
-            if self.tags_removed.get(page_id, None):
-                self.tags_removed[page_id][field] = tags_removed
-            else:
-                self.tags_removed[page_id] = {field: tags_removed}
+            self.tags_removed[page_id][field] = tags_removed
+            # if self.tags_removed.get(page_id, None):
+            # else:
+            #     self.tags_removed[page_id] = {field: tags_removed}
         if tags_unwrapped:
             if self.tags_unwrapped.get(page_id, None):
                 self.tags_unwrapped[page_id][field] = tags_unwrapped
@@ -152,25 +163,25 @@ class Command(BaseCommand):
         self.log_alterations(page.id, field, tags_removed, tags_unwrapped)
 
         remove_html_wrappers(soup)
+
+        self.pages_processed += 1
         return str(soup)
 
-    def handle(self, fix=False, **options):
+    def handle(self, options):
         list_fields = options["list_fields"]
         verbose = options["verbose"]
         limit = options["limit"]
         csv = options["csv"]
-        if csv:
-            verbose = False
+        # if csv:
+        #     verbose = False
 
+        # List the rich text fields on each page type
+        # instead of processing (debugging)
         if list_fields:
-            for content_class in get_page_models():
-                richtext_fields = get_class_richtext_fields(content_class)
-                if richtext_fields:
-                    print(content_class.__name__)
-                    for f in richtext_fields:
-                        print("    " + f)
+            list_all_page_type_richtext_fields()
             return
 
+        # Iterate through all page types and process their richtext fields
         for content_class in get_page_models():
             richtext_fields = get_class_richtext_fields(content_class)
             pages = content_class.objects.public().live().specific()
@@ -190,24 +201,36 @@ class Command(BaseCommand):
                 for field in richtext_fields:
                     self.remove_empty_tags(page, field)
 
-        if verbose:
-            print("=====================")
-            print("Tags were removed from richtext on {} pages".format(
-                len(self.tags_removed))
-            )
+        # if verbose:
+        #     print("=====================")
+        print("{} pages were processed".format(self.pages_processed))
+        print("Tags were removed from richtext on {} pages".format(
+            len(self.tags_removed))
+        )
 
-        elif csv:
+        if csv:
             import csv
 
             # TODO: This may need to be output to standard out or to S3
-            # Unless the migration is done locally and then switched.
-            with open("test_output.csv", "wb") as f:
+            # Unless the migration is done locally and then db switched.
+            with open("richtext_tag_removals.csv", "wb") as f:
                 w = csv.writer(f)
                 w.writerow(['Page ID', 'Rich Text Field', 'Tags Removed'])
                 page_tags = self.tags_removed
                 fields = page_tags.values()[0].keys()
-                for key in page_tags.keys():
+                for page_id in page_tags.keys():
                     try:
-                        w.writerow([key] + [field] + [page_tags[key][field] for field in fields])
+                        w.writerow([page_id] + [field] + [page_tags[page_id][field] for field in fields])
+                    except KeyError:
+                        pass
+
+            with open("richtext_tag_unwraps.csv", "wb") as f:
+                w = csv.writer(f)
+                w.writerow(['Page ID', 'Rich Text Field', 'Tags Unwrapped'])
+                page_tags = self.tags_unwrapped
+                fields = page_tags.values()[0].keys()
+                for page_id in page_tags.keys():
+                    try:
+                        w.writerow([page_id] + [field] + [page_tags[page_id][field] for field in fields])
                     except KeyError:
                         pass
