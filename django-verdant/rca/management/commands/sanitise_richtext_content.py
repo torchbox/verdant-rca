@@ -174,6 +174,7 @@ class Command(BaseCommand):
 
         self.log_alterations(page, field, tags_removed, tags_unwrapped)
         remove_html_wrappers(soup)
+        setattr(page, field, str(soup.encode('utf-8')))
         return page
 
     def output_to_csv(self, filename, affected_content):
