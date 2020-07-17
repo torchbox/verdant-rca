@@ -16,8 +16,8 @@
                 <dl>
                     {% with self.creator.all as creators %}
                         {% if creators %}
-                            <dd>creator{% if creators|length > 1 %}s{% endif %}</dd>
-                            <dt>
+                            <dt>creator{% if creators|length > 1 %}s{% endif %}</dt>
+                            <dd>
                                 <ul>
                                     {% for creator in creators %}
                                         <li>
@@ -31,36 +31,36 @@
                                         </li>
                                     {% endfor %}
                                 </ul>
-                            </dt>
+                            </dd>
                         {% endif %}
                     {% endwith %}
 
-                    <dd>Year</dd>
-                    <dt>{{ self.year }}</dt>
+                    <dt>Year</dt>
+                    <dd>{{ self.year }}</dd>
 
                     {% if self.school %}
-                        <dd>Centre</dd>
-                        <dt>{% school_historical_display_name self.school self.year %}</dt>
+                        <dt>Centre</dt>
+                        <dd>{% school_historical_display_name self.school self.year %}</dd>
                     {% endif %}
 
-                    <dd>Category</dd>
-                    <dt>{{ self.get_category_display }}</dt>
+                    <dt>Category</dt>
+                    <dd>{{ self.get_category_display }}</dd>
 
                     {% if self.programme %}
-                        <dd>Programme</dd>
-                        <dt>{% programme_historical_display_name self.programme self.year %}</dt>
+                        <dt>Programme</dt>
+                        <dd>{% programme_historical_display_name self.programme self.year %}</dd>
                     {% endif %}
 
                     {% with self.links.all as links %}
                         {% if links %}
-                            <dd>Links</dd>
-                            <dt>
+                            <dt>Links</dt>
+                            <dd>
                                 <ul>
                                     {% for link in links %}
                                     <li><a href="{{ link.link }}">{{ link.link_text }}</a></li>
                                     {% endfor %}
                                 </ul>
-                            </dt>
+                            </dd>
                         {% endif %}
                     {% endwith %}
                 </dl>
