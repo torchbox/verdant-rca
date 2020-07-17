@@ -4,6 +4,7 @@ from functools import wraps
 from optparse import make_option
 
 from bs4 import BeautifulSoup
+from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import Page, get_page_models
@@ -46,7 +47,6 @@ TEST_HTML = '''
 <h3 class="heading-with-void"><br/><h3>
 <h4 class="heading-with-void"><hr/><h4>
 '''
-
 
 def memoize(function):
     memo = {}
@@ -107,6 +107,12 @@ class Command(BaseCommand):
             default=False,
             help="Verbose output"
         ),
+        make_option('--silent',
+            action='store_true',
+            dest='silent',
+            default=False,
+            help="Silence all output"
+        ),
         make_option('--list-fields',
             action='store_true',
             dest='list_fields',
@@ -138,6 +144,7 @@ class Command(BaseCommand):
         self.tags_unwrapped = defaultdict(dict)
         self.pages_processed = 0
         self.pages_urls = {}
+        self.page_not_saved = {}
         self.verbose = False
 
     def log_alterations(self, page, field, tags_removed, tags_unwrapped):
@@ -145,11 +152,18 @@ class Command(BaseCommand):
             self.tags_removed[page.id][field] = tags_removed
         if tags_unwrapped:
             self.tags_unwrapped[page.id][field] = tags_unwrapped
+        # Save a dictionary of page id/url for use in reporting
         self.pages_urls[page.id] = page.url
+
+    def remove_page_from_log(self, page):
+        self.tags_removed.pop(page.id, None)
+        self.tags_unwrapped.pop(page.id, None)
+        self.page_not_saved[page.id] = page.url
 
     def remove_empty_tags(self, page, field):
         html = getattr(page, field)
         soup = BeautifulSoup(html, "html5lib")
+
         potentially_empty_tags = soup.find_all(TAGS_REMOVE_EMPTY)
 
         tags_removed = []
@@ -172,9 +186,11 @@ class Command(BaseCommand):
                         tags_removed.append(str(tag))
                         tag.decompose()
 
-        self.log_alterations(page, field, tags_removed, tags_unwrapped)
         remove_html_wrappers(soup)
-        setattr(page, field, str(soup.encode('utf-8')))
+        setattr(page, field, soup)
+        # setattr(page, field, soup.encode('utf-8'))
+        self.log_alterations(page, field, tags_removed, tags_unwrapped)
+
         return page
 
     def output_to_csv(self, filename, affected_content):
@@ -192,7 +208,6 @@ class Command(BaseCommand):
                     ]
                     page_url = self.pages_urls[page_id]
                     row = [page_id, field, alterations, page_url]
-                    # print(row)
                     w.writerow(row)
 
     def process_page(self, page, richtext_fields):
@@ -207,7 +222,7 @@ class Command(BaseCommand):
         fix = options["fix"]
         list_fields = options["list_fields"]
         limit = options["limit"]
-        csv = options["csv"]
+        output_csv = options["csv"]
         page_ids = []
         if options["page_ids"]:
             if "-" in options["page_ids"]:
@@ -217,7 +232,9 @@ class Command(BaseCommand):
                 page_ids = range(first_id, last_id)
             else:
                 page_ids = [int(pid) for pid in options["page_ids"].split(',')]
-        self.verbose = options["verbose"]
+        silent = options["silent"]
+        if not silent:
+            self.verbose = options["verbose"]
 
         # Only list the rich text fields on each page type
         if list_fields:
@@ -226,17 +243,23 @@ class Command(BaseCommand):
 
         # Process specified pages
         if page_ids:
-            pages = Page.objects.filter(pk__in=page_ids).specific()
+            pages = Page.objects.filter(pk__in=page_ids)
+            pages = pages.public().live().specific()
             for page in pages:
                 richtext_fields = get_class_richtext_fields(page.__class__)
                 page = self.process_page(page, richtext_fields)
                 if fix:
-                    page.save()
+                    try:
+                        page.save()
+                    except ValidationError:
+                        self.remove_page_from_log(page)
 
         # Iterate through all page types and process their richtext fields
         else:
             for content_class in get_page_models():
                 richtext_fields = get_class_richtext_fields(content_class)
+                if not richtext_fields:
+                    continue
                 pages = content_class.objects.public().live().specific()
 
                 if limit:
@@ -251,28 +274,47 @@ class Command(BaseCommand):
                 for page in pages:
                     page = self.process_page(page, richtext_fields)
                     if fix:
-                        page.save()
+                        try:
+                            page.save()
+                        except ValidationError:
+                            self.remove_page_from_log(page)
 
         # Report affected pages
         if self.verbose:
             print("=====================")
 
-        print("{} pages were processed".format(self.pages_processed))
-        print("Tags were removed from richtext on {} pages".format(
-            len(self.tags_removed))
-        )
-        print("Tags were unwrapped within richtext on {} pages".format(
-            len(self.tags_unwrapped))
-        )
-        if csv:
+        if not silent:
+            print("{} pages were processed".format(self.pages_processed))
+            print("Tags were removed from richtext on {} pages".format(
+                len(self.tags_removed))
+            )
+            print("Tags were unwrapped within richtext on {} pages".format(
+                len(self.tags_unwrapped))
+            )
+            if self.page_not_saved:
+                print("\nThe following pages could not be saved due to validation errors")
+                for page_id in self.page_not_saved:
+                    print("{}: {}".format(page_id, self.page_not_saved[page_id]))
+
+        # Export reports as CSVs
+        if output_csv:
             if self.tags_removed:
                 self.output_to_csv(
                     "richtext_tags_removed.csv",
                     self.tags_removed
                 )
-
             if self.tags_unwrapped:
                 self.output_to_csv(
                     "richtext_tags_unwrapped.csv",
                     self.tags_unwrapped
                 )
+            if self.page_not_saved:
+                filename = "unsaved_pages.csv"
+                headings = ['Page ID', 'Page URL']
+                with open(filename, "wb") as f:
+                    w = csv.writer(f)
+                    w.writerow(headings)
+                    for page_id in self.page_not_saved:
+                        page_url = self.page_not_saved[page_id]
+                        row = [page_id, page_url]
+                        w.writerow(row)
