@@ -14,12 +14,12 @@
         <section class="four">
             <div class="meta-data">
                 <dl>
-                    <dd>Project</dd>
-                    <dt>{{ self.get_project_display }}</dt>
+                    <dt>Project</dt>
+                    <dd>{{ self.get_project_display }}</dd>
                     {% with self.leader.all as leaders %}
                         {% if leaders %}
-                            <dd>Workshop leader{% if leaders|length > 1 %}s{% endif %}</dd>
-                            <dt>
+                            <dt>Workshop leader{% if leaders|length > 1 %}s{% endif %}</dt>
+                            <dd>
                                 <ul>
                                     {% for leader in leaders %}
                                         <li>
@@ -33,14 +33,14 @@
                                         </li>
                                     {% endfor %}
                                 </ul>
-                            </dt>
+                            </dd>
                         {% endif %}
                     {% endwith %}
 
                     {% with self.assistant.all as assistants %}
                         {% if assistants %}
-                            <dd>Workshop assistant{% if assistants|length > 1 %}s{% endif %}</dd>
-                            <dt>
+                            <dt>Workshop assistant{% if assistants|length > 1 %}s{% endif %}</dt>
+                            <dd>
                                 <ul>
                                     {% for assistant in assistants %}
                                         <li>
@@ -54,14 +54,14 @@
                                         </li>
                                     {% endfor %}
                                 </ul>
-                            </dt>
+                            </dd>
                         {% endif %}
                     {% endwith %}
 
                     {% with self.participants.all as participants %}
                         {% if participants %}
-                            <dd>Workshop participant{% if participants|length > 1 %}s{% endif %}</dd>
-                            <dt>
+                            <dt>Workshop participant{% if participants|length > 1 %}s{% endif %}</dt>
+                            <dd>
                                 <ul>
                                     {% for participant in participants %}
                                         <li>
@@ -69,14 +69,14 @@
                                         </li>
                                     {% endfor %}
                                 </ul>
-                            </dt>
+                            </dd>
                         {% endif %}
                     {% endwith %}
 
                     {% with self.partnerships.all as partnerships %}
                         {% if partnerships %}
-                            <dd>Workshop partnership{% if partnerships|length > 1 %}s{% endif %}</dd>
-                            <dt>
+                            <dt>Workshop partnership{% if partnerships|length > 1 %}s{% endif %}</dt>
+                            <dd>
                                 <ul>
                                     {% for partnership in partnerships %}
                                         <li>
@@ -84,25 +84,25 @@
                                         </li>
                                     {% endfor %}
                                 </ul>
-                            </dt>
+                            </dd>
                         {% endif %}
                     {% endwith %}
 
                     {% if self.year %}
-                        <dd>Date</dd>
-                        <dt>{{ self.year }}</dt>
+                        <dt>Date</dt>
+                        <dd>{{ self.year }}</dd>
                     {% endif %}
 
                     {% with self.links.all as links %}
                         {% if links %}
-                            <dd>Links</dd>
-                            <dt>
+                            <dt>Links</dt>
+                            <dd>
                                 <ul>
                                     {% for link in links %}
                                     <li><a href="{{ link.link }}">{{ link.link_text }}</a></li>
                                     {% endfor %}
                                 </ul>
-                            </dt>
+                            </dd>
                         {% endif %}
                     {% endwith %}
                 </dl>

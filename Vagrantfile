@@ -4,8 +4,8 @@
 
 Vagrant.configure(2) do |config|
   # Base box
-  config.vm.box = "torchbox/wagtail-jessie64"
-  config.vm.box_version = "~> 1.0"
+  config.vm.box = "wagtail/buster64"
+  config.vm.box_version = "~> 1.1"
 
   # Port forwarding
   config.vm.network "forwarded_port", guest: 8000, host: 8000

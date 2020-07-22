@@ -7,9 +7,10 @@
                 <figure class="staff">
                     <div class="image">
                     {% if student.profile_image %}
-                        {% image student.profile_image fill-180x180 %}
+                        {% image student.profile_image fill-180x180 as student_image %}
+                        <img src="{{ student_image.src }}" width="{{ student_image.width }}" height="{{ student_image.height }}" alt="">
                     {% else %}
-                        <img src="/static/rca/images/rca-placeholder-square.jpg" width="180">
+                        <img src="/static/rca/images/rca-placeholder-square.jpg" width="180" alt="">
                     {% endif %}
                     </div>
                     <figcaption>{{ student.first_name }}<span>{{ student.last_name }}</span></figcaption>
