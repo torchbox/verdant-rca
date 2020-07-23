@@ -149,15 +149,6 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
                                            help_text=help_text(
                                                'shortcourses.ShortCoursePage',
                                                'show_on_homepage'))
-    booking_enabled = models.BooleanField(default=True,
-                                          help_text=help_text(
-                                              'shortcourses.ShortCoursePage',
-                                              'booking_enabled'))
-    booking_disabled_text = models.CharField(
-        max_length=255,
-        blank=True,
-        help_text=help_text('shortcourses.ShortCoursePage',
-                            'booking_disabled_text'))
     twitter_feed = models.CharField(max_length=255,
                                     blank=True,
                                     help_text=help_text(
@@ -283,14 +274,6 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
         if enquiry_page:
             return enquiry_page.url + '?course_id=' + self.ap_course_id
 
-    @cached_property
-    def booking_link(self):
-        if not self.ap_course_id:
-            return None
-        booking_page = ShortCourseBookingPage.objects.live().first()
-        if booking_page:
-            return booking_page.url + '?course_id=' + self.ap_course_id
-
     @property
     def reusable_text_snippets(self):
         return self.shortcourse_reusable_text_snippets
@@ -317,11 +300,6 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
         FieldPanel('strapline', classname="full"),
         FieldPanel('intro', classname="full"),
         FieldPanel('details'),
-        MultiFieldPanel([
-            FieldPanel('booking_enabled'),
-            FieldPanel('booking_disabled_text'),
-        ],
-                        heading='Booking options'),
         FieldPanel('body', classname="full"),
         InlinePanel('shortcourse_carousel_items', label="Carousel content"),
         InlinePanel('shortcourse_related_links', label="Related links"),
@@ -403,33 +381,6 @@ class ShortCourseEnquiryPage(Page, SocialFields):
 
     def get_context(self, request, *args, **kwargs):
         context = super(ShortCourseEnquiryPage,
-                        self).get_context(request, *args, **kwargs)
-        context.update({
-            'access_planit_company_id': getattr(settings, "ACCESS_PLANIT_COMPANY_ID", ""),
-            'access_planit_url': getattr(settings, "ACCESS_PLANIT_URL", ""),
-        })
-        return context
-
-
-class ShortCourseBookingPage(Page, SocialFields):
-    is_creatable = False
-    parent_page_types = ['rca.StandardIndex']
-
-    intro = RichTextField(help_text=help_text(
-        'shortcourses.ShortCourseEnquiryPage', 'intro'),
-                          blank=True)
-
-    search_fields = Page.search_fields + [
-        index.SearchField('intro'),
-    ]
-
-    content_panels = [
-        FieldPanel('title', classname="full title"),
-        FieldPanel('intro', classname="full"),
-    ]
-
-    def get_context(self, request, *args, **kwargs):
-        context = super(ShortCourseBookingPage,
                         self).get_context(request, *args, **kwargs)
         context.update({
             'access_planit_company_id': getattr(settings, "ACCESS_PLANIT_COMPANY_ID", ""),
