@@ -2,13 +2,13 @@
 
 ## Vagrant
 
-* Install [Vagrant](https://wiki.torchbox.com/view/Vagrant)
-* ```git clone git@github.com:torchbox/verdant-rca.git```
-* ```cd verdant-rca```
-* ```vagrant up```
-* ```vagrant ssh```
-* ```djrun```
-* Edit your code locally, browse at [localhost:8000](http://localhost:8000/)
+- Install [Vagrant](https://wiki.torchbox.com/view/Vagrant)
+- `git clone git@github.com:torchbox/verdant-rca.git`
+- `cd verdant-rca`
+- `vagrant up`
+- `vagrant ssh`
+- `djrun`
+- Edit your code locally, browse at [localhost:8000](http://localhost:8000/)
 
 ## Docker
 
@@ -35,12 +35,10 @@ You may encounter a "Invalid input of type: 'CacheKey'" error when running a new
 
 `redis==2.10.6` to `django-verdant/requirements.txt` and then running `pip install -r requirements.txt`
 
-
 # Implementation notes
 
-* MyRCA / student profiles: https://projects.torchbox.com/projects/rca-django-cms-project/notebook/Implementation%20notes%20for%20%22My%20RCA%22%20feature.md
-* Course registration: https://projects.torchbox.com/projects/rca-django-cms-project/notebook/Implementation%20notes%20for%20Course%20registration%20(%23788).md
-
+- MyRCA / student profiles: https://projects.torchbox.com/projects/rca-django-cms-project/notebook/Implementation%20notes%20for%20%22My%20RCA%22%20feature.md
+- Course registration: https://projects.torchbox.com/projects/rca-django-cms-project/notebook/Implementation%20notes%20for%20Course%20registration%20(%23788).md
 
 # My RCA
 
@@ -57,16 +55,13 @@ Also you will need to add the following user groups (with same ID)
 - MPhil Students => 5
 - PhD Students => 6
 
-
 # Front end notes on the main RCA build
-
 
 ## Original set up and build
 
-It was orignally built to a design provided by an external agency, and some of the terminology e.g. 'modules' and the names of the text styles are based on their original terminology.
+It was originally built to a design provided by an external agency, and some of the terminology e.g. 'modules' and the names of the text styles are based on their original terminology.
 
 There is no tooling, and the site uses `django-compressor`.
-
 
 ### CSS
 
@@ -99,7 +94,7 @@ Note that all templates for template tags sit in a separate `tags` subfolder.
 There's the usual `blocks` folder for streamfield block templates.
 
 ### Carousels
+
 The original carousel used was bxslider, and on some templates there is still functionality to add a hero carousel (with both videos and images) using bxslider. The bxslider javascript is loaded via base.html. RCA are not using this functionality much and it may get removed at a later date.
 
 When the homepage 2018 redesign happened, there was a need to use another carousel, slick, in order to use the centre mode functionality.
-
