@@ -21,6 +21,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Update
+          command: |
+            sudo apt-get update
+      - run:
           name: Install ldap
           command: |
             sudo apt-get install -y apt-transport-https rsync libldap2-dev libsasl2-dev
