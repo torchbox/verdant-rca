@@ -16,7 +16,7 @@
 
                 <section class="row">
                     <div class="three-nine-cols">
-                        <div class="col col-9 last body-text">
+                        <div class="col col-9 col-9--not-empty last body-text">
                             {% if self.phd_dissertation_title %}<h2 class="h3">{{ self.phd_dissertation_title }}</h2>{% endif %}
 
                             {{ self.phd_statement|richtext }}
@@ -74,7 +74,7 @@
 
                 <section class="row">
                     <div class="three-nine-cols">
-                        <div class="col col-9 last body-text">
+                        <div class="col col-9 col-9--not-empty last body-text">
                             {% if self.mphil_dissertation_title %}<h2 class="h3">{{ self.mphil_dissertation_title }}</h2>{% endif %}
 
                             {{ self.mphil_statement|richtext }}
@@ -132,7 +132,7 @@
 
                 <section class="row">
                     <div class="three-nine-cols">
-                        <div class="col col-9 last body-text">
+                        <div class="col col-9 col-9--not-empty last body-text">
                             {% if self.show_work_title %}<h2 class="h3">{{ self.show_work_title }}</h2>{% endif %}
 
                             {% if self.show_work_description %}{{ self.show_work_description|richtext }}{% endif %}
@@ -265,7 +265,7 @@
                             {% include "rca/includes/modules/share-button.html" %}
                         </div>
                     </li>
-                    <li class="col col-9 last body-text-style">
+                    <li class="col col-9 col-9--not-empty last body-text-style">
                         {{ self.statement|richtext }}
                     </li>
                 </ul>
@@ -278,7 +278,7 @@
                             <li class="col col-3 first">
                                 <h2 class="module-title">Degrees</h2>
                             </li>
-                            <li class="col col-9 last body-text-style">
+                            <li class="col col-9 col-9--not-empty last body-text-style">
                                 {% for degree in degrees %}
                                     {{ degree.degree }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
@@ -312,7 +312,7 @@
                             <li class="col col-3 first">
                                 <h2 class="module-title">Exhibitions</h2>
                             </li>
-                            <li class="col col-9 last body-text-style">
+                            <li class="col col-9 col-9--not-empty last body-text-style">
                                 {% for exhibition in exhibitions %}
                                     {{ exhibition.exhibition }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
@@ -329,7 +329,7 @@
                             <li class="col col-3 first">
                                 <h2 class="module-title">Awards</h2>
                             </li>
-                            <li class="col col-9 last body-text-style">
+                            <li class="col col-9 col-9--not-empty last body-text-style">
                                 {% for award in awards %}
                                     {{ award.award }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
@@ -363,7 +363,7 @@
                             <li class="col col-3 first">
                                 <h2 class="module-title">Publications</h2>
                             </li>
-                            <li class="col col-9 last body-text-style">
+                            <li class="col col-9 col-9--not-empty last body-text-style">
                                 {% for publication in publications %}
                                     {{ publication.name }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
