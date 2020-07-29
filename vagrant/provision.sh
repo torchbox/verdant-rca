@@ -8,17 +8,20 @@ PIP=$VIRTUALENV_DIR/bin/pip
 
 NODE_VERSION=v4.2.3
 
+apt-get update -y
+
+# Python
+apt-get install -y python python-dev python-virtualenv
+
 # PostgreSQL
+export DEBIAN_FRONTEND=noninteractive
 apt-get remove -y --purge postgresql*
-echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-cat /vagrant/vagrant/ACCC4CF8.asc | apt-key add -
 apt-get update -y
 apt-get install -y postgresql-9.6 postgresql-client-9.6 postgresql-contrib-9.6 libpq-dev
 
 su - postgres -c "createuser -s vagrant"
 
 # Dependencies for LDAP
-apt-get update -y
 apt-get install -y libldap2-dev libsasl2-dev
 
 # Node.js, CoffeeScript and LESS
@@ -49,11 +52,6 @@ fi
 
 # Install Heroku CLI
 curl -sSL https://cli-assets.heroku.com/install-ubuntu.sh | sh
-
-# Install Fabric 2
-apt-get remove -y fabric
-pip3 install --upgrade pip
-python3 -m pip install Fabric==2.1.3
 
 # Install AWS CLI
 apt-get update -y
