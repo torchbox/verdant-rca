@@ -1,15 +1,15 @@
+from django.conf import settings
 from django.db import models
-
+from django.utils.functional import cached_property
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
-
 from taggit.models import TaggedItemBase
-
-from wagtail.wagtailadmin.edit_handlers import (
-    FieldPanel, InlinePanel, MultiFieldPanel, PublishingPanel
-)
+from wagtail.wagtailadmin.edit_handlers import (FieldPanel, InlinePanel,
+                                                MultiFieldPanel,
+                                                PageChooserPanel,
+                                                PublishingPanel)
 from wagtail.wagtailcore.fields import RichTextField
-from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtailcore.models import Orderable, Page
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
@@ -17,47 +17,35 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 
 from rca.help_text import help_text
 from rca.models import TWITTER_FEED_HELP_TEXT
-from rca.utils.models import (
-    RelatedLinkMixin, SocialFields, SidebarBehaviourFields, CarouselItemFields
-)
+from rca.utils.models import (CarouselItemFields, RelatedLinkMixin,
+                              SidebarBehaviourFields, SocialFields)
 
 
 class ShortCourseCarouselItem(Orderable, CarouselItemFields):
-    page = ParentalKey(
-        'shortcourses.ShortCoursePage',
-        related_name='shortcourse_carousel_items'
-    )
+    page = ParentalKey('shortcourses.ShortCoursePage',
+                       related_name='shortcourse_carousel_items')
 
 
 class ShortCourseRelatedLink(Orderable, RelatedLinkMixin):
-    page = ParentalKey(
-        'shortcourses.ShortCoursePage',
-        related_name='shortcourse_related_links'
-    )
+    page = ParentalKey('shortcourses.ShortCoursePage',
+                       related_name='shortcourse_related_links')
 
 
 class ShortCourseQuotation(Orderable):
-    page = ParentalKey(
-        'shortcourses.ShortCoursePage',
-        related_name='shortcourse_quotations'
-    )
-    quotation = models.TextField(
-        help_text=help_text(
-            'shortcourses.ShortCoursePageQuotation', 'quotation'
-        )
-    )
-    quotee = models.CharField(
-        max_length=255,
-        blank=True,
-        help_text=help_text('shortcourses.ShortCoursePageQuotation', 'quotee')
-    )
+    page = ParentalKey('shortcourses.ShortCoursePage',
+                       related_name='shortcourse_quotations')
+    quotation = models.TextField(help_text=help_text(
+        'shortcourses.ShortCoursePageQuotation', 'quotation'))
+    quotee = models.CharField(max_length=255,
+                              blank=True,
+                              help_text=help_text(
+                                  'shortcourses.ShortCoursePageQuotation',
+                                  'quotee'))
     quotee_job_title = models.CharField(
         max_length=255,
         blank=True,
-        help_text=help_text(
-            'shortcourses.ShortCoursePageQuotation', 'quotee_job_title'
-        )
-    )
+        help_text=help_text('shortcourses.ShortCoursePageQuotation',
+                            'quotee_job_title'))
 
     panels = [
         FieldPanel('quotation'),
@@ -67,44 +55,33 @@ class ShortCourseQuotation(Orderable):
 
 
 class ShortCourseRelatedDocument(Orderable):
-    page = ParentalKey(
-        'shortcourses.ShortCoursePage',
-        related_name='shortcourse_documents'
-    )
+    page = ParentalKey('shortcourses.ShortCoursePage',
+                       related_name='shortcourse_documents')
     document = models.ForeignKey(
         'wagtaildocs.Document',
         null=True,
         blank=True,
         related_name='+',
-        help_text=help_text(
-            'shortcourses.ShortCoursePageRelatedDocument', 'document'
-        )
-    )
+        help_text=help_text('shortcourses.ShortCoursePageRelatedDocument',
+                            'document'))
     document_name = models.CharField(
         max_length=255,
-        help_text=help_text(
-            'shortcourses.ShortCoursePageRelatedDocument', 'document_name'
-        )
-    )
+        help_text=help_text('shortcourses.ShortCoursePageRelatedDocument',
+                            'document_name'))
 
-    panels = [
-        DocumentChooserPanel('document'),
-        FieldPanel('document_name')
-    ]
+    panels = [DocumentChooserPanel('document'), FieldPanel('document_name')]
 
 
 class ShortCourseImage(Orderable):
-    page = ParentalKey(
-        'shortcourses.ShortCoursePage',
-        related_name='shortcourse_images'
-    )
-    image = models.ForeignKey(
-        'rca.RcaImage',
-        null=True,
-        blank=True,
-        related_name='+',
-        help_text=help_text('shortcourses.ShortCoursePageImage', 'image')
-    )
+    page = ParentalKey('shortcourses.ShortCoursePage',
+                       related_name='shortcourse_images')
+    image = models.ForeignKey('rca.RcaImage',
+                              null=True,
+                              blank=True,
+                              related_name='+',
+                              help_text=help_text(
+                                  'shortcourses.ShortCoursePageImage',
+                                  'image'))
 
     panels = [
         ImageChooserPanel('image'),
@@ -112,15 +89,12 @@ class ShortCourseImage(Orderable):
 
 
 class ShortCourseAd(Orderable):
-    page = ParentalKey(
-        'shortcourses.ShortCoursePage',
-        related_name='shortcourse_manual_adverts'
-    )
-    ad = models.ForeignKey(
-        'rca.Advert',
-        related_name='+',
-        help_text=help_text('shortcourses.ShortCoursePageAd', 'ad')
-    )
+    page = ParentalKey('shortcourses.ShortCoursePage',
+                       related_name='shortcourse_manual_adverts')
+    ad = models.ForeignKey('rca.Advert',
+                           related_name='+',
+                           help_text=help_text(
+                               'shortcourses.ShortCoursePageAd', 'ad'))
 
     panels = [
         SnippetChooserPanel('ad'),
@@ -128,18 +102,13 @@ class ShortCourseAd(Orderable):
 
 
 class ShortCourseReusableTextSnippet(Orderable):
-    page = ParentalKey(
-        'shortcourses.ShortCoursePage',
-        related_name='shortcourse_reusable_text_snippets'
-    )
+    page = ParentalKey('shortcourses.ShortCoursePage',
+                       related_name='shortcourse_reusable_text_snippets')
     reusable_text_snippet = models.ForeignKey(
         'rca.ReusableTextSnippet',
         related_name='+',
-        help_text=help_text(
-            'shortcourses.ShortCoursePageReusableTextSnippet',
-            'reusable_text_snippet'
-        )
-    )
+        help_text=help_text('shortcourses.ShortCoursePageReusableTextSnippet',
+                            'reusable_text_snippet'))
 
     panels = [
         SnippetChooserPanel('reusable_text_snippet'),
@@ -147,75 +116,70 @@ class ShortCourseReusableTextSnippet(Orderable):
 
 
 class ShortCourseTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'shortcourses.ShortCoursePage',
-        related_name='tagged_items'
-    )
+    content_object = ParentalKey('shortcourses.ShortCoursePage',
+                                 related_name='tagged_items')
 
 
 class ShortCoursePageKeyword(TaggedItemBase):
-    content_object = ParentalKey(
-        'shortcourses.ShortCoursePage', on_delete=models.CASCADE)
+    content_object = ParentalKey('shortcourses.ShortCoursePage',
+                                 on_delete=models.CASCADE)
 
 
 class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
     parent_page_types = ['rca.StandardIndex']
 
-    intro = RichTextField(
-        help_text=help_text('shortcourses.ShortCoursePage', 'intro'),
-        blank=True
-    )
+    intro = RichTextField(help_text=help_text('shortcourses.ShortCoursePage',
+                                              'intro'),
+                          blank=True)
+    details = RichTextField(null=True,
+                            help_text=help_text('shortcourses.ShortCoursePage',
+                                                'details'))
     body = RichTextField(
-        help_text=help_text('shortcourses.ShortCoursePage', 'body')
-    )
-    strapline = models.CharField(
-        max_length=255,
-        blank=True,
-        help_text=help_text('shortcourses.ShortCoursePage', 'strapline')
-    )
-    middle_column_body = RichTextField(
-        blank=True,
-        help_text=help_text(
-            'shortcourses.ShortCoursePage', 'middle_column_body')
-    )
-    show_on_homepage = models.BooleanField(
-        default=False,
-        help_text=help_text('shortcourses.ShortCoursePage', 'show_on_homepage')
-    )
-    twitter_feed = models.CharField(
-        max_length=255,
-        blank=True,
-        help_text=help_text(
-            'shortcourses.ShortCoursePage',
-            'twitter_feed', default=TWITTER_FEED_HELP_TEXT
-        )
-    )
-    related_school = models.ForeignKey(
-        'taxonomy.School',
-        null=True,
-        blank=False,
-        on_delete=models.SET_NULL,
-        related_name='shortcourses',
-        help_text=help_text('shortcourses.ShortCoursePage', 'related_school'),
-        verbose_name='School'
-    )
-    related_programme = models.ForeignKey(
-        'taxonomy.Programme',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='shortcourses',
-        help_text=help_text(
-            'shortcourses.ShortCoursePage', 'related_programme')
-    )
-    related_area = models.ForeignKey(
-        'taxonomy.Area',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='shortcourses',
-        help_text=help_text('shortcourses.ShortCoursePage', 'related_area')
-    )
+        help_text=help_text('shortcourses.ShortCoursePage', 'body'))
+    strapline = models.CharField(max_length=255,
+                                 blank=True,
+                                 help_text=help_text(
+                                     'shortcourses.ShortCoursePage',
+                                     'strapline'))
+    middle_column_body = RichTextField(blank=True,
+                                       help_text=help_text(
+                                           'shortcourses.ShortCoursePage',
+                                           'middle_column_body'))
+    show_on_homepage = models.BooleanField(default=False,
+                                           help_text=help_text(
+                                               'shortcourses.ShortCoursePage',
+                                               'show_on_homepage'))
+    twitter_feed = models.CharField(max_length=255,
+                                    blank=True,
+                                    help_text=help_text(
+                                        'shortcourses.ShortCoursePage',
+                                        'twitter_feed',
+                                        default=TWITTER_FEED_HELP_TEXT))
+    related_school = models.ForeignKey('taxonomy.School',
+                                       null=True,
+                                       blank=False,
+                                       on_delete=models.SET_NULL,
+                                       related_name='shortcourses',
+                                       help_text=help_text(
+                                           'shortcourses.ShortCoursePage',
+                                           'related_school'),
+                                       verbose_name='School')
+    related_programme = models.ForeignKey('taxonomy.Programme',
+                                          null=True,
+                                          blank=True,
+                                          on_delete=models.SET_NULL,
+                                          related_name='shortcourses',
+                                          help_text=help_text(
+                                              'shortcourses.ShortCoursePage',
+                                              'related_programme'))
+    related_area = models.ForeignKey('taxonomy.Area',
+                                     null=True,
+                                     blank=True,
+                                     on_delete=models.SET_NULL,
+                                     related_name='shortcourses',
+                                     help_text=help_text(
+                                         'shortcourses.ShortCoursePage',
+                                         'related_area'))
     feed_image = models.ForeignKey(
         'rca.RcaImage',
         null=True,
@@ -226,37 +190,34 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
             'shortcourses.ShortCoursePage',
             'feed_image',
             default="The image displayed in content feeds, such as the news "
-                    "carousel. Should be 16:9 ratio."
-        )
-    )
-    tags = ClusterTaggableManager(
-        through=ShortCourseTag,
-        help_text=help_text('shortcourses.ShortCoursePage', 'tags'),
-        blank=True
-    )
+            "carousel. Should be 16:9 ratio."))
+    tags = ClusterTaggableManager(through=ShortCourseTag,
+                                  help_text=help_text(
+                                      'shortcourses.ShortCoursePage', 'tags'),
+                                  blank=True)
     show_on_school_page = models.BooleanField(
         default=False,
-        help_text=help_text(
-            'shortcourses.ShortCoursePage', 'show_on_school_page')
-    )
+        help_text=help_text('shortcourses.ShortCoursePage',
+                            'show_on_school_page'))
     programme_finder_exclude = models.BooleanField(
         default=False,
         verbose_name='Exclude from programme finder',
-        help_text='Tick to exclude this page from the programme finder.'
-    )
+        help_text='Tick to exclude this page from the programme finder.')
     programme_finder_keywords = ClusterTaggableManager(
         through=ShortCoursePageKeyword,
         blank=True,
         verbose_name='Keywords',
         help_text='A comma-separated list of keywords.',
-        related_name='shortcourse_keywords'
-    )
-    degree_level = models.ForeignKey(
-        'taxonomy.DegreeLevel',
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='degree_shortcourse_pages'
-    )
+        related_name='shortcourse_keywords')
+    degree_level = models.ForeignKey('taxonomy.DegreeLevel',
+                                     null=True,
+                                     on_delete=models.SET_NULL,
+                                     related_name='degree_shortcourse_pages')
+    ap_course_id = models.CharField(max_length=8,
+                                    blank=True,
+                                    help_text=help_text(
+                                        'shortcourses.ShortCoursePage',
+                                        'ap_course_id'))
 
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
@@ -305,6 +266,14 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
     def related_links(self):
         return self.shortcourse_related_links
 
+    @cached_property
+    def enquiry_link(self):
+        if not self.ap_course_id:
+            return None
+        enquiry_page = ShortCourseEnquiryPage.objects.live().first()
+        if enquiry_page:
+            return enquiry_page.url + '?course_id=' + self.ap_course_id
+
     @property
     def reusable_text_snippets(self):
         return self.shortcourse_reusable_text_snippets
@@ -326,17 +295,17 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
         return self.shortcourse_manual_adverts
 
     content_panels = [
+        FieldPanel('ap_course_id'),
         FieldPanel('title', classname="full title"),
         FieldPanel('strapline', classname="full"),
         FieldPanel('intro', classname="full"),
+        FieldPanel('details'),
         FieldPanel('body', classname="full"),
         InlinePanel('shortcourse_carousel_items', label="Carousel content"),
         InlinePanel('shortcourse_related_links', label="Related links"),
         FieldPanel('middle_column_body', classname="full"),
-        InlinePanel(
-            'shortcourse_reusable_text_snippets',
-            label="Reusable text snippet"
-        ),
+        InlinePanel('shortcourse_reusable_text_snippets',
+                    label="Reusable text snippet"),
         InlinePanel('shortcourse_documents', label="Document"),
         InlinePanel('shortcourse_quotations', label="Quotation"),
         InlinePanel('shortcourse_images', label="Middle column image"),
@@ -377,3 +346,44 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
             FieldPanel('collapse_upcoming_events'),
         ], 'Sidebar behaviour'),
     ]
+
+
+class ShortCourseEnquiryRelatedShortCourse(Orderable):
+    page = ParentalKey('shortcourses.ShortCourseEnquiryPage',
+                       related_name='shortcourses')
+    course = models.ForeignKey('shortcourses.ShortCoursePage',
+                               null=True,
+                               blank=True,
+                               related_name='+')
+
+    panels = [
+        PageChooserPanel('course'),
+    ]
+
+
+class ShortCourseEnquiryPage(Page, SocialFields):
+    is_creatable = False
+    parent_page_types = ['rca.StandardIndex']
+
+    intro = RichTextField(help_text=help_text(
+        'shortcourses.ShortCourseEnquiryPage', 'intro'),
+                          blank=True)
+
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+    ]
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('intro', classname="full"),
+        InlinePanel('shortcourses', label="Available courses"),
+    ]
+
+    def get_context(self, request, *args, **kwargs):
+        context = super(ShortCourseEnquiryPage,
+                        self).get_context(request, *args, **kwargs)
+        context.update({
+            'access_planit_company_id': getattr(settings, "ACCESS_PLANIT_COMPANY_ID", ""),
+            'access_planit_url': getattr(settings, "ACCESS_PLANIT_URL", ""),
+        })
+        return context

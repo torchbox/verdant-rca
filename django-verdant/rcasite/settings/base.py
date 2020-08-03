@@ -2,8 +2,10 @@
 
 import os
 import sys
-import raven
+
 import dj_database_url
+import raven
+from django.conf import global_settings
 from raven.exceptions import InvalidGitRepository
 
 env = os.environ.copy()
@@ -119,7 +121,6 @@ MIDDLEWARE_CLASSES = [
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
 ]
 
-from django.conf import global_settings
 TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + [
     'django.core.context_processors.request',
     'rca.context_processors.global_vars',
@@ -502,6 +503,12 @@ if 'EMAIL_SENDER' in env:
 # https://intranet.rca.ac.uk/sync/trigger_import/{id}/?token=tokenfromintranetconfig
 if 'INTRANET_PUSH_URL' in env:
     INTRANET_PUSH_URL = env['INTRANET_PUSH_URL']
+
+# Configure Access Planit integration for short course enquiries.
+if 'ACCESS_PLANIT_COMPANY_ID' in env:
+    ACCESS_PLANIT_COMPANY_ID = env['ACCESS_PLANIT_COMPANY_ID']
+if 'ACCESS_PLANIT_URL' in env:
+    ACCESS_PLANIT_URL = env['ACCESS_PLANIT_URL']
 
 if 'EMBEDLY_KEY' in env:
     EMBEDLY_KEY = env['EMBEDLY_KEY']
