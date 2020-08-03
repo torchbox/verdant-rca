@@ -20,8 +20,8 @@
     <div class="header__navigation-toggle">
         {% include 'rca/includes/modules/navigation/menu-toggle.html' with modifier="header__menu-toggle--medium" %}
         {% include 'rca/includes/modules/navigation/search-toggle.html' %}
-        <a class="header__menu-close" href="#" data-close-menu>
-            <svg width="14" height="14" aria-label="Close menu"><use xlink:href="#close"></use></svg>
+        <a class="header__menu-close" href="#" data-close-menu aria-label="Close menu">
+            <svg width="14" height="14"><use xlink:href="#close"></use></svg>
         </a>
     </div>
 
@@ -38,7 +38,7 @@
                 <form action="/search" method="get" role="search" class="search2">
                     <label class="search__label" for="searchDesktop">Search</label>
                     <input class="search2__input input" id="searchDesktop" type="text" placeholder="Search…" name="q"{% if search_query %} value="{{ search_query }}"{% endif %}>
-                    <button class="search2__button button" type="submit">
+                    <button class="search2__button button" type="submit" aria-label="Search">
                         <svg width="12px" height="8px" class="search2__icon"><use xlink:href="#arrow"></use></svg>
                     </button>
                 </form>
