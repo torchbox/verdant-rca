@@ -289,6 +289,10 @@
     }
     .col-9 {
         .column(9);
+
+        &--not-empty {
+            min-height: 10px; // ensures the div always has some height and affects the layout even if empty of content
+        }
     }
 
     .three-plus {

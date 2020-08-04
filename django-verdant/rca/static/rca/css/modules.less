@@ -1331,11 +1331,11 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
         margin: 0;
         padding: 0;
     }
-    dd {
+    dt {
         .a2();
     }
 
-    dt {
+    dd {
         margin-bottom: @grid-gutter-width;
         &:last {
             margin-bottom: 0;
@@ -1417,6 +1417,12 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
         border-top: 1px solid @color-dark-grey;
         margin-top: @spacing-two;
         clear: both;
+
+        &.h3 {
+            font-size: @font-size-18;
+            line-height: @line-height-5;
+            margin-bottom: 0;
+        }
     }
 
     h3 {

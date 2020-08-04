@@ -16,47 +16,47 @@
 
                 <section class="row">
                     <div class="three-nine-cols">
-                        <div class="col col-9 last body-text">
-                            <h3>{{ self.phd_dissertation_title }}</h3>
+                        <div class="col col-9 col-9--not-empty last body-text">
+                            {% if self.phd_dissertation_title %}<h2 class="h3">{{ self.phd_dissertation_title }}</h2>{% endif %}
 
                             {{ self.phd_statement|richtext }}
                         </div>
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
-                                    <dd>School</dd>
-                                    <dt>{{ self.get_phd_school_display }}</dt>
+                                    <dt>School</dt>
+                                    <dd>{{ self.get_phd_school_display }}</dd>
                                     {% if self.phd_programme %}
-                                        <dd>Programme</dd>
-                                        <dt>
+                                        <dt>Programme</dt>
+                                        <dd>
                                             {{ self.get_phd_programme_display }}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.phd_collaborators.all %}
-                                        <dd>Collaborators</dd>
-                                        <dt>
+                                        <dt>Collaborators</dt>
+                                        <dd>
                                             {% for collaborator in self.phd_collaborators.all %}
                                                 {{ collaborator.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
 
                                     {% if self.phd_supervisors.all %}
-                                        <dd>Supervisors</dd>
-                                        <dt>
+                                        <dt>Supervisors</dt>
+                                        <dd>
                                             {% for supervisor in self.phd_supervisors.all %}
                                                 {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}{{ supervisor.name }}{% if supervisor.link %}</a>{% endif %}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
 
                                     {% if self.phd_sponsors.all %}
-                                        <dd>Sponsors</dd>
-                                        <dt>
+                                        <dt>Sponsors</dt>
+                                        <dd>
                                             {% for sponsor in self.phd_sponsors.all %}
                                                 {{ sponsor.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                 </dl>
                             </div>
@@ -74,47 +74,47 @@
 
                 <section class="row">
                     <div class="three-nine-cols">
-                        <div class="col col-9 last body-text">
-                            <h3>{{ self.mphil_dissertation_title }}</h3>
+                        <div class="col col-9 col-9--not-empty last body-text">
+                            {% if self.mphil_dissertation_title %}<h2 class="h3">{{ self.mphil_dissertation_title }}</h2>{% endif %}
 
                             {{ self.mphil_statement|richtext }}
                         </div>
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
-                                    <dd>School</dd>
-                                    <dt>
+                                    <dt>School</dt>
+                                    <dd>
                                         {{ self.get_mphil_school_display }}
-                                    </dt>
+                                    </dd>
                                     {% if self.mphil_programme %}
-                                        <dd>Programme</dd>
-                                        <dt>
+                                        <dt>Programme</dt>
+                                        <dd>
                                             {{ self.get_mphil_programme_display }}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.mphil_collaborators.all %}
-                                        <dd>Collaborators</dd>
-                                        <dt>
+                                        <dt>Collaborators</dt>
+                                        <dd>
                                             {% for collaborator in self.mphil_collaborators.all %}
                                                 {{ collaborator.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.mphil_supervisors.all %}
-                                        <dd>Supervisors</dd>
-                                        <dt>
+                                        <dt>Supervisors</dt>
+                                        <dd>
                                             {% for supervisor in self.mphil_supervisors.all %}
                                                 {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}{{ supervisor.name }}{% if supervisor.link %}</a>{% endif %}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.mphil_sponsors.all %}
-                                        <dd>Sponsors</dd>
-                                        <dt>
+                                        <dt>Sponsors</dt>
+                                        <dd>
                                             {% for sponsor in self.mphil_sponsors.all %}
                                                 {{ sponsor.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                 </dl>
                             </div>
@@ -127,38 +127,38 @@
 
         {% if self.is_ma_student and self.ma_in_show %}
             {% tab "MA work" %}
-                {% get_student_carousel_items self 'ma' as ma_carousel_items %}
-                {% include "rca_show/includes/modules/carousel.html" with carousel_items=ma_carousel_items %}
+                {% comment %} {% get_student_carousel_items self 'ma' as ma_carousel_items %}
+                {% include "rca_show/includes/modules/carousel.html" with carousel_items=ma_carousel_items %} {% endcomment %}
 
                 <section class="row">
                     <div class="three-nine-cols">
-                        <div class="col col-9 last body-text">
-                            <h3>{{ self.show_work_title }}</h3>
+                        <div class="col col-9 col-9--not-empty last body-text">
+                            {% if self.show_work_title %}<h2 class="h3">{{ self.show_work_title }}</h2>{% endif %}
 
-                            {{ self.show_work_description|richtext }}
+                            {% if self.show_work_description %}{{ self.show_work_description|richtext }}{% endif %}
                         </div>
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
-                                    <dd>Programme</dd>
-                                    <dt>
+                                    <dt>Programme</dt>
+                                    <dd>
                                         {{ self.get_ma_programme_display }}
-                                    </dt>
+                                    </dd>
                                     {% if self.show_collaborators.all %}
-                                        <dd>Collaborators</dd>
-                                        <dt>
+                                        <dt>Collaborators</dt>
+                                        <dd>
                                             {% for collaborator in self.show_collaborators.all %}
                                                 {{ collaborator.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                     {% if self.show_sponsors.all %}
-                                        <dd>Sponsors</dd>
-                                        <dt>
+                                        <dt>Sponsors</dt>
+                                        <dd>
                                             {% for sponsor in self.show_sponsors.all %}
                                                 {{ sponsor.name }}<br />
                                             {% endfor %}
-                                        </dt>
+                                        </dd>
                                     {% endif %}
                                 </dl>
                             </div>
@@ -175,7 +175,7 @@
                         {% if self.profile_image %}
                             {% image self.profile_image width-300 %}
                         {% else %}
-                            <img src="/static/rca/images/rca-placeholder-square.jpg" width="300">
+                            <img src="/static/rca/images/rca-placeholder-square.jpg" width="300" alt="">
                         {% endif %}
                     </li>
                      {% if self.is_phd_student %}
@@ -265,42 +265,10 @@
                             {% include "rca/includes/modules/share-button.html" %}
                         </div>
                     </li>
-                    <li class="col col-9 last body-text-style">
+                    <li class="col col-9 col-9--not-empty last body-text-style">
                         {{ self.statement|richtext }}
                     </li>
                 </ul>
-
-     <!--
-                            <h2 class="h6">Contact</h2>
-                            <ul>
-                                {% with self.emails.all as emails %}
-                                    {% if emails %}
-                                        {% for email in emails %}
-                                            <li><a href="mailto:{{ email.email }}">{{ email.email }}</a></li>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                                {% with self.phones.all as phone_nos %}
-                                    {% if phone_nos %}
-                                        {% for phone_no in phone_nos %}
-                                            <li>{{ phone_no.phone }}</li>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                                {% with self.websites.all as websites %}
-                                    {% if websites %}
-                                        {% for website in websites %}
-                                            <li><a href="{{ website.website }}">{{ website.website }}</a></li>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                                {% if self.twitter_handle %}
-                                    <a href="http://www.twitter.com/{{ self.twitter_handle }}">&#64;{{ self.twitter_handle }}</a>
-                                {% endif %}
-                            </ul>
-                         -->
-
-
 
                 <!--degrees-->
                 {% with self.previous_degrees.all as degrees %}
@@ -310,7 +278,7 @@
                             <li class="col col-3 first">
                                 <h2 class="module-title">Degrees</h2>
                             </li>
-                            <li class="col col-9 last body-text-style">
+                            <li class="col col-9 col-9--not-empty last body-text-style">
                                 {% for degree in degrees %}
                                     {{ degree.degree }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
@@ -344,7 +312,7 @@
                             <li class="col col-3 first">
                                 <h2 class="module-title">Exhibitions</h2>
                             </li>
-                            <li class="col col-9 last body-text-style">
+                            <li class="col col-9 col-9--not-empty last body-text-style">
                                 {% for exhibition in exhibitions %}
                                     {{ exhibition.exhibition }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
@@ -361,7 +329,7 @@
                             <li class="col col-3 first">
                                 <h2 class="module-title">Awards</h2>
                             </li>
-                            <li class="col col-9 last body-text-style">
+                            <li class="col col-9 col-9--not-empty last body-text-style">
                                 {% for award in awards %}
                                     {{ award.award }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
@@ -395,7 +363,7 @@
                             <li class="col col-3 first">
                                 <h2 class="module-title">Publications</h2>
                             </li>
-                            <li class="col col-9 last body-text-style">
+                            <li class="col col-9 col-9--not-empty last body-text-style">
                                 {% for publication in publications %}
                                     {{ publication.name }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
