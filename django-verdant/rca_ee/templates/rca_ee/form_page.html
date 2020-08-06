@@ -84,9 +84,7 @@
 
 {% block js %}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
     <script src="https://js.stripe.com/v2/"></script>
-    <script src="/static2/js/main.js"></script>
 
     <script type="text/javascript">
         var domainroot = "{{ request.site.hostname }}";
@@ -118,6 +116,10 @@
         <script src="{% static "rca/js/site.js" %}"></script>
         <script src="{% static "rca/js/nav.js" %}"></script>
         <script src="{% static "rca/js/pushstate.js" %}"></script>
+        <script src="{% static "rca/js/populate-primary-nav.js" %}"></script>
+        <script src="{% static "rca/js/populate-audience-nav.js" %}"></script>
+        <script src="{% static "rca/js/populate-footer-nav.js" %}"></script>
+        <script src="{% static "rca/js/populate-footer-links.js" %}"></script>
 
         {% get_debug as DEBUG %}
 
@@ -131,6 +133,8 @@
             <script src="{% static "rca/js/local_images.js" %}"></script>
         {% endif %}
     {% endcompress %}
+
+    <script src="//www.rca.ac.uk/static2/js/main.js"></script>
 
     <script type="text/javascript">
         {# and here is a replacement for that missing customSelect #}
