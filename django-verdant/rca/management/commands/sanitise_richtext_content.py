@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import Page, get_page_models
+from rca.models import NewStudentPage
 
 HEADING_TAGS = [
     "h1",
@@ -139,7 +140,8 @@ class Command(BaseCommand):
         ),
     )
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(type(self), Command).__init__(self, *args, **kwargs)
         self.tags_removed = defaultdict(dict)
         self.tags_unwrapped = defaultdict(dict)
         self.pages_processed = 0
@@ -251,12 +253,16 @@ class Command(BaseCommand):
                 if fix:
                     try:
                         page.save()
-                    except ValidationError:
+                    except ValidationError as e:
+                        print(e)
                         self.remove_page_from_log(page)
 
         # Iterate through all page types and process their richtext fields
         else:
             for content_class in get_page_models():
+                if content_class.__name__ != 'NewStudentPage':
+                    continue
+                print(content_class.__name__ )
                 richtext_fields = get_class_richtext_fields(content_class)
                 if not richtext_fields:
                     continue
@@ -276,7 +282,8 @@ class Command(BaseCommand):
                     if fix:
                         try:
                             page.save()
-                        except ValidationError:
+                        except ValidationError as e:
+                            print(e)
                             self.remove_page_from_log(page)
 
         # Report affected pages
