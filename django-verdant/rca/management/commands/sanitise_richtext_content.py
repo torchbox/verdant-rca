@@ -260,9 +260,6 @@ class Command(BaseCommand):
         # Iterate through all page types and process their richtext fields
         else:
             for content_class in get_page_models():
-                if content_class.__name__ != 'NewStudentPage':
-                    continue
-                print(content_class.__name__ )
                 richtext_fields = get_class_richtext_fields(content_class)
                 if not richtext_fields:
                     continue
