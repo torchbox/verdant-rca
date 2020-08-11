@@ -1,0 +1,71 @@
+.sitewide-alert {
+    display: none;
+    z-index: 110;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    background-color: @color--black-80;
+
+    // Applied if cookie just added
+    &--inactive {
+        display: none;
+    }
+
+    &--active {
+        display: block;
+    }
+
+    &__modal {
+        z-index: 120;
+        background-color: @color--white;
+        color: @color--black;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: (@gutter * 1.5);
+    }
+
+    &__copy {
+        margin: 0 0 15px;
+
+        .rich-text {
+            p {
+                font-family: 'Benton Sans Old', Helvetica Neue, Arial, Helvetica, Sans-Serif;
+                font-size: 14px;
+                margin: 0 0 20px;
+            }
+
+            a {
+                font-family: @font-family-benton;
+                color: #0001EE;
+
+                &:hover {
+                    color: #0001EE;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    &__close {
+        background: none;
+        border: 0;
+        position: absolute;
+        top: @gutter;
+        right: @gutter;
+    }
+
+    &__close-icon {
+        fill: @color--white;
+    }
+
+    &__action {
+        font-family: @font-family-benton;
+    }
+}

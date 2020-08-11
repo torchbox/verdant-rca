@@ -116,6 +116,11 @@
 
         {% wagtailuserbar %}
 
+        {% sitewide_alert as alert %}
+        {% if alert.show_alert %}
+            {% include "rca/includes/modules/sitewide-alert.html" %}
+        {% endif %}
+
         {# ADD CAMPAIGNS TRACKERS https://projects.torchbox.com/projects/rca-django-cms-project/tickets/898 #}
         {% include "rca/includes/campaigns_trackers.html" %}
 
@@ -268,7 +273,8 @@
                 {% endif %}
             {% endcompress %}
 
-            <script src="//www.rca.ac.uk/static2/js/main.js"></script>
+            {# revert this back to live JS file path before deploying to live #}
+            <script src="//rca-staging.herokuapp.com/static2/js/main.js"></script>
 
             <script type="text/javascript">
                 {% if not request.is_ajax %}
