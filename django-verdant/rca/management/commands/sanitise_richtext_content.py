@@ -164,12 +164,9 @@ class Command(BaseCommand):
     def remove_empty_tags(self, page, field):
         html = getattr(page, field)
         soup = BeautifulSoup(html, "html5lib")
-
         potentially_empty_tags = soup.find_all(TAGS_REMOVE_EMPTY)
-
         tags_removed = []
         tags_unwrapped = []
-
         for tag in potentially_empty_tags:
             if tag_has_no_text(tag):
                 if not tag.descendants:
@@ -191,7 +188,6 @@ class Command(BaseCommand):
         setattr(page, field, soup)
         # setattr(page, field, soup.encode('utf-8'))
         self.log_alterations(page, field, tags_removed, tags_unwrapped)
-
         return page
 
     def output_to_csv(self, filename, affected_content):
@@ -244,11 +240,18 @@ class Command(BaseCommand):
 
         # Process specified pages
         if page_ids:
+            print('yep')
             pages = Page.objects.filter(pk__in=page_ids)
             pages = pages.public().live().specific()
             for page in pages:
                 richtext_fields = get_class_richtext_fields(page.__class__)
-                page = self.process_page(page, richtext_fields)
+                # issues here
+                try:
+                    page = self.process_page(page, richtext_fields)
+                except TypeError as e:
+                    print(e)
+                    pass
+
                 if fix:
                     try:
                         page.save()
@@ -274,7 +277,11 @@ class Command(BaseCommand):
                     )
 
                 for page in pages:
-                    page = self.process_page(page, richtext_fields)
+                    try:
+                        page = self.process_page(page, richtext_fields)
+                    except TypeError as e:
+                        print(e)
+                        pass
                     if fix:
                         try:
                             page.save()
