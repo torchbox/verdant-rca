@@ -273,13 +273,14 @@
                 {% endif %}
             {% endcompress %}
 
+            <script src="//www.rca.ac.uk/static2/js/main.js"></script>
             <script type="text/javascript">
                 {% if not request.is_ajax %}
                     // onDocumentReady wraps all the startup code in site.js
                     jQuery(onDocumentReady);
                 {% endif %}
             </script>
-            
+
             {# revert this back to live JS file path before deploying to live #}
             <script src="//rca-staging.herokuapp.com/static2/js/main.js"></script>
             {# <script src="//www.rca.ac.uk/static2/js/main.js"></script> #}

@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from wagtail.wagtailadmin import blocks
+from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.blocks import PageChooserBlock
 from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
