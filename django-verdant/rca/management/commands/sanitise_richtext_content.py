@@ -139,7 +139,8 @@ class Command(BaseCommand):
         ),
     )
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(type(self), Command).__init__(self, *args, **kwargs)
         self.tags_removed = defaultdict(dict)
         self.tags_unwrapped = defaultdict(dict)
         self.pages_processed = 0
@@ -194,9 +195,9 @@ class Command(BaseCommand):
         return page
 
     def output_to_csv(self, filename, affected_content):
-        headings = ['Page ID', 'Rich Text Field', 'Tags Affected', 'Page URL']
         with open(filename, "wb") as f:
             w = csv.writer(f)
+            headings = ['Page ID', 'Rich Text Field', 'Tags Affected', 'Page URL']
             w.writerow(headings)
             fields = affected_content.values()[0].keys()
             for page_id in affected_content.keys():
@@ -251,7 +252,8 @@ class Command(BaseCommand):
                 if fix:
                     try:
                         page.save()
-                    except ValidationError:
+                    except ValidationError as e:
+                        print(e)
                         self.remove_page_from_log(page)
 
         # Iterate through all page types and process their richtext fields
@@ -276,7 +278,8 @@ class Command(BaseCommand):
                     if fix:
                         try:
                             page.save()
-                        except ValidationError:
+                        except ValidationError as e:
+                            print(e)
                             self.remove_page_from_log(page)
 
         # Report affected pages
