@@ -240,7 +240,6 @@ class Command(BaseCommand):
 
         # Process specified pages
         if page_ids:
-            print('yep')
             pages = Page.objects.filter(pk__in=page_ids)
             pages = pages.public().live().specific()
             for page in pages:
