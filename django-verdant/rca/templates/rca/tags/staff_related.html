@@ -8,7 +8,7 @@
                     <div class="image">
                     {% if staff_member.profile_image %}
                         {% image staff_member.profile_image width-180 as staff_image %}
-                        <img src="{{ staff_image.src }}" width="{{ staff_image.width }}" height="{{ staff_image.height }}" alt="">
+                        <img src="{{ staff_image.url }}" width="{{ staff_image.width }}" height="{{ staff_image.height }}" alt="">
                     {% else %}
                         <img src="/static/rca/images/rca-placeholder-square.jpg" width="180" alt="">
                     {% endif %}
