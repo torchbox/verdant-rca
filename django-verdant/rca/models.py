@@ -4051,9 +4051,7 @@ class NewStudentPage(Page, SocialFields):
     ma_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='ma_students', help_text=help_text('rca.NewStudentPage', 'ma_programme'))
     ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_graduation_year'))
 
-    # NOTE the ma_specialism has the choices=SPECIALISM_CHOICES removed to bypass validation temporarily.
-    # For a sanitization command to be run, very old pages will not save.
-    ma_specialism = models.CharField("Specialism", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_specialism'))
+    ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_specialism'))
     ma_in_show = models.BooleanField("In show", default=False, help_text=help_text('rca.NewStudentPage', 'ma_in_show', default="Please tick only if you're in the Show this academic year"))
     show_work_title = models.CharField("Dissertation/project title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_title'))
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_type'))
