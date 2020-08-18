@@ -18,6 +18,37 @@
 
             <section class="row">
                 <div class="three-nine-cols">
+                    <div class="col col-9 last body-text">
+                        <h2 class="module-title">
+                            {% if student.ma_in_show %}
+                                {# Only show type/title if a type is chosen, else nothing #}
+                                {% if student.show_work_type %}
+                                    <span>{{ student.get_show_work_type_display }}:</span>
+                                {% endif %}
+                            {% else %}
+                                Dissertation:
+                            {% endif %}
+                        </h2>
+
+
+                        <h3>
+                        {% if student.ma_in_show and student.ma_graduation_year == self.year %}
+                            {{ student.show_work_title }}
+                        {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                            {{ student.mphil_dissertation_title }}
+                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                            {{ student.phd_dissertation_title }}
+                        {% endif %}
+                        </h3>
+
+                        {% if student.ma_in_show and student.ma_graduation_year == self.year %}
+                            {{ student.show_work_description|richtext }}
+                        {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                            {{ student.mphil_statement|richtext }}
+                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                            {{ student.phd_statement|richtext }}
+                        {% endif %}
+                    </div>
                     <div class="col col-3 first">
                         <div class="meta-data">
                             <dl>
@@ -70,37 +101,7 @@
                             {% include "rca/includes/modules/share-button.html" %}
                         </div>
                     </div>
-                    <div class="col col-9 last body-text">
-                        <h2 class="module-title">
-                            {% if student.ma_in_show %}
-                                {# Only show type/title if a type is chosen, else nothing #}
-                                {% if student.show_work_type %}
-                                    <span>{{ student.get_show_work_type_display }}:</span>
-                                {% endif %}
-                            {% else %}
-                                Dissertation:
-                            {% endif %}
-                        </h2>
 
-
-                        <h3>
-                        {% if student.ma_in_show and student.ma_graduation_year == self.year %}
-                            {{ student.show_work_title }}
-                        {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
-                            {{ student.mphil_dissertation_title }}
-                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
-                            {{ student.phd_dissertation_title }}
-                        {% endif %}
-                        </h3>
-
-                        {% if student.ma_in_show and student.ma_graduation_year == self.year %}
-                            {{ student.show_work_description|richtext }}
-                        {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
-                            {{ student.mphil_statement|richtext }}
-                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
-                            {{ student.phd_statement|richtext }}
-                        {% endif %}
-                    </div>
                 </div>
             </section>
         {% endtab %}
