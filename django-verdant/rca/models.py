@@ -4056,7 +4056,8 @@ class NewStudentPage(Page, SocialFields):
     show_work_title = models.CharField("Dissertation/project title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_title'))
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_type'))
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_location'))
-    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True)
+    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True, max_length=1200)
+    programme_value_override = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'programme_value_override'))
 
     # MPhil details
     mphil_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
@@ -4341,7 +4342,9 @@ class NewStudentPage(Page, SocialFields):
             return ''
 
     def get_ma_programme_display(self):
-        if not self.ma_programme:
+        if self.programme_value_override:
+            return self.programme_value_override
+        elif not self.ma_programme:
             return ''
 
         return self.ma_programme.get_display_name_for_year(self.ma_graduation_year)
@@ -4515,6 +4518,7 @@ NewStudentPage.content_panels = [
         FieldPanel('ma_programme'),
         FieldPanel('ma_graduation_year'),
         FieldPanel('ma_specialism'),
+        FieldPanel('programme_value_override')
     ], "MA details", classname="collapsible collapsed"),
 
     # Show details
