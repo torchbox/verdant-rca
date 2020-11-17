@@ -41,7 +41,7 @@ class NextEventOrder(filters.OrderingFilter):
             date_from = request.query_params.get('event_date_from', None)
             if date_from:
                 now = datetime.utcnow().date()
-                queryset = queryset.filter(dates_times__date_from__gte=now)
+                queryset = queryset.filter(dates_times__date_from__gte=now) | queryset.filter(dates_times__date_to__gte=now)
                 queryset = queryset.order_by('dates_times__date_from')
 
         return queryset
