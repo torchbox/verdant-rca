@@ -28,6 +28,7 @@ boto==2.32.0
 certifi==2019.9.11
 django-mailgun==0.9.1
 scout-apm==2.1.0
+python-magic==0.4.18
 
 # Developer requirements
 django-debug-toolbar==0.11.0
