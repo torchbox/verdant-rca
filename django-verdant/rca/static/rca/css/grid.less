@@ -7,7 +7,7 @@
 /* Utility variable - you should never need to modify this */
 @gridsystem_width: @grid-columns * 1px;
 @padding: @grid-gutter-width * 0.5;
-@correction: 0.5 / @grid-max-width * 100 * 1%; // NOTE: Check this in IE
+@correction: 0.5 / {@grid-max-width} * 100 * 1%; // NOTE: Check this in IE
 
 /* Ensure grid columns are set to border-boxes. This is essential */
 .border-box(){
