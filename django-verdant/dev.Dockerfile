@@ -65,7 +65,7 @@ COPY gunicorn-conf.py ./
 COPY --chown=verdant-rca . .
 
 # Install less
-RUN npm install less -g
+RUN npm install less@^3.13.1 -g
 
 # Collect static. This command will move static files from application
 # directories and "static_compiled" folder to the main static directory that

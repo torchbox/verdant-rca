@@ -55,7 +55,7 @@ WORKDIR /app
 # RUN npm install
 
 # Install less
-RUN npm install less -g
+RUN npm install less@^3.13.1 -g
 
 # Install your app's Python requirements.
 COPY requirements.txt ./requirements.txt
