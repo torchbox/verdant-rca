@@ -100,7 +100,7 @@ if 'MEDIA_DIR' in env:
 # Email settings
 # We use SMTP to send emails. We typically use transactional email services
 # that let us use SMTP.
-# https://docs.djangoproject.com/en/2.1/topics/email/
+# https://docs.djangoproject.com/en/1.8/topics/email
 
 # https://docs.djangoproject.com/en/stable/ref/settings/#email-host
 if "EMAIL_HOST" in env:
