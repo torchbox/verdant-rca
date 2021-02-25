@@ -26,7 +26,6 @@ django-storages==1.6
 boto3==1.2.3
 boto==2.32.0
 certifi==2019.9.11
-django-mailgun==0.9.1
 scout-apm==2.1.0
 
 # Developer requirements

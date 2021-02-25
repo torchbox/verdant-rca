@@ -75,12 +75,6 @@ if 'ALLOWED_HOSTS' in env:
 if 'PRIMARY_HOST' in env:
     BASE_URL = 'http://%s' % env['PRIMARY_HOST']
 
-if 'MAILGUN_ACCESS_KEY' in env:
-    EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-    MAILGUN_ACCESS_KEY = env['MAILGUN_ACCESS_KEY']
-if 'MAILGUN_SERVER_NAME' in env:
-    MAILGUN_SERVER_NAME = env['MAILGUN_SERVER_NAME']
-
 if 'CACHE_PURGE_URL' in env:
     INSTALLED_APPS += ('wagtail.contrib.wagtailfrontendcache', )  # noqa
     WAGTAILFRONTENDCACHE = {
@@ -101,6 +95,52 @@ if 'MEDIA_URL' in env:
 
 if 'MEDIA_DIR' in env:
     MEDIA_ROOT = env['MEDIA_DIR']
+
+
+# Email settings
+# We use SMTP to send emails. We typically use transactional email services
+# that let us use SMTP.
+# https://docs.djangoproject.com/en/1.8/topics/email
+
+# https://docs.djangoproject.com/en/stable/ref/settings/#email-host
+if "EMAIL_HOST" in env:
+    EMAIL_HOST = env["EMAIL_HOST"]
+
+# https://docs.djangoproject.com/en/stable/ref/settings/#email-port
+if "EMAIL_PORT" in env:
+    try:
+        EMAIL_PORT = int(env["EMAIL_PORT"])
+    except ValueError:
+        pass
+
+# https://docs.djangoproject.com/en/stable/ref/settings/#email-host-user
+if "EMAIL_HOST_USER" in env:
+    EMAIL_HOST_USER = env["EMAIL_HOST_USER"]
+
+# https://docs.djangoproject.com/en/stable/ref/settings/#email-host-password
+if "EMAIL_HOST_PASSWORD" in env:
+    EMAIL_HOST_PASSWORD = env["EMAIL_HOST_PASSWORD"]
+
+# https://docs.djangoproject.com/en/stable/ref/settings/#email-use-tls
+if env.get("EMAIL_USE_TLS", "false").lower().strip() == "true":
+    EMAIL_USE_TLS = True
+
+# https://docs.djangoproject.com/en/stable/ref/settings/#email-use-ssl
+if env.get("EMAIL_USE_SSL", "false").lower().strip() == "true":
+    EMAIL_USE_SSL = True
+
+# https://docs.djangoproject.com/en/stable/ref/settings/#email-subject-prefix
+if "EMAIL_SUBJECT_PREFIX" in env:
+    EMAIL_SUBJECT_PREFIX = env["EMAIL_SUBJECT_PREFIX"]
+
+# SERVER_EMAIL is used to send emails to administrators.
+# https://docs.djangoproject.com/en/stable/ref/settings/#server-email
+# DEFAULT_FROM_EMAIL is used as a default for any mail send from the website to
+# the users.
+# https://docs.djangoproject.com/en/stable/ref/settings/#default-from-email
+if "SERVER_EMAIL" in env:
+    SERVER_EMAIL = DEFAULT_FROM_EMAIL = env["SERVER_EMAIL"]
+
 
 # Redis
 # Redis location can either be passed through with REDIS_HOST or REDIS_SOCKET
