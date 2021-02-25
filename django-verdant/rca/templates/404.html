@@ -1,11 +1,23 @@
 {% extends "rca/base.html" %}
 
-{% block title %}Page not found{% endblock %}
+{% block title %}Something's not right{% endblock %}
 
 {% block content %}
-    <h1 class="h1">Page not found</h1>
+    <h1 class="h1">Something's not right</h1>
 
-    <h2>Sorry, this page could not be found.</h2>
+    <section class="row">
+        <div class="body-text">
+            <p>The page you’re looking for may have moved or no longer exists. You can try:</p>
+
+            <ul>
+                <li>using our search feature to find specific content</li>
+                <li><a href="https://www.rca.ac.uk/schools">exploring our degree programmes<a></li>
+                <li><a href="https://www.rca.ac.uk/research-innovation">visiting our research pages</a> to discover our cutting-edge work</li>
+                <li>finding a specific member of staff <a href="https://www.rca.ac.uk/more/staff">with our staff picker</a></li>
+                <li><a href="https://www.rca.ac.uk/news-and-events">visiting our news and events pages</a> for the latest updates from the RCA</li>
+            </ul>
+        </div>
+    </section>
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 
