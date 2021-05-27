@@ -5478,8 +5478,17 @@ class GalleryPage(Page, SocialFields):
         programme_slug = request.GET.get('programme')
         year = request.GET.get('degree_year') or None  # "or None" converts '' => None
 
+        # Archive-It just shows a plain template of links
+        archive_it = request.GET.get('archive-it', 'false') == 'true'
+
         # Get students
         students = NewStudentPageQuerySet(NewStudentPage).live()
+
+        if archive_it:
+            return render(request, 'rca/archive_it.html', {
+                'count': students.count(),
+                'pages': students.order_by('first_name', 'last_name')
+            })
 
         if year:
             ma_students = students.ma(in_show=True, current=True, current_year=year)
