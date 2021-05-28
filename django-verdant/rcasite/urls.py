@@ -17,6 +17,7 @@ from rcasitemaps.views import index, sitemap
 from wagtail.api.v2.router import WagtailAPIRouter
 from rca.api.endpoints import RCAPagesAPIEndpoint, RCAImagesAPIEndpoint
 
+from archiveit import urls as archiveit_urls
 from donations import urls as donations_urls
 from rca import admin_urls as rca_admin_urls
 from twitter import urls as twitter_urls
@@ -79,6 +80,8 @@ urlpatterns = patterns('',
     url(r'^my-rca/nowpages/', include(student_profiles.now_urls, namespace='nowpages')),
 
     url(r'^programme_search/', 'rca.views.programme_search', name="programme_search"),
+
+    url(r'^archive-it/', include(archiveit_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism

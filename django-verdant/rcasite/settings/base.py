@@ -195,6 +195,7 @@ INSTALLED_APPS = [
     'rca_ee',           # executive education
     'student_profiles',
     'shortcourses',
+    'archiveit',
 ]
 
 EMAIL_SUBJECT_PREFIX = '[wagtail] '
