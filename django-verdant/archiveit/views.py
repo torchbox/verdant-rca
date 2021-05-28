@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
-from rca.models import NewStudentPageQuerySet, NewStudentPage
+from wagtail.wagtailcore.models import Page
 
 
-def rca_show(request):
-    students = NewStudentPageQuerySet(NewStudentPage).live()
+def index(request, parent_page_id):
+    parent = get_object_or_404(Page, pk=parent_page_id)
+    pages = parent.get_children().live()
     return render(request, 'rca/archive_it.html', {
-        'count': students.count(),
-        'pages': students.order_by('first_name', 'last_name')
+        'count': pages.count(),
+        'pages': pages
     })
