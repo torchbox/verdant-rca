@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import re
+import magic
 
 from django import forms
 from django.forms.formsets import BaseFormSet
@@ -221,14 +222,20 @@ class ImageForm(forms.Form):
         if self.max_size and img.size > self.max_size:
             raise forms.ValidationError(u'Please keep file size under 10MB. Current file size {}'.format(filesizeformat(img.size)))
 
-        try:
-            dt = Image.open(img)
-            dt.load()
-            if dt.format.upper() not in ('PNG', 'JPEG', 'GIF', 'MPO'):
-                raise forms.ValidationError(u'Only images of types JPEG and GIF are allowed. Please make sure that you save the image file as the specified format, instead of simply changing the file extension.')
+        ALLOWED_FILE_TYPES = (
+            "image/jpeg",
+            "image/gif",
+            "image/png",
+        )
 
+        FILE_TYPE_ERROR_MESSGAE = u'Only images of types JPEG, PNG and GIF are allowed. Please make sure that you save the image file as the specified format, instead of simply changing the file extension.'
+
+        try:
+            file_type = magic.from_buffer(img.read(), mime=True)
+            if file_type not in ALLOWED_FILE_TYPES:
+                raise forms.ValidationError(FILE_TYPE_ERROR_MESSGAE)
         except IOError:
-            raise forms.ValidationError(u'Only images of types JPEG and GIF are allowed. Please make sure that you save the image file as the specified format, instead of simply changing the file extension.')
+            raise forms.ValidationError(FILE_TYPE_ERROR_MESSGAE)
 
         if self.min_dim:
             minX, minY = self.min_dim
