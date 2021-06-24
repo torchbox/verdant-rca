@@ -3,15 +3,146 @@
 
 {% block body_class %}type-standard{% endblock %}
 
+{% block extra_css %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.6.6/video-js.css" rel="stylesheet">
+    <style type="text/css">
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /*16:9*/
+            padding-top: 30px;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container iframe,
+        .video-container object,
+        .video-container embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+{% endblock %}
+
 {% block extra_js_head %}
-    <script id='player_embed' src='//player.cloud.wowza.com/hosted/d1nyg9yy/wowza.js' type='text/javascript'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.6.6/video.min.js"></script>
+    <script src="https://player.live-video.net/1.2.0/amazon-ivs-videojs-tech.min.js"></script>
+    <script src="https://player.live-video.net/1.2.0/amazon-ivs-quality-plugin.min.js"></script>
 {% endblock %}
 
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
     <section class="row">
-        <div id='wowza_player'></div>
+        {% comment %}
+            Player code from: https://projects.torchbox.com/projects/rca-django-cms-project/tickets/1224#update-67498511
+        {% endcomment %}
+        <div class="video-container">
+            {% image page.poster_image original as poster_image %}
+            <video id="amazon-ivs-videojs" poster="{% if poster_image %}{{ poster_image.url }}{% else %}https://live-stage.co.uk/wp-content/uploads/2021/05/background-ge-expertc.png{% endif %}" class="video-js vjs-fluid vjs-big-play-centered" controls autoplay playsinline ></video>
+        </div>
+
+        <style>
+            body {
+                margin: 0;
+            }
+            .video-container {
+                margin: 5px;
+            }
+        </style>
+
+        <script>
+            const DEFAULT_STREAM = "https://d8126df738ec.eu-west-1.playback.live-video.net/api/video/v1/eu-west-1.688531423426.channel.52GOJxtoStX9.m3u8";
+
+            // Initialize player
+            (function () {
+                // Set up IVS playback tech and quality plugin
+                registerIVSTech(videojs);
+                registerIVSQualityPlugin(videojs);
+
+                // Initialize video.js player
+                const videoJSPlayer = videojs("amazon-ivs-videojs", {
+                    techOrder: ["AmazonIVS"],
+                    controlBar: {
+                        playToggle: {
+                            replay: false
+                        }, // Hides the replay button for VOD
+                        pictureInPictureToggle: false // Hides the PiP button
+                    }
+                });
+
+                // Use the player API once the player instance's ready callback is fired
+                const readyCallback = function () {
+                    // This executes after video.js is initialized and ready
+                    window.videoJSPlayer = videoJSPlayer;
+
+                    // Get reference to Amazon IVS player
+                    const ivsPlayer = videoJSPlayer.getIVSPlayer();
+
+                    // Show the "big play" button when the stream is paused
+                    const videoContainerEl = document.querySelector("#amazon-ivs-videojs");
+                    videoContainerEl.addEventListener("click", () => {
+                        if (videoJSPlayer.paused()) {
+                            videoContainerEl.classList.remove("vjs-has-started");
+                        } else {
+                            videoContainerEl.classList.add("vjs-has-started");
+                        }
+                    });
+
+                    // Logs low latency setting and latency value 5s after playback starts
+                    const PlayerState = videoJSPlayer.getIVSEvents().PlayerState;
+                    ivsPlayer.addEventListener(PlayerState.PLAYING, () => {
+                        console.log("Player State - PLAYING");
+                        setTimeout(() => {
+                            console.log(
+                                `This stream is ${
+                                    ivsPlayer.isLiveLowLatency() ? "" : "not "
+                                }playing in ultra low latency mode`
+                            );
+                            console.log(`Stream Latency: ${ivsPlayer.getLiveLatency()}s`);
+                        }, 5000);
+                    });
+
+                    // Log errors
+                    const PlayerEventType = videoJSPlayer.getIVSEvents().PlayerEventType;
+                    ivsPlayer.addEventListener(PlayerEventType.ERROR, (type, source) => {
+                        console.warn("Player Event - ERROR: ", type, source);
+                    });
+
+                    // Log and display timed metadata
+                    ivsPlayer.addEventListener(PlayerEventType.TEXT_METADATA_CUE, (cue) => {
+                        const metadataText = cue.text;
+                        const position = ivsPlayer.getPosition().toFixed(2);
+                        console.log(
+                            `Player Event - TEXT_METADATA_CUE: "${metadataText}". Observed ${position}s after playback started.`
+                        );
+                    });
+
+                    // Enables manual quality selection plugin
+                    videoJSPlayer.enableIVSQualityPlugin();
+
+                    // Set volume and play default stream
+                    videoJSPlayer.volume(0.5);
+                    videoJSPlayer.src(DEFAULT_STREAM);
+                };
+
+                // Register ready callback
+                videoJSPlayer.ready(readyCallback);
+            })();
+
+            // Sets up input box for Amazon IVS manifest
+            (function () {
+                const containerEl = document.querySelector(".video-container");
+                const directSrcFormEl = containerEl.querySelector(".src-container-direct");
+                const directSrcInputEl = containerEl.querySelector(".src-input");
+                directSrcFormEl.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    videoJSPlayer.src(directSrcInputEl.value);
+                });
+            })();
+        </script>
     </section>
 
     <section class="row">
