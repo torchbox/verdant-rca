@@ -10,6 +10,7 @@
         <meta name="robots" content="noindex">
     </head>
     <body>
+        <h1>{{ parent.title }} Index</h1>
         <p>Count: {{ count }}</p>
         {% for page in pages %}
             <a href="{% pageurl page %}">{{ page }}</a><br>

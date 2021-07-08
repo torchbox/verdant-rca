@@ -7,5 +7,6 @@ def index(request, parent_page_id):
     pages = parent.get_children().live().public()
     return render(request, 'rca/archive_it.html', {
         'count': pages.count(),
-        'pages': pages
+        'pages': pages,
+        'parent': parent,
     })
