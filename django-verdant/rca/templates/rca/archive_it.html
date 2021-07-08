@@ -1,0 +1,19 @@
+{% load wagtailcore_tags %}
+{% comment %}
+    Page of URLs so they can indexed by Archive It
+{% endcomment %}
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>Archival index page</title>
+        <meta name="robots" content="noindex">
+    </head>
+    <body>
+        <h1>{{ parent.title }} Index</h1>
+        <p>Count: {{ count }}</p>
+        {% for page in pages %}
+            <a href="{% pageurl page %}">{{ page }}</a><br>
+        {% endfor %} 
+    </body>
+</html>
