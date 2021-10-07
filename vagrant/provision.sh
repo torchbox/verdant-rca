@@ -17,7 +17,7 @@ apt-get install -y python python-dev python-virtualenv
 export DEBIAN_FRONTEND=noninteractive
 apt-get remove -y --purge postgresql*
 apt-get update -y
-apt-get install -y postgresql-9.6 postgresql-client-9.6 postgresql-contrib-9.6 libpq-dev
+apt-get install -y postgresql-13 postgresql-client-13 postgresql-contrib-13 libpq-dev
 
 su - postgres -c "createuser -s vagrant"
 
