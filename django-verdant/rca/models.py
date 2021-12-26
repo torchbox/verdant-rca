@@ -5950,6 +5950,7 @@ class InnovationRCAProject(Page, SocialFields):
     project_ended = models.BooleanField(default=False, help_text=help_text('rca.InnovationRCAProject', 'project_ended'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.InnovationRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    featured = models.BooleanField(default=False, help_text=help_text('rca.InnovationRCAProject', 'featured'))
 
     search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
@@ -6022,6 +6023,7 @@ InnovationRCAProject.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
+        FieldPanel('featured'),
         ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
@@ -6053,7 +6055,7 @@ class InnovationRCAIndex(Page, SocialFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get list of live projects
-        projects = InnovationRCAProject.objects.filter(live=True, path__startswith=self.path)
+        projects = InnovationRCAProject.objects.live().child_of(self).filter(featured=True)
 
         # Apply filters
         project_type = request.GET.get('project_type')
