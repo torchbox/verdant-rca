@@ -11,7 +11,7 @@
     {% tabdeck %}
         {% if self.is_phd_student %}
             {% tab "PhD Work" %}
-                <h2>PhD work</h2>
+                <h2 class="student-tab-heading">PhD work</h2>
                 {% get_student_carousel_items self 'phd' as phd_carousel_items %}
                 {% include "rca_show/includes/modules/carousel.html" with carousel_items=phd_carousel_items %}
 
@@ -70,7 +70,7 @@
 
         {% if self.is_mphil_student %}
             {% tab "MPhil work" %}
-                <h2>MPhil work</h2>
+                <h2 class="student-tab-heading">MPhil work</h2>
                 {% get_student_carousel_items self 'mphil' as mphil_carousel_items %}
                 {% include "rca_show/includes/modules/carousel.html" with carousel_items=mphil_carousel_items %}
 
@@ -129,7 +129,7 @@
 
         {% if self.is_ma_student and self.ma_in_show %}
             {% tab "MA work" %}
-                <h2>MA work</h2>
+                <h2 class="student-tab-heading">MA work</h2>
                 {% get_student_carousel_items self 'ma' as ma_carousel_items %}
                 {% include "rca_show/includes/modules/carousel.html" with carousel_items=ma_carousel_items %}
 
@@ -172,7 +172,7 @@
         {% endif %}
 
         {% tab "Info" %}
-            <h2>Info</h2>
+            <h2 class="student-tab-heading">Info</h2>
             <div class="profile">
                 <ul class="four-cols">
                     <li class="col first">

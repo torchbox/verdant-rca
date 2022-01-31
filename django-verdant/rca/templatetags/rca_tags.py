@@ -681,7 +681,7 @@ class TabNode(template.Node):
         context['tabdeck']['tab_headings'].append(heading)
         context['tabdeck']['index'] += 1
 
-        return header_html + ('<div class="%s">') + self.nodelist.render(context) + '</div>'
+        return header_html + ('<div>') + self.nodelist.render(context) + '</div>'
 
 # settings value
 @register.assignment_tag
