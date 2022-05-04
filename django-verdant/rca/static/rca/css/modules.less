@@ -399,7 +399,7 @@
         .dont-break-out();
         a { /* repeating body-text-style styles here because I don't want to
         screw with the javascript without being able to test it */
-            color: @color-highlight-blue;
+            color: @url-blue;
             .bold();
             &:hover {
                 text-decoration: underline;
@@ -409,7 +409,7 @@
 
     .tweet-join {
         a {
-            color: @color-highlight-blue;
+            color: @url-blue;
             font-family: @font-family-benton;
         }
     }
@@ -1364,7 +1364,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
     }
 
     a {
-        color: @color-highlight-blue;
+        color: @url-blue;
         .bold();
         &:hover {
             text-decoration: underline;
@@ -2207,6 +2207,12 @@ form .hidden-field{
         padding: @spacing-half;
         float: right;
         margin: 0 0 0 @spacing-one;
+    }
+}
+
+.cookie-notice-text {
+    a {
+        color: @color-highlight-blue;
     }
 }
 
