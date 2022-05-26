@@ -3,59 +3,59 @@
  */
 
 .callout-block {
-    &__left {
-        display: inline-block;
-        vertical-align: top;
-        width: 100%;
-        margin-bottom: 20px;
+  &__left {
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    margin-bottom: 20px;
 
-        @media @media-desktop-regular {
-            width: 55%;
-            padding: 0 8% 0 0;
-        }
+    @media @media-desktop-regular {
+      width: 55%;
+      padding: 0 8% 0 0;
+    }
+  }
+
+  &__right {
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: #f2f2f2;
+
+    @media @media-desktop-regular {
+      width: 45%;
+      margin-bottom: 0;
     }
 
-    &__right {
-        display: inline-block;
-        vertical-align: top;
-        width: 100%;
-        margin-bottom: 20px;
-        background-color: #F2F2F2;
-
-        @media @media-desktop-regular {
-            width: 45%;
-            margin-bottom: 0;
-        }
-
-        &:hover {
-            // Beat specificity
-            .body-text-style & {
-                text-decoration: none;
-            }
-        }
+    &:hover {
+      // Beat specificity
+      .body-text-style & {
+        text-decoration: none;
+      }
     }
-    
-    // Right column content - callout actual
-    &__content {
-        padding: 30px;
+  }
 
-        h4 {
-            margin-top: 0;
-            margin-bottom: 0;
-            font-size: @font-size-18;
-            font-weight: bold;
-            color: #000;
-        }
-        
-        p {
-            font-family: @font-family-benton-light;
-            font-size: @font-size-16;
-            color: #000;
-        }
+  // Right column content - callout actual
+  &__content {
+    padding: 30px;
+
+    h4 {
+      margin-top: 0;
+      margin-bottom: 0;
+      font-size: @font-size-18;
+      font-weight: bold;
+      color: #000;
     }
 
-    &__read-more {
-        color: #0096ff;
-        font-weight: bold;
+    p {
+      font-family: @font-family-benton-light;
+      font-size: @font-size-16;
+      color: #000;
     }
+  }
+
+  &__read-more {
+    color: #077aca;
+    font-weight: bold;
+  }
 }
