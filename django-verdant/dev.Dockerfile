@@ -2,7 +2,7 @@
 # ones becase they use a different C compiler. Debian images also come with
 # all useful packages required for image manipulation out of the box. They
 # however weight a lot, approx. up to 1.5GiB per built image.
-FROM python:2.7-stretch
+FROM python:2.7-buster
 
 RUN useradd verdant-rca
 
@@ -38,10 +38,12 @@ EXPOSE 8000
 # Install operating system dependencies.
 RUN apt-get update -y && \
     apt-get install -y apt-transport-https rsync libldap2-dev libsasl2-dev && \
-    curl -sL https://deb.nodesource.com/setup_8.x | bash - &&\
-    apt-get install -y nodejs &&\
+    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
+# Check if Node.js and npm are installed
+RUN node -v && npm -v
 
 # Intsall WSGI server - Gunicorn - that will serve the application.
 RUN pip install "gunicorn== 19.9.0"
