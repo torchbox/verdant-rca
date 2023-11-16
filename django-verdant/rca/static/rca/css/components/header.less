@@ -6,7 +6,7 @@
 
     /**
      * Determines the background colour, this isn't related to the header-content
-     * light or dark classes, or the bg--light and bg--dark. I'm keeping the site 
+     * light or dark classes, or the bg--light and bg--dark. I'm keeping the site
      * intergration with backend as simple as possible for the header.
      */
     background-color: transparent;
@@ -129,7 +129,7 @@
 
     &__menus {
         .grid-layout();
-        
+
         &::before {
             @media @media-large {
                 content: '';
@@ -297,6 +297,36 @@
         }
     }
 
+    &__archive-label {
+        position: absolute;
+        top: 30px;
+        right: 20px;
+        text-align: center;
+
+        @media @media-medium {
+            position: initial;
+            grid-column: 4 / span 2;
+            display: flex;
+            align-items: center;
+            justify-content: end;
+        }
+
+        span {
+            font-family: @font-family-benton-light;
+            background-color: #D9D9D9;
+            color: @color-black;
+            padding: 9px 12px 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+
+            @media @media-medium {
+                font-size: 18px;
+                padding: 9px 12px 8px;
+            }
+        }
+    }
+
     .theme-light & {
         @{root}__search-toggle,
         @{root}__menu-toggle {
@@ -322,5 +352,5 @@
             color: @color--white;
         }
     }
-    
+
 }
