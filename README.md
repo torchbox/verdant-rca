@@ -17,6 +17,13 @@ the site will be available on `0.0.0.0:8509`.
 
 Note: this was developed for testing the `Dockerfile` during the Heroku move. It isn't completely working yet for local development.
 
+If working with docker locally, you will need to run the following:
+
+```
+docker exec -it django-verdant_web_1 python manage.py migrate
+docker exec -it django-verdant_web_1 python manage.py createsuperuser
+```
+
 # Deployments
 
 Deployments are handled by [CircleCI](https://circleci.com/gh/torchbox/workflows/verdant-rca).
