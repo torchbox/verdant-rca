@@ -642,7 +642,7 @@ class TabDeckNode(template.Node):
         module_title_html = '';
         if self.module_title_expr:
             module_title_html = '<h2 class="module-title">%s</h2>' % self.module_title_expr.resolve(context)
-        return '<section class="row module tabdeck">' + module_title_html + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
+        return '<section class="row module tabdeck">' + module_title_html + '<div class="tab-content">' + output + '</div></section>'
 
 
 @register.tag
@@ -677,18 +677,11 @@ class TabNode(template.Node):
             (' active' if context['tabdeck']['index'] == 1 else ''),
             conditional_escape(heading)
         )
-        if self.extra_classname_expr:
-            classname = "tab-pane %s" % self.extra_classname_expr.resolve(context)
-        else:
-            classname = "tab-pane"
-
-        if context['tabdeck']['index'] == 1:
-            classname += ' active'
 
         context['tabdeck']['tab_headings'].append(heading)
         context['tabdeck']['index'] += 1
 
-        return header_html + ('<div class="%s">' % classname) + self.nodelist.render(context) + '</div>'
+        return header_html + ('<div>') + self.nodelist.render(context) + '</div>'
 
 # settings value
 @register.assignment_tag
