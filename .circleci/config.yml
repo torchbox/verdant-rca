@@ -2,7 +2,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/python:2.7-stretch
+      - image: cimg/python:2.7-node
         environment:
           SECRET_KEY: testingsecretkey
           SECURE_SSL_REDIRECT: false
