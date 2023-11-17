@@ -20,8 +20,8 @@ Note: this was developed for testing the `Dockerfile` during the Heroku move. It
 If working with docker locally, you will need to run the following:
 
 ```
-docker exec -it django-verdant_web_1 python manage.py migrate
-docker exec -it django-verdant_web_1 python manage.py createsuperuser
+docker exec -it django-verdant-web-1 python manage.py migrate
+docker exec -it django-verdant-web-1 python manage.py createsuperuser
 ```
 
 # Deployments
