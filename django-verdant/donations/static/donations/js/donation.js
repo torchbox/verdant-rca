@@ -162,8 +162,30 @@ jQuery(function($) {
             exp_year: $form.find('[data-stripe="exp-year"]').val(),
             name: name
         });
+        var newParams = {};
 
-        Stripe.createToken(params, stripeResponseHandler);
+        var ALLOWED_PARAMS = [
+          'number',
+          'exp_month',
+          'exp_year',
+          'name',
+          'address_line1',
+          'address_line2',
+          'address_city',
+          'address_state',
+          'address_zip',
+          'address_country',
+        ];
+
+        // Filter out any values that are not used by Stripe API.
+        // https://stripe.com/docs/stripe-js/v2
+        $.each(params, function(key, value){
+          if ($.inArray(key, ALLOWED_PARAMS) !== -1) {
+            newParams[key] = value;
+          }
+        });
+
+        Stripe.createToken(newParams, stripeResponseHandler);
         // Stripe.createToken($form[0], stripeResponseHandler);
 
         // Prevent the form from submitting with the default action

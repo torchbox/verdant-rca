@@ -7,13 +7,27 @@ from django import forms
 from donations.fields import CreditCardField, ExpiryDateField, VerificationValueField, EmptyValueAttrWidget
 
 
+SINGLE = 's'
+MONTHLY = 'm'
+ANNUAL = 'a'
+
+SUBSCRIPTION_CHOICES = (
+    (SINGLE, 'Single'),
+    (MONTHLY, 'Monthly'),
+    (ANNUAL, 'Annual'),
+)
+
+
 class DonationForm(forms.Form):
     def __init__(self, *args, **kwargs):
+        show_subscription = kwargs.pop('show_subscription', False)
         super(DonationForm, self).__init__(*args, **kwargs)
         # the EmptyValueAttrWidget makes sure not to render the single use token on the page
         self.fields['stripe_token'].widget = EmptyValueAttrWidget()
         self.fields['name'].widget = forms.HiddenInput()
         self.fields['name'].initial = ""  # name on card is optional and set by javascript
+        if not show_subscription:
+            del self.fields['subscription']
 
     required_css_class = 'required'
 
@@ -36,6 +50,8 @@ class DonationForm(forms.Form):
     cvc = VerificationValueField(required=False, help_text="The 3-digit security code printed on the signature strip on the reverse")
     email = forms.EmailField(required=True)
     not_included_in_supporters_list = forms.BooleanField(label="Please tick this box if you do not wish to be included in our list of supporters", required=False, help_text="")
+
+    subscription = forms.ChoiceField(choices=SUBSCRIPTION_CHOICES, label="Please make my payment")
 
     title           = forms.CharField(required=True, max_length=255)
     first_name      = forms.CharField(required=True, max_length=255)
@@ -69,8 +85,9 @@ class DonationForm(forms.Form):
             # ("wendy_dagworthy_scholarship_fund", "Wendy Dagworthy Scholarship Fund"),
             # ("in_memory_of_dorothy_kemp", "In memory of Dorothy Kemp"),
             # ("college_greatest_need", "College’s greatest need"),
-            ("rca_fund", "RCA Fund"),
-    ), initial="rca_fund")
+            # ("rca_fund", "RCA Fund"),
+            ("gen_rca", "GenerationRCA"),
+    ), initial="gen_rca")
 
     name = forms.CharField(required=False, max_length=255)
     stripe_token = forms.CharField(required=False, max_length=255)
