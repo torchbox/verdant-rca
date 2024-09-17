@@ -684,30 +684,81 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .order_by('-latest_revision_created_at')
 
         # Get all kinds of student stories
+
+        ## Student Stories - StandardPage - filter by the related school field
         student_stories_standard = StandardPage.objects\
-            .filter(show_on_school_page=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .filter(show_on_school_page=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG,
+                    related_school_id=self.school_id)\
             .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
             .values_list('pk', flat=True)
+
+
+        ## Student Stories - StandardPage - filter by descendance
+        student_stories_standard_descendants = StandardPage.objects\
+            .filter(show_on_school_page=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .descendant_of(self) \
+            .values_list('pk', flat=True)
+
+        ## Student Stories - StandardStreamPage - filter by the related school field
         student_stories_standard_stream = StandardStreamPage.objects\
-            .filter(show_on_school_page=True, tags__name__iexact=StandardStreamPage.STUDENT_STORY_TAG)\
+            .filter(show_on_school_page=True, related_school_id=self.school_id,
+                    tags__name__iexact=StandardStreamPage.STUDENT_STORY_TAG)\
             .exclude(tags__name__iexact=StandardStreamPage.ALUMNI_STORY_TAG)\
             .values_list('pk', flat=True)
 
+        ## Student Stories - StandardStreamPage - filter by descendance
+        student_stories_standard_stream_descendants = StandardStreamPage.objects\
+            .filter(show_on_school_page=True, tags__name__iexact=StandardStreamPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardStreamPage.ALUMNI_STORY_TAG)\
+            .descendant_of(self) \
+            .values_list('pk', flat=True)
+
+        ## Student Stories - Join results
         student_stories = Page.objects.live()\
-            .filter(models.Q(pk__in=student_stories_standard_stream) | models.Q(pk__in=student_stories_standard))\
+            .filter(
+                models.Q(pk__in=student_stories_standard_stream) |
+                models.Q(pk__in=student_stories_standard_stream_descendants) |
+                models.Q(pk__in=student_stories_standard) |
+                models.Q(pk__in=student_stories_standard_descendants)
+            )\
             .exclude(pk__in=featured_ids) \
             .annotate(is_student_story=models.Value(True, output_field=models.BooleanField())) \
             .order_by('?')
 
         # Get all kinds of alumni stories
+        ## Alumni Stories - StandardPage - filter by the related school field
         alumni_stories_standard = StandardPage.objects\
+            .filter(show_on_school_page=True, related_school_id=self.school_id,
+                    tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .values_list('pk', flat=True)
+
+        ## Alumni Stories - StandardPage - filter by descendance
+        alumni_stories_standard_descendants = StandardPage.objects\
             .filter(show_on_school_page=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .descendant_of(self) \
+            .values_list('pk', flat=True)
 
+        ## Alumni Stories - StandardStreamPage - filter by the related school field
         alumni_stories_standard_stream = StandardStreamPage.objects\
-            .filter(show_on_school_page=True, tags__name__iexact=StandardStreamPage.ALUMNI_STORY_TAG)\
+            .filter(show_on_school_page=True, related_school_id=self.school_id,
+                    tags__name__iexact=StandardStreamPage.ALUMNI_STORY_TAG)\
+            .values_list('pk', flat=True)
 
+        ## Alumni Stories - StandardStreamPage - filter by the descendants
+        alumni_stories_standard_stream_descendants = StandardStreamPage.objects\
+            .filter(show_on_school_page=True, tags__name__iexact=StandardStreamPage.ALUMNI_STORY_TAG)\
+            .descendant_of(self) \
+            .values_list('pk', flat=True)
+
+        ## Alumni Stories - join the results
         alumni_stories = Page.objects.live()\
-            .filter(models.Q(pk__in=alumni_stories_standard) | models.Q(pk__in=alumni_stories_standard_stream))\
+            .filter(
+                models.Q(pk__in=alumni_stories_standard) |
+                models.Q(pk__in=alumni_stories_standard_stream) |
+                models.Q(pk__in=alumni_stories_standard_descendants) |
+                models.Q(pk__in=alumni_stories_standard_stream_descendants)
+            )\
             .exclude(pk__in=featured_ids) \
             .annotate(is_alumni_story=models.Value(True, output_field=models.BooleanField()))\
             .order_by('?')
