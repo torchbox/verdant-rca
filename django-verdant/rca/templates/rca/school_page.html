@@ -59,7 +59,7 @@ it is important and adding type-school #}
                             <a href="{% pageurl self.head_of_school %}">
                                 <div class="image">
                                     {% if self.head_of_school.profile_image %}
-                                        {% image self.head_of_school.profile_image width-200 %}
+                                        {% image self.head_of_school.profile_image width-400 %}
                                     {% else %}
                                         <img src="/static/rca/images/staff-default-image.png" width="200">
                                     {% endif %}
@@ -114,9 +114,9 @@ it is important and adding type-school #}
                             {% include "rca/includes/modules/contact_snippet.html" with hide_title=True %}
                         </div>
                     </div>
-                    
+
                 {% endif %}
-                
+
             </div>
         </section>
     {% endif %}
